@@ -11,28 +11,50 @@ import (
 
 type options struct {
 	title       string
+	separator   string
 	logarithmic bool
+	invert      bool
 	typ         string
 }
 
 func main() {
 	titleHelp := "Sets the title for the chart."
+	separatorHelp := "Sets the separator for each row's fields; can be ' ', '\\t', ';', ','; default \\t."
 	logarithmicHelp := "Sets logarithmic scale for the y-axis."
 	typHelp := "Sets the chart type; default is 'pie'; can be pie/bar."
+	invertHelp := "Expects each row to have '%value%   %label%' rather than the inverse (default)."
 
 	var o options
 
 	fs := flag.NewFlagSet("params", flag.ContinueOnError)
 	fs.StringVar(&o.title, "title", o.title, titleHelp)
 	fs.StringVar(&o.title, "t", o.title, titleHelp)
+	fs.StringVar(&o.separator, "separator", o.separator, separatorHelp)
+	fs.StringVar(&o.separator, "s", o.separator, separatorHelp)
 	fs.BoolVar(&o.logarithmic, "log", o.logarithmic, logarithmicHelp)
 	fs.BoolVar(&o.logarithmic, "l", o.logarithmic, logarithmicHelp)
+	fs.BoolVar(&o.invert, "invert", o.invert, invertHelp)
+	fs.BoolVar(&o.invert, "i", o.invert, invertHelp)
 	fs.StringVar(&o.typ, "type", o.typ, typHelp)
 	fs.StringVar(&o.typ, "y", o.typ, typHelp)
 
 	err := fs.Parse(fromFirstDash(os.Args[1:]))
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	var separator rune
+	switch o.separator {
+	case " ":
+		separator = ' '
+	case ";":
+		separator = ';'
+	case ",":
+		separator = ','
+	case "\t":
+		separator = '\t'
+	default:
+		separator = '\t'
 	}
 
 	args := fs.Args()
@@ -45,9 +67,9 @@ func main() {
 	var finalString string
 	switch chartType {
 	case "pie":
-		finalString, err = setupPie(title, displayTitle, '\t')
+		finalString, err = setupPie(title, displayTitle, separator, o.invert)
 	case "bar":
-		finalString, err = setupBar(title, displayTitle, '\t', scale)
+		finalString, err = setupBar(title, displayTitle, separator, scale, o.invert)
 	}
 	if err != nil {
 		log.Fatal(err)

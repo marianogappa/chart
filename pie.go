@@ -59,7 +59,7 @@ func init() {
 	}
 }
 
-func setupPie(title string, displayTitle bool, separator rune) (string, error) {
+func setupPie(title string, displayTitle bool, separator rune, invert bool) (string, error) {
 	r := csv.NewReader(os.Stdin)
 	r.Comma = separator
 	r.Comment = '#'
@@ -87,8 +87,13 @@ func setupPie(title string, displayTitle bool, separator rune) (string, error) {
 			noLabels = true
 		}
 		if len(record) >= 2 {
-			s = record[0]
-			fS = record[1]
+			if invert {
+				s = record[1]
+				fS = record[0]
+			} else {
+				s = record[0]
+				fS = record[1]
+			}
 		}
 		f, err := strconv.ParseFloat(fS, 64)
 		if err != nil {
