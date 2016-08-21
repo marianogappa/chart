@@ -67,6 +67,7 @@ var baseTemplateString = `<!DOCTYPE HTML>
         border-collapse: collapse;
         border-spacing: 0;
     }
+    #chart { padding: 25px; }
 </style>
 <script type="text/javascript">
 /*!
@@ -87,7 +88,7 @@ if(n.options.stacked){for(var r=a.chart,l=r.data.datasets,s=Number(l[t].data[e])
 
 </head>
 <body>
-<div style="height:100vh; width:100vw;">
+<div style="height:100vh; width:90vw;">
 <canvas id="chart"></canvas>
 </div>
 <script>

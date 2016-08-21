@@ -11,7 +11,7 @@ import (
 	"text/template"
 )
 
-type pieTemplateData struct {
+type barTemplateData struct {
 	Labels          string
 	DisplayTitle    bool
 	Title           string
@@ -19,18 +19,20 @@ type pieTemplateData struct {
 	Data            string
 	Colors          string
 	TooltipTemplate string
+	ScaleType       string
 }
 
-var pieTemplate *template.Template
+var barTemplate *template.Template
 
 func init() {
-	pieTemplateString := `{
+	barTemplateString := `{
     type: '{{ .ChartType }}',
     data: {
 		labels: [{{ .Labels }}],
         datasets: [{
+            label: "My First dataset",
             data: [{{ .Data }}],
-            backgroundColor: [{{ .Colors }}]
+            backgroundColor: [{{.Colors}}]
         }]
     },
     options: {
@@ -42,24 +44,36 @@ func init() {
             callbacks: {
                 label: function(tti, data) {
                     var value = data.datasets[0].data[tti.index];
-                    var total = data.datasets[0].data.reduce((a, b) => a + b, 0)
                     var label = data.labels[tti.index];
-                    var percentage = Math.round(value / total * 100);
                     return {{ .TooltipTemplate }};
                 }
             }
+        },
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [{
+                type: "{{ .ScaleType }}",
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                }
+            }]
         }
     }
 }`
 
 	var err error
-	pieTemplate, err = template.New("pie").Parse(pieTemplateString)
+	barTemplate, err = template.New("bar").Parse(barTemplateString)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func setupPie(title string, displayTitle bool, separator rune) (string, error) {
+func setupBar(title string, displayTitle bool, separator rune, scaleType string) (string, error) {
 	r := csv.NewReader(os.Stdin)
 	r.Comma = separator
 	r.Comment = '#'
@@ -108,24 +122,21 @@ func setupPie(title string, displayTitle bool, separator rune) (string, error) {
 	stringData := strings.Join(ds, ",")
 	stringLabels := strings.Join(labels, ",")
 
-	if noLabels {
-		tooltipTemplate = `percentage + '%'`
-	} else {
-		tooltipTemplate = `label + ': ' + percentage + '%'`
-	}
+	tooltipTemplate = `value`
 
-	templateData := pieTemplateData{
-		ChartType:       "pie",
+	templateData := barTemplateData{
+		ChartType:       "bar",
 		Data:            stringData,
 		Labels:          stringLabels,
 		Title:           title,
 		DisplayTitle:    displayTitle,
 		Colors:          colorFirstN(len(stringData)),
 		TooltipTemplate: tooltipTemplate,
+		ScaleType:       scaleType,
 	}
 
 	var b bytes.Buffer
-	if err := pieTemplate.Execute(&b, templateData); err != nil {
+	if err := barTemplate.Execute(&b, templateData); err != nil {
 		log.Fatal(err)
 	}
 

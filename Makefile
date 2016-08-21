@@ -6,7 +6,7 @@ all: build
 build: GOOS ?= ${OS}
 build: GOARCH ?= amd64
 build: clean
-		GOOS=${GOOS} GOARCH=${GOARCH} CGO_ENABLED=0 go build -o ${ARTIFACT} -a *.go
+		GOOS=${GOOS} GOARCH=${GOARCH} CGO_ENABLED=0 go build -o ${ARTIFACT} -a .
 
 clean:
 		rm -f ${ARTIFACT}
