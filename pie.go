@@ -14,12 +14,13 @@ import (
 )
 
 type pieTemplateData struct {
-	Labels       string
-	DisplayTitle bool
-	Title        string
-	ChartType    string
-	Data         string
-	Colors       string
+	Labels          string
+	DisplayTitle    bool
+	Title           string
+	ChartType       string
+	Data            string
+	Colors          string
+	TooltipTemplate string
 }
 
 var pieTemplate *template.Template
@@ -38,6 +39,17 @@ func init() {
         title: {
             display: {{ .DisplayTitle }},
             text: '{{ .Title }}'
+        },
+        tooltips: {
+            callbacks: {
+                label: function(tti, data) {
+                    var value = data.datasets[0].data[tti.index];
+                    var total = data.datasets[0].data.reduce((a, b) => a + b, 0)
+                    var label = data.labels[tti.index];
+                    var percentage = Math.round(value / total * 100);
+                    return {{ .TooltipTemplate }};
+                }
+            }
         }
     }
 }`
@@ -56,7 +68,8 @@ func setupPie(title string, displayTitle bool, separator rune) (string, error) {
 
 	var labels []string
 	var data []float64
-	var d string
+	var d, tooltipTemplate string
+	var noLabels bool
 
 	for {
 		var fS, s string
@@ -73,6 +86,7 @@ func setupPie(title string, displayTitle bool, separator rune) (string, error) {
 		if len(record) == 1 {
 			fS = record[0]
 			s = ""
+			noLabels = true
 		}
 		if len(record) >= 2 {
 			s = record[0]
@@ -84,7 +98,9 @@ func setupPie(title string, displayTitle bool, separator rune) (string, error) {
 			continue
 		}
 		data = append(data, f)
-		labels = append(labels, `"`+s+`"`)
+		if !noLabels {
+			labels = append(labels, `"`+s+`"`)
+		}
 	}
 
 	var ds []string
@@ -94,13 +110,20 @@ func setupPie(title string, displayTitle bool, separator rune) (string, error) {
 	stringData := strings.Join(ds, ",")
 	stringLabels := strings.Join(labels, ",")
 
+	if noLabels {
+		tooltipTemplate = `percentage + '%'`
+	} else {
+		tooltipTemplate = `label + ': ' + percentage + '%'`
+	}
+
 	templateData := pieTemplateData{
-		ChartType:    "pie",
-		Data:         stringData,
-		Labels:       stringLabels,
-		Title:        title,
-		DisplayTitle: displayTitle,
-		Colors:       color.FirstN(len(stringData)),
+		ChartType:       "pie",
+		Data:            stringData,
+		Labels:          stringLabels,
+		Title:           title,
+		DisplayTitle:    displayTitle,
+		Colors:          color.FirstN(len(stringData)),
+		TooltipTemplate: tooltipTemplate,
 	}
 
 	var b bytes.Buffer
