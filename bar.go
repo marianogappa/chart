@@ -73,7 +73,7 @@ func init() {
 	}
 }
 
-func setupBar(title string, displayTitle bool, separator rune, scaleType string, invert bool) (string, error) {
+func setupBar(title string, displayTitle bool, separator rune, scaleType scaleType, invert bool) (string, error) {
 	r := csv.NewReader(os.Stdin)
 	r.Comma = separator
 	r.Comment = '#'
@@ -138,7 +138,7 @@ func setupBar(title string, displayTitle bool, separator rune, scaleType string,
 		DisplayTitle:    displayTitle,
 		Colors:          colorFirstN(len(stringData)),
 		TooltipTemplate: tooltipTemplate,
-		ScaleType:       scaleType,
+		ScaleType:       scaleType.string(),
 	}
 
 	var b bytes.Buffer
