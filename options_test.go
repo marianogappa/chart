@@ -185,6 +185,36 @@ func TestResolveOptions(t *testing.T) {
 			args: []string{"-s"},
 			fails: true,
 		},
+		{
+			args: []string{"bar", "log", "invert", ","},
+			expected: options{
+				title:     "",
+				separator: ",",
+				scaleType: logarithmic,
+				invert:    true,
+				chartType: bar,
+			},
+		},
+		{
+			args: []string{"bar", ";"},
+			expected: options{
+				title:     "",
+				separator: ";",
+				scaleType: linear,
+				invert:    false,
+				chartType: bar,
+			},
+		},
+		{
+			args: []string{" "},
+			expected: options{
+				title:     "",
+				separator: " ",
+				scaleType: linear,
+				invert:    false,
+				chartType: pie,
+			},
+		},
 	}
 
 	for _, ts := range tests {

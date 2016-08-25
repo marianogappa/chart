@@ -51,15 +51,15 @@ func resolveOptions(args []string) (options, error) {
 	o := defaultOptions
 
 	var chartType string
-	var logarithmic bool
+	var log bool
 
 	fs := flag.NewFlagSet("params", flag.ContinueOnError)
 	fs.StringVar(&o.title, "title", o.title, titleHelp)
 	fs.StringVar(&o.title, "t", o.title, titleHelp)
 	fs.StringVar(&o.separator, "separator", o.separator, separatorHelp)
 	fs.StringVar(&o.separator, "s", o.separator, separatorHelp)
-	fs.BoolVar(&logarithmic, "log", o.scaleType.isLogarithmic(), logarithmicHelp)
-	fs.BoolVar(&logarithmic, "l", o.scaleType.isLogarithmic(), logarithmicHelp)
+	fs.BoolVar(&log, "log", o.scaleType.isLogarithmic(), logarithmicHelp)
+	fs.BoolVar(&log, "l", o.scaleType.isLogarithmic(), logarithmicHelp)
 	fs.BoolVar(&o.invert, "invert", o.invert, invertHelp)
 	fs.BoolVar(&o.invert, "i", o.invert, invertHelp)
 	fs.StringVar(&chartType, "type", o.chartType.string(), chartTypeHelp)
@@ -71,16 +71,30 @@ func resolveOptions(args []string) (options, error) {
 	}
 
 	o.chartType.become(chartType)
-	o.scaleType.become(logarithmic)
+	o.scaleType.become(log)
 
 	if o.separator != " " && o.separator != ";" && o.separator != "," && o.separator != "\t" {
 		o.separator = defaultOptions.separator
 	}
 
-	// remaining := fs.Args()
-	// remaining = append(remaining, untilFirstDash(args)...)
-
-	// log.Printf("remaining are: %v", remaining)
+	hints := fs.Args()
+	hints = append(hints, untilFirstDash(args)...)
+	for _, h := range hints {
+		switch h {
+		case "log":
+			o.scaleType = logarithmic
+		case "bar":
+			o.chartType = bar
+		case "invert":
+			o.invert = true
+		case ",":
+			o.separator = ","
+		case ";":
+			o.separator = ";"
+		case " ":
+			o.separator = " "
+		}
+	}
 
 	return o, nil
 }
@@ -141,5 +155,5 @@ func untilFirstDash(as []string) []string {
 			return as[:i]
 		}
 	}
-	return []string{}
+	return as
 }
