@@ -87,3 +87,38 @@ func TestParseLine(t *testing.T) {
 		}
 	}
 }
+
+func TestParseFormat(t *testing.T) {
+	tests := []struct {
+		name string
+		i    []string
+		sep rune
+		expected string
+	}{
+		{
+			name: "empty case",
+			i: []string{},
+			sep: '\t',
+			expected: "",
+		},
+		{
+			name: "string, float",
+			i: []string{"a\t1", "b\t2", "c\t3"},
+			sep: '\t',
+			expected: "s,f",
+		},
+		{
+			name: "string, float with one outlier (minority)",
+			i: []string{"a\t1", "onlystring", "c\t3"},
+			sep: '\t',
+			expected: "s,f",
+		},
+	}
+
+	for _, ts := range tests {
+		result := parseFormat(ts.i, ts.sep)
+		if !reflect.DeepEqual(result, ts.expected) {
+			t.Errorf("'%v' failed: %v was not equal to %v", ts.name, result, ts.expected)
+		}
+	}
+}

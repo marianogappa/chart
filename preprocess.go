@@ -4,6 +4,26 @@ func preprocess(i []string, o options) ([]string, options) {
 	return i, o
 }
 
+func parseFormat(i []string, sep rune) string {
+	lfs := make(map[string]int)
+	for _, l := range i {
+		lfs[parseLine(l, sep).string()] += 1
+	}
+	return maxLineFormat(lfs)
+}
+
+func maxLineFormat(lfs map[string]int) string {
+	max := 0
+	lf := ""
+	for k, v := range lfs {
+		if v > max {
+			max = v
+			lf = k
+		}
+	}
+	return lf
+}
+
 type sectionType int
 const (
 	emptyT sectionType = iota
@@ -13,6 +33,21 @@ const (
 )
 
 type lineFormat []sectionType
+
+func (lf lineFormat) string() string {
+	s := ""
+	for _, v := range lf {
+		switch v {
+		case stringT:
+			s += "s"
+		case floatOrStringT:
+			s += "f"
+		case separatorT:
+			s += ","
+		}
+	}
+	return s
+}
 
 func parseLine(s string, sep rune) lineFormat {
 	lf := lineFormat{emptyT}
