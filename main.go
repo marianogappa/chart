@@ -9,8 +9,8 @@ import (
 )
 
 func main() {
-
 	o := mustResolveOptions(os.Args[1:])
+	i := mustReadInput(os.Stdin)
 
 	// defer func() { time.Sleep(5 * time.Second); os.Remove(tmpfile.Name()) }()
 
@@ -18,9 +18,9 @@ func main() {
 	var err error
 	switch o.chartType {
 	case pie:
-		finalString, err = setupPie(o.title, len(o.title) > 0, rune(o.separator[0]), o.invert)
+		finalString, err = setupPie(i, o.title, len(o.title) > 0, rune(o.separator[0]), o.invert)
 	case bar:
-		finalString, err = setupBar(o.title, len(o.title) > 0, rune(o.separator[0]), o.scaleType, o.invert)
+		finalString, err = setupBar(i, o.title, len(o.title) > 0, rune(o.separator[0]), o.scaleType, o.invert)
 	}
 	if err != nil {
 		log.Fatal(err)

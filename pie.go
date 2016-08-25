@@ -5,7 +5,6 @@ import (
 	"encoding/csv"
 	"io"
 	"log"
-	"os"
 	"strconv"
 	"strings"
 	"text/template"
@@ -59,8 +58,10 @@ func init() {
 	}
 }
 
-func setupPie(title string, displayTitle bool, separator rune, invert bool) (string, error) {
-	r := csv.NewReader(os.Stdin)
+func setupPie(input []string, title string, displayTitle bool, separator rune, invert bool) (string, error) {
+	i := strings.Join(input, "\n")
+
+	r := csv.NewReader(strings.NewReader(i))
 	r.Comma = separator
 	r.Comment = '#'
 
