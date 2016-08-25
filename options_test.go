@@ -161,6 +161,30 @@ func TestResolveOptions(t *testing.T) {
 				chartType: bar,
 			},
 		},
+		{
+			args: []string{"-type"},
+			fails: true,
+		},
+		{
+			args: []string{"-y"},
+			fails: true,
+		},
+		{
+			args: []string{"-t"},
+			fails: true,
+		},
+		{
+			args: []string{"-title"},
+			fails: true,
+		},
+		{
+			args: []string{"-separator"},
+			fails: true,
+		},
+		{
+			args: []string{"-s"},
+			fails: true,
+		},
 	}
 
 	for _, ts := range tests {
