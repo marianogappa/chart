@@ -74,7 +74,7 @@ func parseLineFormat(s string, sep rune) string {
 				lf += "f"
 			} else if c == sep && sep != ' ' {
 				lf += "f,"
-			} else if sep != ' ' {
+			} else if c != sep {
 				lf += "s"
 			}
 		}
@@ -120,10 +120,10 @@ func parseLine(l string, lf string, sep rune) ([]float64, []string, error) {
 		}
 		switch lf[lfi] {
 		case 'f':
-			if isFloat(lv) || lv == ' ' {
+			if isFloat(lv) || (lv == ' ' && sep != ' ') {
 				pf += string(lv)
 			}
-			if (!isFloat(lv) && lv != ' ') || li == len(l)-1 {
+			if !(isFloat(lv) || (lv == ' ' && sep != ' ')) || li == len(l)-1 {
 				if len(pf) == 0 {
 					return fs, ss, fmt.Errorf("Parse error; expecting float but got [%v]", string(lv))
 				}
@@ -150,7 +150,7 @@ func parseLine(l string, lf string, sep rune) ([]float64, []string, error) {
 				li--
 			}
 		case ',':
-			if lv == sep || lv == ' ' {
+			if lv == sep {
 				lfi++
 			} else {
 				return fs, ss, fmt.Errorf("Parse error; expecting [%v], but found [%v]", string(sep), string(lv))
