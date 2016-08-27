@@ -86,7 +86,7 @@ func setupBar(fss [][]float64, sss [][]string, title string, displayTitle bool, 
 		if len(ss) == 0 {
 			break //TODO this probably shouldn't happen
 		}
-		ls = append(ls, `"`+ss[0]+`"`)
+		ls = append(ls, "`"+ss[0]+"`")
 	}
 
 	stringData := strings.Join(ds, ",")

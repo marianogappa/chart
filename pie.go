@@ -75,7 +75,7 @@ func setupPie(fss [][]float64, sss [][]string, title string, displayTitle bool) 
 			noLabels = true //TODO this probably shouldn't happen
 			break
 		}
-		ls = append(ls, `"`+ss[0]+`"`)
+		ls = append(ls, "`"+ss[0]+"`")
 	}
 
 	stringData := strings.Join(ds, ",")
