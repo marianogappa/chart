@@ -10,73 +10,73 @@ func TestParseLine(t *testing.T) {
 		name string
 		s     string
 		sep rune
-		expected lineFormat
+		expected string
 	}{
 		{
 			name: "empty case",
 			s: "",
 			sep: '\t',
-			expected: lineFormat{emptyT},
+			expected: " ",
 		},
 		{
 			name: "basic tab",
 			s: "1\t2\t3",
 			sep: '\t',
-			expected: lineFormat{floatOrStringT, separatorT, floatOrStringT, separatorT, floatOrStringT},
+			expected: "f,f,f",
 		},
 		{
 			name: "basic space",
 			s: "1 2 3",
 			sep: ' ',
-			expected: lineFormat{floatOrStringT, separatorT, floatOrStringT, separatorT, floatOrStringT},
+			expected: "f,f,f",
 		},
 		{
 			name: "basic comma",
 			s: "1,2,3",
 			sep: ',',
-			expected: lineFormat{floatOrStringT, separatorT, floatOrStringT, separatorT, floatOrStringT},
+			expected: "f,f,f",
 		},
 		{
 			name: "basic semicolon",
 			s: "1;2;3",
 			sep: ';',
-			expected: lineFormat{floatOrStringT, separatorT, floatOrStringT, separatorT, floatOrStringT},
+			expected: "f,f,f",
 		},
 		{
 			name: "space with extras before, in between and after",
 			s: "  1   2  3  ",
 			sep: ' ',
-			expected: lineFormat{floatOrStringT, separatorT, floatOrStringT, separatorT, floatOrStringT},
+			expected: "f,f,f",
 		},
 		{
 			name: "commas with complete floating numbers",
 			s: "-1,2.0e3,-3.239847E-1",
 			sep: ',',
-			expected: lineFormat{floatOrStringT, separatorT, floatOrStringT, separatorT, floatOrStringT},
+			expected: "f,f,f",
 		},
 		{
 			name: "subsequent commas",
 			s: ",,",
 			sep: ',',
-			expected: lineFormat{floatOrStringT, separatorT, floatOrStringT, separatorT, floatOrStringT},
+			expected: "f,f,f",
 		},
 		{
 			name: "string and float",
 			s: "a,1",
 			sep: ',',
-			expected: lineFormat{stringT, separatorT, floatOrStringT},
+			expected: "s,f",
 		},
 		{
 			name: "float and string",
 			s: "1,a",
 			sep: ',',
-			expected: lineFormat{floatOrStringT, separatorT, stringT},
+			expected: "f,s",
 		},
 		{
 			name: "float and string; ignore other separators",
 			s: "1,a;b c\td",
 			sep: ',',
-			expected: lineFormat{floatOrStringT, separatorT, stringT},
+			expected: "f,s",
 		},
 	}
 

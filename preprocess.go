@@ -7,7 +7,7 @@ func preprocess(i []string, o options) ([]string, options) {
 func parseFormat(i []string, sep rune) string {
 	lfs := make(map[string]int)
 	for _, l := range i {
-		lfs[parseLine(l, sep).string()] += 1
+		lfs[parseLine(l, sep)] += 1
 	}
 	return maxLineFormat(lfs)
 }
@@ -24,68 +24,42 @@ func maxLineFormat(lfs map[string]int) string {
 	return lf
 }
 
-type sectionType int
-const (
-	emptyT sectionType = iota
-	stringT
-	floatOrStringT
-	separatorT
-)
-
-type lineFormat []sectionType
-
-func (lf lineFormat) string() string {
-	s := ""
-	for _, v := range lf {
-		switch v {
-		case stringT:
-			s += "s"
-		case floatOrStringT:
-			s += "f"
-		case separatorT:
-			s += ","
-		}
-	}
-	return s
-}
-
-func parseLine(s string, sep rune) lineFormat {
-	lf := lineFormat{emptyT}
+func parseLine(s string, sep rune) string {
+	lf := " "
 	for _, c := range s {
 		switch lf[len(lf)-1] {
-		case emptyT:
+		case ' ':
 			if isFloatStart(c) {
-				lf[len(lf)-1] = floatOrStringT
+				lf = "f"
 			} else if c == sep && sep != ' ' {
-				lf[len(lf)-1] = floatOrStringT
-				lf = append(lf, separatorT)
+				lf = "f,"
 			} else if !(c == sep) {
-				lf[len(lf)-1] = stringT
+				lf = "s"
 			}
-		case stringT:
+		case 's':
 			if c == sep {
-				lf = append(lf, separatorT)
+				lf += ","
 			}
-		case floatOrStringT:
+		case 'f':
 			if c == sep {
-				lf = append(lf, separatorT)
+				lf += ","
 			} else if !isFloat(c) && !(c == sep) {
-				lf[len(lf)-1] = stringT
+				lf = lf[:len(lf)-1] + "s"
 			}
-		case separatorT:
+		case ',':
 			if isFloatStart(c) {
-				lf = append(lf, floatOrStringT)
+				lf += "f"
 			} else if c == sep && sep != ' ' {
-				lf = append(lf, floatOrStringT, separatorT)
+				lf += "f,"
 			} else if sep != ' ' {
-				lf = append(lf, stringT)
+				lf += "s"
 			}
 		}
 	}
-	if sep == ' ' && lf[len(lf)-1] == separatorT {
+	if sep == ' ' && lf[len(lf)-1] == ',' {
 		return lf[:len(lf)-1]
-	} else if lf[len(lf)-1] == separatorT {
-		return append(lf, floatOrStringT)
+	} else if lf[len(lf)-1] == ',' {
+		return lf + "f"
 	}
 	return lf
 }
