@@ -59,8 +59,6 @@ func init() {
 
 func setupPie(fss [][]float64, sss [][]string, title string, displayTitle bool) (string, error) {
 
-	fmt.Println(fss, sss)
-
 	var ds []string
 	for _, fs := range fss {
 		if len(fs) == 0 {
