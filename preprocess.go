@@ -6,18 +6,30 @@ import (
 	"strings"
 )
 
-func preprocess(i []string, o options) ([]string, options) {
-	//var floats [][]float64
-	//var strings [][]string
+func preprocess(i []string, o options) ([][]float64, [][]string, options) {
+	var fss [][]float64
+	var sss [][]string
 
-	_ = parseFormat(i, rune(o.separator[0]))
+	sep := rune(o.separator[0])
+	lf := parseFormat(i, sep)
+	for _, l := range i {
+		fs, ss, err := parseLine(l, lf, sep)
+		if err != nil {
+			break
+		}
+		fss = append(fss, fs)
+		sss = append(sss, ss)
+	}
 
-	return i, o
+	return fss, sss, o
 }
 
 func parseFormat(i []string, sep rune) string {
 	lfs := make(map[string]int)
 	for _, l := range i {
+		if len(strings.TrimSpace(l)) == 0 {
+			continue
+		}
 		lfs[parseLineFormat(l, sep)] += 1
 	}
 	return maxLineFormat(lfs)

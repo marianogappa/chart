@@ -2,8 +2,7 @@ package main
 
 import (
 	"bytes"
-	"encoding/csv"
-	"io"
+	"fmt"
 	"log"
 	"strconv"
 	"strings"
@@ -72,64 +71,26 @@ func init() {
 	}
 }
 
-func setupBar(input []string, title string, displayTitle bool, separator rune, scaleType scaleType, invert bool) (string, error) {
-	i := strings.Join(input, "\n")
-
-	r := csv.NewReader(strings.NewReader(i))
-	r.Comma = separator
-	r.Comment = '#'
-	r.TrimLeadingSpace = true
-
-	var labels []string
-	var data []float64
-	var d, tooltipTemplate string
-	var noLabels bool
-
-	for {
-		var fS, s string
-		record, err := r.Read()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			break
-		}
-		if len(record) == 0 {
-			break
-		}
-		if len(record) == 1 {
-			fS = record[0]
-			s = ""
-			noLabels = true
-		}
-		if len(record) >= 2 {
-			if invert {
-				s = record[1]
-				fS = record[0]
-			} else {
-				s = record[0]
-				fS = record[1]
-			}
-		}
-		f, err := strconv.ParseFloat(fS, 64)
-		if err != nil {
-			log.Printf("Ignoring this as it's not a number: [%v]", d)
-			continue
-		}
-		data = append(data, f)
-		if !noLabels {
-			labels = append(labels, `"`+s+`"`)
-		}
-	}
+func setupBar(fss [][]float64, sss [][]string, title string, displayTitle bool, scaleType scaleType) (string, error) {
 
 	var ds []string
-	for _, v := range data {
-		ds = append(ds, strconv.FormatFloat(v, 'f', -1, 64))
+	for _, fs := range fss {
+		if len(fs) == 0 {
+			return "", fmt.Errorf("Couldn't find values to plot.") //TODO this probably shouldn't happen
+		}
+		ds = append(ds, strconv.FormatFloat(fs[0], 'f', -1, 64))
 	}
-	stringData := strings.Join(ds, ",")
-	stringLabels := strings.Join(labels, ",")
 
-	tooltipTemplate = `value`
+	var ls []string
+	for _, ss := range sss {
+		if len(ss) == 0 {
+			break //TODO this probably shouldn't happen
+		}
+		ls = append(ls, `"`+ss[0]+`"`)
+	}
+
+	stringData := strings.Join(ds, ",")
+	stringLabels := strings.Join(ls, ",")
 
 	templateData := barTemplateData{
 		ChartType:       "bar",
@@ -138,7 +99,7 @@ func setupBar(input []string, title string, displayTitle bool, separator rune, s
 		Title:           title,
 		DisplayTitle:    displayTitle,
 		Colors:          colorFirstN(len(stringData)),
-		TooltipTemplate: tooltipTemplate,
+		TooltipTemplate: `value`,
 		ScaleType:       scaleType.string(),
 	}
 

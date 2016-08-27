@@ -11,17 +11,17 @@ import (
 func main() {
 	o := mustResolveOptions(os.Args[1:])
 	i := mustReadInput(os.Stdin)
-	i, o = preprocess(i, o)
+	fss, sss, o := preprocess(i, o)
 
 	// defer func() { time.Sleep(5 * time.Second); os.Remove(tmpfile.Name()) }()
 
-	var finalString string
+	var html string
 	var err error
 	switch o.chartType {
 	case pie:
-		finalString, err = setupPie(i, o.title, len(o.title) > 0, rune(o.separator[0]), o.invert)
+		html, err = setupPie(fss, sss, o.title, len(o.title) > 0)
 	case bar:
-		finalString, err = setupBar(i, o.title, len(o.title) > 0, rune(o.separator[0]), o.scaleType, o.invert)
+		html, err = setupBar(fss, sss, o.title, len(o.title) > 0, o.scaleType)
 	}
 	if err != nil {
 		log.Fatal(err)
@@ -32,7 +32,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err = baseTemplate.Execute(tmpfile, finalString); err != nil {
+	if err = baseTemplate.Execute(tmpfile, html); err != nil {
 		log.Fatal(err)
 	}
 	if err = tmpfile.Close(); err != nil {
