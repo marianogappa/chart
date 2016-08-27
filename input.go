@@ -1,9 +1,10 @@
 package main
 
 import (
-	"io"
 	"bufio"
+	"io"
 	"log"
+	"strings"
 )
 
 func mustReadInput(r io.Reader) []string {
@@ -27,6 +28,10 @@ func readInput(r io.Reader) ([]string, error) {
 		if err != nil {
 			return ls, err
 		}
-		ls = append(ls, s)
+		s = strings.TrimSpace(s)
+		if len(s) == 0 {
+			continue
+		}
+		ls = append(ls, strings.TrimSpace(s))
 	}
 }
