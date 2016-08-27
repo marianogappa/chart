@@ -21,7 +21,6 @@ type options struct {
 	title     string
 	separator string
 	scaleType scaleType
-	invert    bool
 	chartType chartType
 }
 
@@ -29,7 +28,6 @@ var defaultOptions = options{
 	title:     "",
 	separator: "\t",
 	scaleType: linear,
-	invert:    false,
 	chartType: pie,
 }
 
@@ -46,7 +44,6 @@ func resolveOptions(args []string) (options, error) {
 	separatorHelp := "Sets the separator for each row's fields; can be ' ', '\\t', ';', ','; default \\t."
 	logarithmicHelp := "Sets logarithmic scale for the y-axis."
 	chartTypeHelp := "Sets the chart type; default is 'pie'; can be pie/bar."
-	invertHelp := "Expects each row to have '%value%   %label%' rather than the inverse (default)."
 
 	o := defaultOptions
 
@@ -60,8 +57,6 @@ func resolveOptions(args []string) (options, error) {
 	fs.StringVar(&o.separator, "s", o.separator, separatorHelp)
 	fs.BoolVar(&log, "log", o.scaleType.isLogarithmic(), logarithmicHelp)
 	fs.BoolVar(&log, "l", o.scaleType.isLogarithmic(), logarithmicHelp)
-	fs.BoolVar(&o.invert, "invert", o.invert, invertHelp)
-	fs.BoolVar(&o.invert, "i", o.invert, invertHelp)
 	fs.StringVar(&chartType, "type", o.chartType.string(), chartTypeHelp)
 	fs.StringVar(&chartType, "y", o.chartType.string(), chartTypeHelp)
 
@@ -85,8 +80,6 @@ func resolveOptions(args []string) (options, error) {
 			o.scaleType = logarithmic
 		case "bar":
 			o.chartType = bar
-		case "invert":
-			o.invert = true
 		case ",":
 			o.separator = ","
 		case ";":
@@ -127,15 +120,6 @@ func (c scaleType) string() string {
 		return "logarithmic"
 	}
 	return "linear"
-}
-
-func isInSlice(s string, ss []string) bool {
-	for _, v := range ss {
-		if v == s {
-			return true
-		}
-	}
-	return false
 }
 
 // flag package doesn't read flags if first argument is not a flag :(
