@@ -100,7 +100,7 @@ func setupPie(fss [][]float64, sss [][]string, title string, displayTitle bool) 
 
 	var b bytes.Buffer
 	if err := pieTemplate.Execute(&b, templateData); err != nil {
-		log.Fatal(err)
+		return "", err
 	}
 
 	return b.String(), nil
