@@ -10,7 +10,7 @@ import (
 
 func main() {
 	o := mustResolveOptions(os.Args[1:])
-	i := mustReadInput(os.Stdin)
+	i := readInput(os.Stdin)
 	fss, sss, o := preprocess(i, o)
 
 	// defer func() { time.Sleep(5 * time.Second); os.Remove(tmpfile.Name()) }()
