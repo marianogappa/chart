@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"log"
 	"strconv"
@@ -71,12 +70,12 @@ func init() {
 	}
 }
 
-func setupBar(fss [][]float64, sss [][]string, title string, scaleType scaleType) (string, error) {
+func setupBar(fss [][]float64, sss [][]string, title string, scaleType scaleType) (interface{}, *template.Template, error) {
 
 	var ds []string
 	for _, fs := range fss {
 		if len(fs) == 0 {
-			return "", fmt.Errorf("Couldn't find values to plot.") //TODO this probably shouldn't happen
+			return nil, nil, fmt.Errorf("Couldn't find values to plot.") //TODO this probably shouldn't happen
 		}
 		ds = append(ds, strconv.FormatFloat(fs[0], 'f', -1, 64))
 	}
@@ -103,10 +102,5 @@ func setupBar(fss [][]float64, sss [][]string, title string, scaleType scaleType
 		ScaleType:       scaleType.string(),
 	}
 
-	var b bytes.Buffer
-	if err := barTemplate.Execute(&b, templateData); err != nil {
-		return "", err
-	}
-
-	return b.String(), nil
+	return templateData, barTemplate, nil
 }

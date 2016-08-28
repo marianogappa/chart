@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"io/ioutil"
 	"log"
 	"os"
+	"text/template"
 
 	"github.com/skratchdot/open-golang/open"
 )
@@ -15,28 +17,34 @@ func main() {
 
 	// defer func() { time.Sleep(5 * time.Second); os.Remove(tmpfile.Name()) }()
 
-	var html string
 	var err error
+	var templ *template.Template
+	var templData interface{}
+
 	switch o.chartType {
 	case pie:
-		html, err = setupPie(fss, sss, o.title)
+		templData, templ, err = setupPie(fss, sss, o.title)
 	case bar:
-		html, err = setupBar(fss, sss, o.title, o.scaleType)
+		templData, templ, err = setupBar(fss, sss, o.title, o.scaleType)
 	}
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Could not construct chart because [%v]", err)
+	}
+	var b bytes.Buffer
+	if err := templ.Execute(&b, templData); err != nil {
+		log.Fatalf("Could not prepare ChartJS js code for chart: [%v]", err)
 	}
 
 	tmpfile, err := ioutil.TempFile("", "chartData")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Could not create temporary file to store the chart: [%v]", err)
 	}
 
-	if err = baseTemplate.Execute(tmpfile, html); err != nil {
-		log.Fatal(err)
+	if err = baseTemplate.Execute(tmpfile, b.String()); err != nil {
+		log.Fatalf("Could not write chart to temporary file: [%v]", err)
 	}
 	if err = tmpfile.Close(); err != nil {
-		log.Fatal(err)
+		log.Fatalf("Could not close temporary file after saving chart to it: [%v]", err)
 	}
 
 	open.Run("file://" + tmpfile.Name())
