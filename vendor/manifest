@@ -1,0 +1,14 @@
+{
+	"version": 0,
+	"dependencies": [
+		{
+			"importpath": "github.com/skratchdot/open-golang/open",
+			"repository": "https://github.com/skratchdot/open-golang",
+			"vcs": "git",
+			"revision": "75fb7ed4208cf72d323d7d02fd1a5964a7a9073c",
+			"branch": "master",
+			"path": "/open",
+			"notests": true
+		}
+	]
+}
