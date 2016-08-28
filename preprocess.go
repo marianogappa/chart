@@ -148,7 +148,7 @@ func parseLine(l string, lf string, sep rune) ([]float64, []string, error) {
 				if len(ps) == 0 {
 					return fs, ss, fmt.Errorf("Parse error; expecting string but got [%v]", string(lv))
 				}
-				ss = append(ss, escapeString(ps))
+				ss = append(ss, strings.TrimSpace(ps))
 				ps = ""
 				lfi++
 				li--
@@ -166,14 +166,4 @@ func parseLine(l string, lf string, sep rune) ([]float64, []string, error) {
 		return fs, ss, fmt.Errorf("Parse error; unfinished line [%v] according to format [%v]", l, lf)
 	}
 	return fs, ss, nil
-}
-
-func escapeString(s string) string {
-	if string(s[len(s)-1]) == "\\" {
-		s += `\`
-	}
-	s = strings.TrimSpace(s)
-	s = strings.Replace(s, `${`, `\${`, -1)
-	s = strings.Replace(s, "`", "\\`", -1)
-	return s
 }
