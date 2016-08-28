@@ -57,7 +57,7 @@ func init() {
 	}
 }
 
-func setupPie(fss [][]float64, sss [][]string, title string, displayTitle bool) (string, error) {
+func setupPie(fss [][]float64, sss [][]string, title string) (string, error) {
 
 	var ds []string
 	for _, fs := range fss {
@@ -93,7 +93,7 @@ func setupPie(fss [][]float64, sss [][]string, title string, displayTitle bool) 
 		Data:            stringData,
 		Labels:          stringLabels,
 		Title:           title,
-		DisplayTitle:    displayTitle,
+		DisplayTitle:    len(title) > 0,
 		Colors:          colorFirstN(len(stringData)),
 		TooltipTemplate: tooltipTemplate,
 	}

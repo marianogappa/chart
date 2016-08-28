@@ -19,9 +19,9 @@ func main() {
 	var err error
 	switch o.chartType {
 	case pie:
-		html, err = setupPie(fss, sss, o.title, len(o.title) > 0)
+		html, err = setupPie(fss, sss, o.title)
 	case bar:
-		html, err = setupBar(fss, sss, o.title, len(o.title) > 0, o.scaleType)
+		html, err = setupBar(fss, sss, o.title, o.scaleType)
 	}
 	if err != nil {
 		log.Fatal(err)

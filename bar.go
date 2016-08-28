@@ -71,7 +71,7 @@ func init() {
 	}
 }
 
-func setupBar(fss [][]float64, sss [][]string, title string, displayTitle bool, scaleType scaleType) (string, error) {
+func setupBar(fss [][]float64, sss [][]string, title string, scaleType scaleType) (string, error) {
 
 	var ds []string
 	for _, fs := range fss {
@@ -97,7 +97,7 @@ func setupBar(fss [][]float64, sss [][]string, title string, displayTitle bool, 
 		Data:            stringData,
 		Labels:          stringLabels,
 		Title:           title,
-		DisplayTitle:    displayTitle,
+		DisplayTitle:    len(title) > 0,
 		Colors:          colorFirstN(len(stringData)),
 		TooltipTemplate: `value`,
 		ScaleType:       scaleType.string(),
