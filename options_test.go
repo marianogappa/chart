@@ -39,117 +39,11 @@ func TestResolveOptions(t *testing.T) {
 			},
 		},
 		{
-			args: []string{"-separator", "\t"},
-			expected: options{
-				title:     "",
-				separator: "\t",
-				scaleType: linear,
-				chartType: pie,
-			},
-		},
-		{
-			args: []string{"-separator", " "},
-			expected: options{
-				title:     "",
-				separator: " ",
-				scaleType: linear,
-				chartType: pie,
-			},
-		},
-		{
-			args: []string{"-s", " "},
-			expected: options{
-				title:     "",
-				separator: " ",
-				scaleType: linear,
-				chartType: pie,
-			},
-		},
-		{
-			args: []string{"-separator", ";"},
-			expected: options{
-				title:     "",
-				separator: ";",
-				scaleType: linear,
-				chartType: pie,
-			},
-		},
-		{
-			args: []string{"-separator", ","},
-			expected: options{
-				title:     "",
-				separator: ",",
-				scaleType: linear,
-				chartType: pie,
-			},
-		},
-		{
-			args: []string{"-separator", "invalid"},
-			expected: options{
-				title:     "",
-				separator: "\t",
-				scaleType: linear,
-				chartType: pie,
-			},
-		},
-		{
-			args: []string{"-l"},
-			expected: options{
-				title:     "",
-				separator: "\t",
-				scaleType: logarithmic,
-				chartType: pie,
-			},
-		},
-		{
-			args: []string{"-log"},
-			expected: options{
-				title:     "",
-				separator: "\t",
-				scaleType: logarithmic,
-				chartType: pie,
-			},
-		},
-		{
-			args: []string{"-y", "bar"},
-			expected: options{
-				title:     "",
-				separator: "\t",
-				scaleType: linear,
-				chartType: bar,
-			},
-		},
-		{
-			args: []string{"-type", "bar"},
-			expected: options{
-				title:     "",
-				separator: "\t",
-				scaleType: linear,
-				chartType: bar,
-			},
-		},
-		{
-			args:  []string{"-type"},
-			fails: true,
-		},
-		{
-			args:  []string{"-y"},
-			fails: true,
-		},
-		{
 			args:  []string{"-t"},
 			fails: true,
 		},
 		{
 			args:  []string{"-title"},
-			fails: true,
-		},
-		{
-			args:  []string{"-separator"},
-			fails: true,
-		},
-		{
-			args:  []string{"-s"},
 			fails: true,
 		},
 		{
