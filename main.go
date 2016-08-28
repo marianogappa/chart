@@ -15,8 +15,6 @@ func main() {
 	i := readInput(os.Stdin)
 	fss, sss, o := preprocess(i, o)
 
-	// defer func() { time.Sleep(5 * time.Second); os.Remove(tmpfile.Name()) }()
-
 	var err error
 	var templ *template.Template
 	var templData interface{}
@@ -39,6 +37,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("Could not create temporary file to store the chart: [%v]", err)
 	}
+
+	// TODO is it worth to introduce delay and race condition to delete a temp file?
+	// defer func() { time.Sleep(5 * time.Second); os.Remove(tmpfile.Name()) }()
 
 	if err = baseTemplate.Execute(tmpfile, b.String()); err != nil {
 		log.Fatalf("Could not write chart to temporary file: [%v]", err)
