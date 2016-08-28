@@ -9,7 +9,8 @@ type chartType int
 type scaleType int
 
 const (
-	pie chartType = iota
+	undefinedChartType chartType = iota
+	pie
 	bar
 )
 const (
@@ -19,16 +20,9 @@ const (
 
 type options struct {
 	title     string
-	separator string
+	separator rune
 	scaleType scaleType
 	chartType chartType
-}
-
-var defaultOptions = options{
-	title:     "",
-	separator: "\t",
-	scaleType: linear,
-	chartType: pie,
 }
 
 func mustResolveOptions(args []string) options {
@@ -42,7 +36,7 @@ func mustResolveOptions(args []string) options {
 func resolveOptions(args []string) (options, error) {
 	titleHelp := "Sets the title for the chart."
 
-	o := defaultOptions
+	o := options{}
 
 	fs := flag.NewFlagSet("params", flag.ContinueOnError)
 	fs.StringVar(&o.title, "title", o.title, titleHelp)
@@ -53,10 +47,6 @@ func resolveOptions(args []string) (options, error) {
 		return o, err
 	}
 
-	if o.separator != " " && o.separator != ";" && o.separator != "," && o.separator != "\t" {
-		o.separator = defaultOptions.separator
-	}
-
 	hints := fs.Args()
 	hints = append(hints, untilFirstDash(args)...)
 	for _, h := range hints {
@@ -65,13 +55,19 @@ func resolveOptions(args []string) (options, error) {
 			o.scaleType = logarithmic
 		case "bar":
 			o.chartType = bar
+		case "pie":
+			o.chartType = pie
 		case ",":
-			o.separator = ","
+			o.separator = ','
 		case ";":
-			o.separator = ";"
+			o.separator = ';'
 		case " ":
-			o.separator = " "
+			o.separator = ' '
 		}
+	}
+
+	if o.separator != ' ' && o.separator != ';' && o.separator != ',' {
+		o.separator = '\t'
 	}
 
 	return o, nil

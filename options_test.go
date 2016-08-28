@@ -15,27 +15,27 @@ func TestResolveOptions(t *testing.T) {
 			args: []string{},
 			expected: options{
 				title:     "",
-				separator: "\t",
+				separator: '\t',
 				scaleType: linear,
-				chartType: pie,
+				chartType: undefinedChartType,
 			},
 		},
 		{
 			args: []string{"-t", "title"},
 			expected: options{
 				title:     "title",
-				separator: "\t",
+				separator: '\t',
 				scaleType: linear,
-				chartType: pie,
+				chartType: undefinedChartType,
 			},
 		},
 		{
 			args: []string{"-title", "title"},
 			expected: options{
 				title:     "title",
-				separator: "\t",
+				separator: '\t',
 				scaleType: linear,
-				chartType: pie,
+				chartType: undefinedChartType,
 			},
 		},
 		{
@@ -50,7 +50,7 @@ func TestResolveOptions(t *testing.T) {
 			args: []string{"bar", "log", "invert", ","},
 			expected: options{
 				title:     "",
-				separator: ",",
+				separator: ',',
 				scaleType: logarithmic,
 				chartType: bar,
 			},
@@ -59,7 +59,7 @@ func TestResolveOptions(t *testing.T) {
 			args: []string{"bar", ";"},
 			expected: options{
 				title:     "",
-				separator: ";",
+				separator: ';',
 				scaleType: linear,
 				chartType: bar,
 			},
@@ -68,7 +68,16 @@ func TestResolveOptions(t *testing.T) {
 			args: []string{" "},
 			expected: options{
 				title:     "",
-				separator: " ",
+				separator: ' ',
+				scaleType: linear,
+				chartType: undefinedChartType,
+			},
+		},
+		{
+			args: []string{" ", "pie"},
+			expected: options{
+				title:     "",
+				separator: ' ',
 				scaleType: linear,
 				chartType: pie,
 			},

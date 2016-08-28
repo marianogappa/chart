@@ -14,7 +14,7 @@ curl -u $USER:$ACCESS_TOKEN -s "https://api.github.com/user/repos" | \
     jq -r 'map(.languages_url) | .[]' | xargs curl -s -u $USER:$ACCESS_TOKEN | \
     jq -r '. as $in| keys[] | [.+ " "]+[$in[.] | tostring] | add' | \
     awk '{arr[$1]+=$2} END {for (i in arr) {print i,arr[i]}}' | \
-    awk '{print $2, $1}' | sort -nr | ./chart ' ' bar
+    awk '{print $2 "\t" $1}' | sort -nr | ./chart bar
 ```
 
 Pie chart of the most used terminal commands
