@@ -24,11 +24,15 @@ chart [pie|bar|log|' '|';'|','|'\t'|-t %title%|--title %title%]
 make && history | awk '{print $2}' | chart
 ```
 
+![Pie chart of your most used terminal commands](img/pie.png?v=1)
+
 - Bar chart of today's currency value against USD, in logarithmic scale
 ```
 curl -s http://api.fixer.io/latest?base=USD | jq -r ".rates | to_entries| \
     map(\"\(.key)\t\(.value|tostring)\")|.[]" | chart bar log -t "Currency value against USD"
 ```
+
+![Bar chart of today's currency value against USD, in logarithmic scale](img/bar-log.png?v=1)
 
 - Bar chart of a Github user's lines of code per language (requires setting up an Access Token)
 ```
@@ -40,6 +44,8 @@ curl -u $USER:$ACCESS_TOKEN -s "https://api.github.com/user/repos" | \
     awk '{arr[$1]+=$2} END {for (i in arr) {print i,arr[i]}}' | \
     awk '{print $2 "\t" $1}' | sort -nr | chart bar
 ```
+
+![Bar chart of a Github user's lines of code per language (requires setting up an Access Token)](img/bar.png?v=1)
 
 - MySQL query output charting
 
