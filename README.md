@@ -53,9 +53,9 @@ TODO
 
 ## Details
 
-- `chart` infers STDIN format by analysing line format on each line (doesn't infer separator though; defaults to `\t` and accepts user overrides) and computing the winner format.
 - `chart` is still experimental.
-- `chart` uses the awesome [ChartJS](http://www.chartjs.org/) library to plot the charts.
+- it infers STDIN format by analysing line format on each line (doesn't infer separator though; defaults to `\t` and accepts user overrides) and computing the winner format.
+- it uses the awesome [ChartJS](http://www.chartjs.org/) library to plot the charts.
 - when input data is string-only, `chart` infers a "word frequency pie chart" use case.
 - should work on Linux/Mac/Windows thanks to [open-golang](https://github.com/skratchdot/open-golang).
 
