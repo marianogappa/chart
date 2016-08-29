@@ -21,7 +21,7 @@ chart [pie|bar|log|' '|';'|','|'\t'|-t %title%|--title %title%]
 
 - Pie chart of your most used terminal commands
 ```
-make && history | awk '{print $2}' | chart
+history | awk '{print $2}' | chart
 ```
 
 ![Pie chart of your most used terminal commands](img/pie.png?v=1)
