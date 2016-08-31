@@ -7,58 +7,62 @@ import (
 func preprocessFreq(isss [][]string) ([][]float64, [][]string) {
 	fss := [][]float64{}
 	sss := [][]string{}
-	fqs := make(map[string]int)
+
+	is := make(map[string]int)
+	fqs := freqs{}
 	for _, ss := range isss {
 		if len(ss) == 0 {
 			break //TODO this probably shouldn't happen
 		}
-		fqs[ss[0]] = fqs[ss[0]] + 1
+		if _, ok := is[ss[0]]; !ok {
+			is[ss[0]] = len(fqs.fs)
+			fqs.fs = append(fqs.fs, freq{s: ss[0], f: 1})
+		} else {
+			fqs.fs[is[ss[0]]].f++
+		}
 	}
 
-	keys := sortedKeys(fqs)
-	topN := make(map[string]int)
+	sort.Sort(fqs)
 
 	for i := 0; i < 9; i++ {
-		if i >= len(keys) {
+		if i >= len(fqs.fs) {
 			break
 		}
-		topN[keys[i]] = fqs[keys[i]]
+		fss = append(fss, []float64{fqs.fs[i].f})
+		sss = append(sss, []string{fqs.fs[i].s})
 	}
 
-	if len(keys) > 10 {
-		sum := 0
-		for i := 9; i < len(keys); i++ {
-			sum += fqs[keys[i]]
+	if len(fqs.fs) > 10 {
+		sum := float64(0)
+		for i := 9; i < len(fqs.fs); i++ {
+			sum += fqs.fs[i].f
 		}
-		topN["Other"] = sum
-	}
-
-	for s, f := range topN {
-		fss = append(fss, []float64{float64(f)})
-		sss = append(sss, []string{s})
+		fss = append(fss, []float64{sum})
+		sss = append(sss, []string{"Other"})
+	} else if len(fqs.fs) == 10 {
+		fss = append(fss, []float64{fqs.fs[9].f})
+		sss = append(sss, []string{fqs.fs[9].s})
 	}
 
 	return fss, sss
 }
 
-type sortedMap struct {
-	m map[string]int
-	s []string
+type freq struct {
+	s string
+	f float64
 }
 
-func (sm *sortedMap) Len() int           { return len(sm.m) }
-func (sm *sortedMap) Less(i, j int) bool { return sm.m[sm.s[i]] > sm.m[sm.s[j]] }
-func (sm *sortedMap) Swap(i, j int)      { sm.s[i], sm.s[j] = sm.s[j], sm.s[i] }
+type freqs struct {
+	fs []freq
+}
 
-func sortedKeys(m map[string]int) []string {
-	sm := new(sortedMap)
-	sm.m = m
-	sm.s = make([]string, len(m))
-	i := 0
-	for key := range m {
-		sm.s[i] = key
-		i++
+func (f freqs) Len() int      { return len(f.fs) }
+func (f freqs) Swap(i, j int) { f.fs[i], f.fs[j] = f.fs[j], f.fs[i] }
+
+func (f freqs) Less(i, j int) bool {
+	if f.fs[i].f == f.fs[j].f {
+		return i < j
+	} else {
+		return f.fs[i].f > f.fs[j].f
 	}
-	sort.Sort(sm)
-	return sm.s
 }
