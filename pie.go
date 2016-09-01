@@ -57,6 +57,9 @@ func init() {
 }
 
 func setupPie(fss [][]float64, sss [][]string, title string) (interface{}, *template.Template, error) {
+	if len(fss) == 0 || len(sss) == 0 {
+		return nil, nil, fmt.Errorf("Couldn't find values to plot.") //TODO this probably shouldn't happen
+	}
 
 	var ds []string
 	for _, fs := range fss {
@@ -93,7 +96,7 @@ func setupPie(fss [][]float64, sss [][]string, title string) (interface{}, *temp
 		Labels:          stringLabels,
 		Title:           title,
 		DisplayTitle:    len(title) > 0,
-		Colors:          colorFirstN(len(stringData)),
+		Colors:          colorFirstN(len(ds)),
 		TooltipTemplate: tooltipTemplate,
 	}
 

@@ -71,6 +71,9 @@ func init() {
 }
 
 func setupBar(fss [][]float64, sss [][]string, title string, scaleType scaleType) (interface{}, *template.Template, error) {
+	if len(fss) == 0 || len(sss) == 0 {
+		return nil, nil, fmt.Errorf("Couldn't find values to plot.")
+	}
 
 	var ds []string
 	for _, fs := range fss {
@@ -97,7 +100,7 @@ func setupBar(fss [][]float64, sss [][]string, title string, scaleType scaleType
 		Labels:          stringLabels,
 		Title:           title,
 		DisplayTitle:    len(title) > 0,
-		Colors:          colorFirstN(len(stringData)),
+		Colors:          colorFirstN(len(ds)),
 		TooltipTemplate: `value`,
 		ScaleType:       scaleType.string(),
 	}
