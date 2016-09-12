@@ -17,6 +17,12 @@ chart [pie|bar|log|' '|';'|','|'\t'|-t %title%|--title %title%]
 - `' '|';'|','|'\t'`: this character separates columns on each line (\t = default)
 - `-t|--title`: title for the chart
 
+## Installation
+
+```
+go get github.com/MarianoGappa/chart
+```
+
 ## Example use cases
 
 - Pie chart of your most used terminal commands
