@@ -25,6 +25,10 @@ func colorNext() string {
 	return result
 }
 
+func colorIndex(i int) string {
+	return colorPalette[i%len(colorPalette)]
+}
+
 // FirstN returns a comma-separated string of the first n colors in the palette.
 func colorFirstN(n int) string {
 	k := 0

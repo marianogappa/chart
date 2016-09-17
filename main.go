@@ -24,6 +24,8 @@ func main() {
 		templData, templ, err = setupPie(fss, sss, o.title)
 	case bar:
 		templData, templ, err = setupBar(fss, sss, o.title, o.scaleType)
+	case line:
+		templData, templ, err = setupLine(fss, sss, o.title, o.scaleType)
 	}
 	if err != nil {
 		log.Fatalf("Could not construct chart because [%v]", err)

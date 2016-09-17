@@ -12,6 +12,7 @@ const (
 	undefinedChartType chartType = iota
 	pie
 	bar
+	line
 )
 const (
 	linear scaleType = iota
@@ -57,6 +58,8 @@ func resolveOptions(args []string) (options, error) {
 			o.chartType = bar
 		case "pie":
 			o.chartType = pie
+		case "line":
+			o.chartType = line
 		case ",":
 			o.separator = ','
 		case ";":
@@ -74,10 +77,14 @@ func resolveOptions(args []string) (options, error) {
 }
 
 func (c chartType) string() string {
-	if c == bar {
+	switch c {
+	case bar:
 		return "bar"
+	case line:
+		return "line"
+	default:
+		return "pie"
 	}
-	return "pie"
 }
 
 func (c scaleType) string() string {

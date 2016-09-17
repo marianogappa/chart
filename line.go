@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"strconv"
@@ -8,28 +9,40 @@ import (
 	"text/template"
 )
 
-type barTemplateData struct {
+type lineTemplateData struct {
 	Labels          string
+	Datasets        string
 	DisplayTitle    bool
 	Title           string
 	ChartType       string
-	Data            string
-	Colors          string
 	TooltipTemplate string
 	ScaleType       string
 }
 
-var barTemplate *template.Template
+type lineDatasetTemplateData struct {
+	Data  string
+	Color string
+}
+
+var lineTemplate *template.Template
+var lineDatasetTemplate *template.Template
 
 func init() {
-	barTemplateString := `{
+	lineDatasetTemplateString := `
+            {
+                fill: false,
+                data: [{{ .Data }}],
+                borderColor: [{{.Color}}]
+            }
+	`
+
+	lineTemplateString := `{
     type: '{{ .ChartType }}',
     data: {
 		labels: [{{ .Labels }}],
-        datasets: [{
-            data: [{{ .Data }}],
-            backgroundColor: [{{.Colors}}]
-        }]
+        datasets: [
+            {{ .Datasets }}
+        ]
     },
     options: {
         title: {
@@ -63,23 +76,34 @@ func init() {
 }`
 
 	var err error
-	barTemplate, err = template.New("bar").Parse(barTemplateString)
+	lineTemplate, err = template.New("line").Parse(lineTemplateString)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	lineDatasetTemplate, err = template.New("line_dataset").Parse(lineDatasetTemplateString)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func setupBar(fss [][]float64, sss [][]string, title string, scaleType scaleType) (interface{}, *template.Template, error) {
+func setupLine(fss [][]float64, sss [][]string, title string, scaleType scaleType) (interface{}, *template.Template, error) {
 	if len(fss) == 0 || len(sss) == 0 {
 		return nil, nil, fmt.Errorf("Couldn't find values to plot.")
 	}
 
-	var ds []string
+	var ds [][]string
 	for _, fs := range fss {
 		if len(fs) == 0 {
 			return nil, nil, fmt.Errorf("Couldn't find values to plot.") //TODO this probably shouldn't happen
 		}
-		ds = append(ds, strconv.FormatFloat(fs[0], 'f', -1, 64))
+		for i, f := range fs {
+			if i > len(ds)-1 {
+				ds = append(ds, []string{})
+			}
+			ds[i] = append(ds[i], strconv.FormatFloat(f, 'f', -1, 64))
+		}
+		ds = append(ds)
 	}
 
 	var ls []string
@@ -90,19 +114,31 @@ func setupBar(fss [][]float64, sss [][]string, title string, scaleType scaleType
 		ls = append(ls, "`"+ss[0]+"`")
 	}
 
-	stringData := strings.Join(ds, ",")
+	datasets := []string{}
+	for i, d := range ds {
+		var b bytes.Buffer
+		if err := lineDatasetTemplate.Execute(&b, lineDatasetTemplateData{
+			Data:  strings.Join(d, ","),
+			Color: colorIndex(i),
+		}); err != nil {
+			return nil, nil, fmt.Errorf("Could not prepare ChartJS js code for chart: [%v]", err)
+		}
+
+		datasets = append(datasets, b.String())
+	}
+
+	stringDatasets := strings.Join(datasets, ",")
 	stringLabels := strings.Join(ls, ",")
 
-	templateData := barTemplateData{
-		ChartType:       "bar",
-		Data:            stringData,
+	templateData := lineTemplateData{
+		ChartType:       "line",
+		Datasets:        stringDatasets,
 		Labels:          stringLabels,
 		Title:           title,
 		DisplayTitle:    len(title) > 0,
-		Colors:          colorFirstN(len(ds)),
 		TooltipTemplate: `value`,
 		ScaleType:       scaleType.string(),
 	}
 
-	return templateData, barTemplate, nil
+	return templateData, lineTemplate, nil
 }
