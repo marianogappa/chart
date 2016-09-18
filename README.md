@@ -8,7 +8,7 @@ Quick & smart charting for STDIN
 ## Syntax
 
 ```
-chart [pie|bar|line|scatter|log|' '|';'|','|'\t'|-t %title%|--title %title%|-x %x_axis_label%|-y %y_axis_label%]
+chart [pie|bar|line|scatter|log|' '|';'|','|'\t'|-t %title%|--title %title%|-x %x_label%|-y %y_label%]
 ```
 
 - `pie`: render a pie chart
