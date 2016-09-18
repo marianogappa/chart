@@ -8,15 +8,18 @@ Quick & smart charting for STDIN
 ## Syntax
 
 ```
-chart [pie|bar|line|log|' '|';'|','|'\t'|-t %title%|--title %title%]
+chart [pie|bar|line|scatter|log|' '|';'|','|'\t'|-t %title%|--title %title%|-x %x_axis_label%|-y %y_axis_label%]
 ```
 
-- `pie`: render a pie chart (default)
+- `pie`: render a pie chart
 - `bar`: render a bar chart
 - `line`: render a line chart
+- `scatter`: render a scatter plot chart
 - `log`: use logarithmmic scale (bar chart only)
 - `' '|';'|','|'\t'`: this character separates columns on each line (\t = default)
 - `-t|--title`: title for the chart
+- `-x`: label for the x axis
+- `-y`: label for the y axis
 
 ## Installation
 
