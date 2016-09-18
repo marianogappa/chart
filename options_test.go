@@ -82,6 +82,24 @@ func TestResolveOptions(t *testing.T) {
 				chartType: pie,
 			},
 		},
+		{
+			args: []string{"line"},
+			expected: options{
+				title:     "",
+				separator: '\t',
+				scaleType: linear,
+				chartType: line,
+			},
+		},
+		{
+			args: []string{"scatter"},
+			expected: options{
+				title:     "",
+				separator: '\t',
+				scaleType: linear,
+				chartType: scatter,
+			},
+		},
 	}
 
 	for _, ts := range tests {

@@ -36,12 +36,20 @@ func TestResolveChartType(t *testing.T) {
 			expectedT: bar,
 		},
 		{
-			name:      "more than one column of floats",
+			name:      "more than one column of floats, with strings",
 			t:         undefinedChartType,
 			lf:        "s,f,f",
 			fss:       [][]float64{},
 			sss:       [][]string{},
 			expectedT: line,
+		},
+		{
+			name:      "more than one column of floats, without strings",
+			t:         undefinedChartType,
+			lf:        "f,f",
+			fss:       [][]float64{},
+			sss:       [][]string{},
+			expectedT: scatter,
 		},
 	}
 
