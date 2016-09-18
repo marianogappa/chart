@@ -16,6 +16,8 @@ type scatterTemplateData struct {
 	ChartType       string
 	TooltipTemplate string
 	ScaleType       string
+	XLabel          string
+	YLabel          string
 }
 
 type scatterDatasetTemplateData struct {
@@ -82,6 +84,16 @@ func init() {
                     callback: function(value, index, values) {
                         return value;
                     }
+                },
+                scaleLabel: {
+                    display: {{if eq .YLabel ""}}false{{else}}true{{end}},
+                    labelString: '{{ .YLabel }}'
+                }
+            }],
+            xAxes: [{
+                scaleLabel: {
+                    display: {{if eq .XLabel ""}}false{{else}}true{{end}},
+                    labelString: '{{ .XLabel }}'
                 }
             }]
         }
@@ -105,7 +117,7 @@ func init() {
 	}
 }
 
-func setupScatter(fss [][]float64, sss [][]string, title string, scaleType scaleType) (interface{}, *template.Template, error) {
+func setupScatter(fss [][]float64, sss [][]string, title string, scaleType scaleType, xLabel string, yLabel string) (interface{}, *template.Template, error) {
 	if len(fss) == 0 {
 		return nil, nil, fmt.Errorf("Couldn't find values to plot.")
 	}
@@ -142,6 +154,8 @@ func setupScatter(fss [][]float64, sss [][]string, title string, scaleType scale
 		DisplayTitle:    len(title) > 0,
 		TooltipTemplate: `value`,
 		ScaleType:       scaleType.string(),
+		XLabel:          xLabel,
+		YLabel:          yLabel,
 	}
 
 	return templateData, scatterTemplate, nil

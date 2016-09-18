@@ -17,6 +17,8 @@ type barTemplateData struct {
 	Colors          string
 	TooltipTemplate string
 	ScaleType       string
+	XLabel          string
+	YLabel          string
 }
 
 var barTemplate *template.Template
@@ -56,6 +58,16 @@ func init() {
                     callback: function(value, index, values) {
                         return value;
                     }
+                },
+                scaleLabel: {
+                    display: {{if eq .YLabel ""}}false{{else}}true{{end}},
+                    labelString: '{{ .YLabel }}'
+                }
+            }],
+            xAxes: [{
+                scaleLabel: {
+                    display: {{if eq .XLabel ""}}false{{else}}true{{end}},
+                    labelString: '{{ .XLabel }}'
                 }
             }]
         }
@@ -69,7 +81,7 @@ func init() {
 	}
 }
 
-func setupBar(fss [][]float64, sss [][]string, title string, scaleType scaleType) (interface{}, *template.Template, error) {
+func setupBar(fss [][]float64, sss [][]string, title string, scaleType scaleType, xLabel string, yLabel string) (interface{}, *template.Template, error) {
 	if len(fss) == 0 || len(sss) == 0 {
 		return nil, nil, fmt.Errorf("Couldn't find values to plot.")
 	}
@@ -102,6 +114,8 @@ func setupBar(fss [][]float64, sss [][]string, title string, scaleType scaleType
 		Colors:          colorFirstN(len(ds)),
 		TooltipTemplate: `value`,
 		ScaleType:       scaleType.string(),
+		XLabel:          xLabel,
+		YLabel:          yLabel,
 	}
 
 	return templateData, barTemplate, nil

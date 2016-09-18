@@ -27,7 +27,7 @@ func TestScatter(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		templateData, resultScatterTemplate, err := setupScatter(ts.fss, ts.sss, ts.title, linear)
+		templateData, resultScatterTemplate, err := setupScatter(ts.fss, ts.sss, ts.title, linear, "", "")
 		if ts.fails && err == nil {
 			t.Errorf("'%v' should have failed", ts.name)
 		}

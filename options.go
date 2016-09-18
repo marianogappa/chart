@@ -25,6 +25,8 @@ type options struct {
 	separator rune
 	scaleType scaleType
 	chartType chartType
+	xLabel    string
+	yLabel    string
 }
 
 func mustResolveOptions(args []string) options {
@@ -37,12 +39,16 @@ func mustResolveOptions(args []string) options {
 
 func resolveOptions(args []string) (options, error) {
 	titleHelp := "Sets the title for the chart."
+	xLabelHelp := "Sets the label for the x axis."
+	yLabelHelp := "Sets the label for the y axis."
 
 	o := options{}
 
 	fs := flag.NewFlagSet("params", flag.ContinueOnError)
 	fs.StringVar(&o.title, "title", o.title, titleHelp)
 	fs.StringVar(&o.title, "t", o.title, titleHelp)
+	fs.StringVar(&o.xLabel, "x", o.xLabel, xLabelHelp)
+	fs.StringVar(&o.yLabel, "y", o.yLabel, yLabelHelp)
 
 	err := fs.Parse(fromFirstDash(args))
 	if err != nil {
