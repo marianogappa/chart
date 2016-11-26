@@ -13,7 +13,7 @@ import (
 func main() {
 	o := mustResolveOptions(os.Args[1:])
 	i := readInput(os.Stdin)
-	fss, sss, o := preprocess(i, o)
+	fss, sss, _, o := preprocess(i, o) //TODO use parsed times
 
 	var err error
 	var templ *template.Template

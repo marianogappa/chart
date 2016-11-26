@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
+	"time"
 )
 
 func TestPreprocess(t *testing.T) {
@@ -12,6 +14,7 @@ func TestPreprocess(t *testing.T) {
 		o         options
 		fss       [][]float64
 		sss       [][]string
+		dss       [][]time.Time
 		expectedO options
 	}{
 		{
@@ -20,6 +23,7 @@ func TestPreprocess(t *testing.T) {
 			o:         options{separator: '\t', scaleType: linear, chartType: pie},
 			fss:       [][]float64{},
 			sss:       [][]string{},
+			dss:       [][]time.Time{},
 			expectedO: options{separator: '\t', scaleType: linear, chartType: pie},
 		},
 		{
@@ -32,17 +36,24 @@ func TestPreprocess(t *testing.T) {
 			sss: [][]string{
 				[]string{"a"}, []string{"b"}, []string{"c"},
 			},
+			dss:       [][]time.Time{{}, {}, {}, {}},
 			expectedO: options{separator: '\t', scaleType: linear, chartType: pie},
 		},
 	}
 
 	for _, ts := range tests {
-		fss, sss, o := preprocess(ts.i, ts.o)
+		fss, sss, dss, o := preprocess(ts.i, ts.o)
 		if !reflect.DeepEqual(fss, ts.fss) {
-			t.Errorf("'%v' failed: %v was not equal to %v", ts.name, fss, ts.fss)
+			t.Errorf("'%v' failed: (floats) %v was not equal to %v", ts.name, fss, ts.fss)
 		}
 		if !reflect.DeepEqual(sss, ts.sss) {
-			t.Errorf("'%v' failed: %v was not equal to %v", ts.name, sss, ts.sss)
+			t.Errorf("'%v' failed: (strings) %v was not equal to %v", ts.name, sss, ts.sss)
+		}
+		if !reflect.DeepEqual(dss, ts.dss) {
+			t.Errorf("'%v' failed: (times) %v was not equal to %v", ts.name, dss, ts.dss)
+			if dss == nil {
+				fmt.Println("thats' why")
+			}
 		}
 		if !reflect.DeepEqual(o, ts.o) {
 			t.Errorf("'%v' failed: %v was not equal to %v", ts.name, o, ts.expectedO)
