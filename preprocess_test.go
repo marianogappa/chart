@@ -36,8 +36,23 @@ func TestPreprocess(t *testing.T) {
 			sss: [][]string{
 				[]string{"a"}, []string{"b"}, []string{"c"},
 			},
-			dss:       [][]time.Time{{}, {}, {}, {}},
+			dss:       [][]time.Time{{}, {}, {}, {}}, //TODO fix the frequence case
 			expectedO: options{separator: '\t', scaleType: linear, chartType: pie},
+		},
+		{
+			name: "dates and floats with many spaces in between",
+			i: []string{"2016-08-29	0.0125", "2016-09-06	0.0272", "2016-09-07	0.0000", "2016-09-08	0.0000"},
+			o: options{separator: '\t', scaleType: linear, chartType: pie, dateFormat: "2006-01-02"},
+			fss: [][]float64{
+				[]float64{0.0125}, []float64{0.0272}, []float64{0}, []float64{0},
+			},
+			sss: [][]string{
+				{}, {}, {}, {},
+			},
+			dss: [][]time.Time{
+				{tp("2006-01-02", "2016-08-29")}, {tp("2006-01-02", "2016-09-06")}, {tp("2006-01-02", "2016-09-07")}, {tp("2006-01-02", "2016-09-08")},
+			},
+			expectedO: options{separator: '\t', scaleType: linear, chartType: pie, dateFormat: "2006-01-02"},
 		},
 	}
 
@@ -55,8 +70,13 @@ func TestPreprocess(t *testing.T) {
 				fmt.Println("thats' why")
 			}
 		}
-		if !reflect.DeepEqual(o, ts.o) {
+		if !reflect.DeepEqual(o, ts.expectedO) {
 			t.Errorf("'%v' failed: %v was not equal to %v", ts.name, o, ts.expectedO)
 		}
 	}
+}
+
+func tp(tf, t string) time.Time {
+	rt, _ := time.Parse(tf, t)
+	return rt
 }
