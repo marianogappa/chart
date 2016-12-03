@@ -75,4 +75,4 @@ Yes, please.
 
 ## TODO
 
-- Currently implementing datetime support #2
+- Currently implementing datetime support https://github.com/MarianoGappa/chart/issues/2
