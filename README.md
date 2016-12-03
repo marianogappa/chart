@@ -72,3 +72,7 @@ TODO
 ## Contribute
 
 Yes, please.
+
+## TODO
+
+- Currently implementing datetime support #2
