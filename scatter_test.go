@@ -39,13 +39,10 @@ func TestScatter(t *testing.T) {
 			if resultScatterTemplate != scatterTemplate {
 				t.Errorf("'%v' appears to not be using the hardcoded scatterTemplate", ts.name)
 			}
-			if templateData.(scatterTemplateData).ChartType != "bubble" {
-				t.Errorf("'%v' appears to not be returning a scatter chart", ts.name)
-			}
 			if templateData.(scatterTemplateData).Title != ts.title {
 				t.Errorf("'%v' did not use the specified title", ts.name)
 			}
-			if len(templateData.(scatterTemplateData).Datasets) == 0 {
+			if len(templateData.(scatterTemplateData).Data) == 0 {
 				t.Errorf("'%v' dataset is empty", ts.name)
 			}
 		}
