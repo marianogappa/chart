@@ -80,6 +80,20 @@ func TestParseLineFormat(t *testing.T) {
 			sep:      ',',
 			expected: "fs",
 		},
+		{
+			name: "date on the left",
+			s: "2016-08-29	0.0125", // N.B. hello; I've broken gofmt :)
+			sep:      '\t',
+			df:       "2006-01-02",
+			expected: "df",
+		},
+		{
+			name: "date on the right",
+			s: "0.0125	2016-08-29",
+			sep:      '\t',
+			df:       "2006-01-02",
+			expected: "fd",
+		},
 	}
 
 	for _, ts := range tests {
