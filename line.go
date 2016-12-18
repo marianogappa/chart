@@ -21,7 +21,7 @@ func init() {
 	lineTemplateString := `{
     type: 'line',
     data: {
-        labels: [{{ if len .Labels }}{{ range $i,$v := .Labels }}{{if $i}},{{end}}{{if len $v}}{{index $v 0 | preprocessLabel}}{{else}}''{{end}}{{end}}{{end}}],
+        labels: [{{ if len .Labels }}{{ range $i,$v := .Labels }}{{if $i}},{{end}}{{if len $v}}{{index $v 0 | preprocessLabel}}{{else}}'row {{$i}}'{{end}}{{end}}{{end}}],
         datasets: [{{$datasets := .Datasets}}
             {{range $i, $unused := (index $datasets 0)}}{{if $i}},{{end}}
                 {
