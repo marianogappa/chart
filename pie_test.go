@@ -55,8 +55,8 @@ func TestPie(t *testing.T) {
 			if templateData.(pieTemplateData).Title != ts.title {
 				t.Errorf("'%v' did not use the specified title", ts.name)
 			}
-			ds := strings.Split(templateData.(pieTemplateData).Data, ",")
-			ss := strings.Split(templateData.(pieTemplateData).Labels, ",")
+			ds := templateData.(pieTemplateData).Data
+			ss := templateData.(pieTemplateData).Labels
 			if len(ts.fss) != len(ds) {
 				t.Errorf("'%v' is using a different number of data points (%v) than specified (%v)", ts.name, len(ds), len(ts.fss))
 			}

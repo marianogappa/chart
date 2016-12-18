@@ -3,19 +3,15 @@ package main
 import (
 	"fmt"
 	"log"
-	"strconv"
-	"strings"
 	"text/template"
 )
 
 type pieTemplateData struct {
-	Labels          string
-	DisplayTitle    bool
-	Title           string
-	ChartType       string
-	Data            string
-	Colors          string
-	TooltipTemplate string
+	Labels    [][]string
+	Title     string
+	ChartType string
+	Data      [][]float64
+	Colors    string
 }
 
 var pieTemplate *template.Template
@@ -24,15 +20,15 @@ func init() {
 	pieTemplateString := `{
     type: '{{ .ChartType }}',
     data: {
-		labels: [{{ .Labels }}],
+		labels: [{{ if len .Labels }}{{ range $i,$v := .Labels }}{{if $i}},{{end}}{{if len $v}}{{index $v 0 | preprocessLabel}}{{else}}''{{end}}{{end}}{{end}}],
         datasets: [{
-            data: [{{ .Data }}],
+            data: [{{ range $i,$v := .Data }}{{if $i}},{{end}}{{if len $v}}{{index $v 0 | printf "%g"}}{{else}}0{{end}}{{end}}],
             backgroundColor: [{{ .Colors }}]
         }]
     },
     options: {
         title: {
-            display: {{ .DisplayTitle }},
+            display: {{ if len .Title }}true{{else}}false{{end}},
             text: '{{ .Title }}'
         },
         tooltips: {
@@ -42,7 +38,7 @@ func init() {
                     var total = data.datasets[0].data.reduce((a, b) => a + b, 0)
                     var label = data.labels[tti.index];
                     var percentage = Math.round(value / total * 100);
-                    return {{ .TooltipTemplate }};
+                    return {{ if len .Labels }}label + ': ' + percentage + '%'{{else}}percentage + '%'{{end}};
                 }
             }
         }
@@ -50,7 +46,9 @@ func init() {
 }`
 
 	var err error
-	pieTemplate, err = template.New("pie").Parse(pieTemplateString)
+	pieTemplate, err = template.New("pie").Funcs(template.FuncMap{
+		"preprocessLabel": preprocessLabel,
+	}).Parse(pieTemplateString)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -58,46 +56,15 @@ func init() {
 
 func setupPie(fss [][]float64, sss [][]string, title string) (interface{}, *template.Template, error) {
 	if len(fss) == 0 || len(sss) == 0 {
-		return nil, nil, fmt.Errorf("Couldn't find values to plot.") //TODO this probably shouldn't happen
-	}
-
-	var ds []string
-	for _, fs := range fss {
-		if len(fs) == 0 {
-			return nil, nil, fmt.Errorf("Couldn't find values to plot.") //TODO this probably shouldn't happen
-		}
-		ds = append(ds, strconv.FormatFloat(fs[0], 'f', -1, 64))
-	}
-
-	var ls []string
-
-	noLabels := len(sss) == 0
-	for _, ss := range sss {
-		if len(ss) == 0 {
-			noLabels = true //TODO this probably shouldn't happen
-			break
-		}
-		ls = append(ls, preprocessLabel(ss[0]))
-	}
-
-	stringData := strings.Join(ds, ",")
-	stringLabels := strings.Join(ls, ",")
-
-	var tooltipTemplate string
-	if noLabels {
-		tooltipTemplate = `percentage + '%'`
-	} else {
-		tooltipTemplate = `label + ': ' + percentage + '%'`
+		return nil, nil, fmt.Errorf("Couldn't find values to plot.")
 	}
 
 	templateData := pieTemplateData{
-		ChartType:       "pie",
-		Data:            stringData,
-		Labels:          stringLabels,
-		Title:           title,
-		DisplayTitle:    len(title) > 0,
-		Colors:          colorFirstN(len(ds)),
-		TooltipTemplate: tooltipTemplate,
+		ChartType: "pie",
+		Data:      fss,
+		Labels:    sss,
+		Title:     title,
+		Colors:    colorFirstN(len(fss)),
 	}
 
 	return templateData, pieTemplate, nil
