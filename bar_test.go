@@ -1,9 +1,6 @@
 package main
 
-import (
-	"strings"
-	"testing"
-)
+import "testing"
 
 func TestBar(t *testing.T) {
 	tests := []struct {
@@ -55,17 +52,13 @@ func TestBar(t *testing.T) {
 			if templateData.(barTemplateData).Title != ts.title {
 				t.Errorf("'%v' did not use the specified title", ts.name)
 			}
-			ds := strings.Split(templateData.(barTemplateData).Data, ",")
-			ss := strings.Split(templateData.(barTemplateData).Labels, ",")
+			ds := templateData.(barTemplateData).Data
+			ss := templateData.(barTemplateData).Labels
 			if len(ts.fss) != len(ds) {
 				t.Errorf("'%v' is using a different number of data points (%v) than specified (%v)", ts.name, len(ds), len(ts.fss))
 			}
 			if len(ds) != len(ss) {
 				t.Errorf("'%v' is returning %v data points, but %v labels", ts.name, len(ds), len(ss))
-			}
-			cs := strings.Split(templateData.(barTemplateData).Colors, ",")
-			if len(cs) != len(ds) {
-				t.Errorf("'%v' is using a different number of colours (%v) than data points (%v)", ts.name, len(cs), len(ds))
 			}
 		}
 	}

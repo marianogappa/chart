@@ -3,18 +3,14 @@ package main
 import (
 	"fmt"
 	"log"
-	"strconv"
-	"strings"
 	"text/template"
 )
 
 type barTemplateData struct {
-	Labels          string
-	DisplayTitle    bool
+	Labels          [][]string
 	Title           string
 	ChartType       string
-	Data            string
-	Colors          string
+	Data            [][]float64
 	TooltipTemplate string
 	ScaleType       string
 	XLabel          string
@@ -27,15 +23,15 @@ func init() {
 	barTemplateString := `{
     type: '{{ .ChartType }}',
     data: {
-		labels: [{{ .Labels }}],
+        labels: [{{ if len .Labels }}{{ range $i,$v := .Labels }}{{if $i}},{{end}}{{if len $v}}{{index $v 0 | preprocessLabel}}{{else}}''{{end}}{{end}}{{end}}],
         datasets: [{
-            data: [{{ .Data }}],
-            backgroundColor: [{{.Colors}}]
+            data: [{{ range $i,$v := .Data }}{{if $i}},{{end}}{{if len $v}}{{index $v 0 | printf "%g"}}{{else}}0{{end}}{{end}}],
+            backgroundColor: [{{ len .Data | colorFirstN }}]
         }]
     },
     options: {
         title: {
-            display: {{ .DisplayTitle }},
+            display: {{ if len .Title }}true{{else}}false{{end}},
             text: '{{ .Title }}'
         },
         tooltips: {
@@ -75,7 +71,10 @@ func init() {
 }`
 
 	var err error
-	barTemplate, err = template.New("bar").Parse(barTemplateString)
+	barTemplate, err = template.New("bar").Funcs(template.FuncMap{
+		"preprocessLabel": preprocessLabel,
+		"colorFirstN":     colorFirstN,
+	}).Parse(barTemplateString)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -86,32 +85,11 @@ func setupBar(fss [][]float64, sss [][]string, title string, scaleType scaleType
 		return nil, nil, fmt.Errorf("Couldn't find values to plot.")
 	}
 
-	var ds []string
-	for _, fs := range fss {
-		if len(fs) == 0 {
-			return nil, nil, fmt.Errorf("Couldn't find values to plot.") //TODO this probably shouldn't happen
-		}
-		ds = append(ds, strconv.FormatFloat(fs[0], 'f', -1, 64))
-	}
-
-	var ls []string
-	for _, ss := range sss {
-		if len(ss) == 0 {
-			break //TODO this probably shouldn't happen
-		}
-		ls = append(ls, "`"+ss[0]+"`")
-	}
-
-	stringData := strings.Join(ds, ",")
-	stringLabels := strings.Join(ls, ",")
-
 	templateData := barTemplateData{
 		ChartType:       "bar",
-		Data:            stringData,
-		Labels:          stringLabels,
+		Data:            fss,
+		Labels:          sss,
 		Title:           title,
-		DisplayTitle:    len(title) > 0,
-		Colors:          colorFirstN(len(ds)),
 		TooltipTemplate: `value`,
 		ScaleType:       scaleType.string(),
 		XLabel:          xLabel,
