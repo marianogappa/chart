@@ -1,9 +1,6 @@
 package main
 
-import (
-	"strings"
-	"testing"
-)
+import "testing"
 
 func TestPie(t *testing.T) {
 	tests := []struct {
@@ -62,10 +59,6 @@ func TestPie(t *testing.T) {
 			}
 			if len(ds) != len(ss) {
 				t.Errorf("'%v' is returning %v data points, but %v labels", ts.name, len(ds), len(ss))
-			}
-			cs := strings.Split(templateData.(pieTemplateData).Colors, ",")
-			if len(cs) != len(ds) {
-				t.Errorf("'%v' is using a different number of colours (%v) than data points (%v)", ts.name, len(cs), len(ds))
 			}
 		}
 	}

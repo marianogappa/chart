@@ -11,7 +11,6 @@ type pieTemplateData struct {
 	Title     string
 	ChartType string
 	Data      [][]float64
-	Colors    string
 }
 
 var pieTemplate *template.Template
@@ -20,10 +19,10 @@ func init() {
 	pieTemplateString := `{
     type: '{{ .ChartType }}',
     data: {
-		labels: [{{ if len .Labels }}{{ range $i,$v := .Labels }}{{if $i}},{{end}}{{if len $v}}{{index $v 0 | preprocessLabel}}{{else}}''{{end}}{{end}}{{end}}],
+        labels: [{{ if len .Labels }}{{ range $i,$v := .Labels }}{{if $i}},{{end}}{{if len $v}}{{index $v 0 | preprocessLabel}}{{else}}''{{end}}{{end}}{{end}}],
         datasets: [{
             data: [{{ range $i,$v := .Data }}{{if $i}},{{end}}{{if len $v}}{{index $v 0 | printf "%g"}}{{else}}0{{end}}{{end}}],
-            backgroundColor: [{{ .Colors }}]
+            backgroundColor: [{{ len .Data | colorFirstN }}]
         }]
     },
     options: {
@@ -48,6 +47,7 @@ func init() {
 	var err error
 	pieTemplate, err = template.New("pie").Funcs(template.FuncMap{
 		"preprocessLabel": preprocessLabel,
+		"colorFirstN":     colorFirstN,
 	}).Parse(pieTemplateString)
 	if err != nil {
 		log.Fatal(err)
@@ -64,7 +64,6 @@ func setupPie(fss [][]float64, sss [][]string, title string) (interface{}, *temp
 		Data:      fss,
 		Labels:    sss,
 		Title:     title,
-		Colors:    colorFirstN(len(fss)),
 	}
 
 	return templateData, pieTemplate, nil
