@@ -1,9 +1,6 @@
 package main
 
-import (
-	"strings"
-	"testing"
-)
+import "testing"
 
 func TestLine(t *testing.T) {
 	tests := []struct {
@@ -49,16 +46,13 @@ func TestLine(t *testing.T) {
 			if resultLineTemplate != lineTemplate {
 				t.Errorf("'%v' appears to not be using the hardcoded lineTemplate", ts.name)
 			}
-			if templateData.(lineTemplateData).ChartType != "line" {
-				t.Errorf("'%v' appears to not be returning a line chart", ts.name)
-			}
 			if templateData.(lineTemplateData).Title != ts.title {
 				t.Errorf("'%v' did not use the specified title", ts.name)
 			}
 			if len(templateData.(lineTemplateData).Datasets) == 0 {
 				t.Errorf("'%v' dataset is empty", ts.name)
 			}
-			ss := strings.Split(templateData.(lineTemplateData).Labels, ",")
+			ss := templateData.(lineTemplateData).Labels
 			if len(ts.sss) != len(ss) {
 				t.Errorf("'%v' is returning less labels than specified: %v instead of expected %v", ts.name, len(ss), len(ts.sss))
 			}
