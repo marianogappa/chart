@@ -1,12 +1,16 @@
 package main
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestScatter(t *testing.T) {
 	tests := []struct {
 		name      string
 		fss       [][]float64
 		sss       [][]string
+		tss       [][]time.Time
 		title     string
 		scaleType scaleType
 		fails     bool
@@ -27,7 +31,7 @@ func TestScatter(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		templateData, resultScatterTemplate, err := setupScatter(ts.fss, ts.sss, ts.title, linear, "", "")
+		templateData, resultScatterTemplate, err := setupScatter(ts.fss, ts.sss, ts.tss, ts.title, linear, "", "")
 		if ts.fails && err == nil {
 			t.Errorf("'%v' should have failed", ts.name)
 		}
@@ -42,7 +46,7 @@ func TestScatter(t *testing.T) {
 			if templateData.(scatterTemplateData).Title != ts.title {
 				t.Errorf("'%v' did not use the specified title", ts.name)
 			}
-			if len(templateData.(scatterTemplateData).Data) == 0 {
+			if len(templateData.(scatterTemplateData).Floats) == 0 {
 				t.Errorf("'%v' dataset is empty", ts.name)
 			}
 		}

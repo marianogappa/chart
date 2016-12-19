@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"log"
 	"text/template"
+	"time"
 )
 
 type scatterTemplateData struct {
-	Data      [][]float64
+	Floats    [][]float64
+	Times     [][]time.Time
 	Title     string
 	ScaleType string
 	XLabel    string
@@ -23,15 +25,32 @@ func init() {
         datasets: [
             {
                 label: '',
-                data: [{{range $i,$v := .Data}}{{if $i}},{{end -}}
-                {{- if len $v -}}
-                  {
-                    x: {{- index $v 0 | printf "%g" -}},
-                    y: {{- if ge (len $v) 2}}{{index $v 1 | printf "%g"}}{{else}}0{{end}},
-                    r: {{- if ge (len $v) 3}}{{index $v 2 | printf "%g"}}{{else}}4{{end -}}
-                  }
-                {{- end -}}
-                {{- end}}],
+                data: [
+                    {{- $times := .Times -}}
+                    {{- if len $times -}}
+                        {{- $fss := .Floats -}}
+                        {{- range $i,$v := $times}}{{if $i}},{{end -}}
+                            {{- if len $v -}}
+                            {{- $fs := index $fss $i -}}
+                              {
+                                x: '{{- (index $v 0).Format "2006-01-02T15:04:05.999999999" -}}',
+                                y: {{- if ge (len $fs) 1}}{{index $fs 0 | printf "%g"}}{{else}}0{{end}},
+                                r: {{- if ge (len $fs) 2}}{{index $fs 1 | printf "%g"}}{{else}}4{{end -}}
+                              }
+                            {{- end -}}
+                        {{- end -}}
+                    {{- else -}}
+                        {{- range $i,$v := .Floats}}{{if $i}},{{end -}}
+                            {{- if len $v -}}
+                              {
+                                x: {{- index $v 0 | printf "%g" -}},
+                                y: {{- if ge (len $v) 2}}{{index $v 1 | printf "%g"}}{{else}}0{{end}},
+                                r: {{- if ge (len $v) 3}}{{index $v 2 | printf "%g"}}{{else}}4{{end -}}
+                              }
+                            {{- end -}}
+                        {{- end -}}
+                    {{- end -}}
+                ],
                 backgroundColor: {{colorFirstN 1}}
             }
         ]
@@ -67,6 +86,7 @@ func init() {
                 }
             }],
             xAxes: [{
+                {{if len $times }}type: 'time',{{end}}
                 scaleLabel: {
                     display: {{if eq .XLabel ""}}false{{else}}true{{end}},
                     labelString: '{{ .XLabel }}'
@@ -86,13 +106,14 @@ func init() {
 	}
 }
 
-func setupScatter(fss [][]float64, sss [][]string, title string, scaleType scaleType, xLabel string, yLabel string) (interface{}, *template.Template, error) {
+func setupScatter(fss [][]float64, sss [][]string, tss [][]time.Time, title string, scaleType scaleType, xLabel string, yLabel string) (interface{}, *template.Template, error) {
 	if len(fss) == 0 {
 		return nil, nil, fmt.Errorf("Couldn't find values to plot.")
 	}
 
 	templateData := scatterTemplateData{
-		Data:      fss,
+		Floats:    fss,
+		Times:     tss,
 		Title:     title,
 		ScaleType: scaleType.string(),
 		XLabel:    xLabel,
