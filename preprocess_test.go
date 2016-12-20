@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"reflect"
 	"testing"
 	"time"
@@ -14,16 +13,16 @@ func TestPreprocess(t *testing.T) {
 		o         options
 		fss       [][]float64
 		sss       [][]string
-		dss       [][]time.Time
+		tss       [][]time.Time
 		expectedO options
 	}{
 		{
 			name:      "empty case",
 			i:         []string{},
 			o:         options{separator: '\t', scaleType: linear, chartType: pie},
-			fss:       [][]float64{},
-			sss:       [][]string{},
-			dss:       [][]time.Time{},
+			fss:       nil,
+			sss:       nil,
+			tss:       nil,
 			expectedO: options{separator: '\t', scaleType: linear, chartType: pie},
 		},
 		{
@@ -36,7 +35,7 @@ func TestPreprocess(t *testing.T) {
 			sss: [][]string{
 				[]string{"a"}, []string{"b"}, []string{"c"},
 			},
-			dss:       [][]time.Time{{}, {}, {}, {}}, //TODO fix the frequence case
+			tss:       nil,
 			expectedO: options{separator: '\t', scaleType: linear, chartType: pie},
 		},
 		{
@@ -46,10 +45,8 @@ func TestPreprocess(t *testing.T) {
 			fss: [][]float64{
 				[]float64{0.0125}, []float64{0.0272}, []float64{0}, []float64{0},
 			},
-			sss: [][]string{
-				{}, {}, {}, {},
-			},
-			dss: [][]time.Time{
+			sss: nil,
+			tss: [][]time.Time{
 				{tp("2006-01-02", "2016-08-29")}, {tp("2006-01-02", "2016-09-06")}, {tp("2006-01-02", "2016-09-07")}, {tp("2006-01-02", "2016-09-08")},
 			},
 			expectedO: options{separator: '\t', scaleType: linear, chartType: pie, dateFormat: "2006-01-02"},
@@ -57,18 +54,15 @@ func TestPreprocess(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		fss, sss, dss, o := preprocess(ts.i, ts.o)
+		fss, sss, tss, o := preprocess(ts.i, ts.o)
 		if !reflect.DeepEqual(fss, ts.fss) {
 			t.Errorf("'%v' failed: (floats) %v was not equal to %v", ts.name, fss, ts.fss)
 		}
 		if !reflect.DeepEqual(sss, ts.sss) {
 			t.Errorf("'%v' failed: (strings) %v was not equal to %v", ts.name, sss, ts.sss)
 		}
-		if !reflect.DeepEqual(dss, ts.dss) {
-			t.Errorf("'%v' failed: (times) %v was not equal to %v", ts.name, dss, ts.dss)
-			if dss == nil {
-				fmt.Println("thats' why")
-			}
+		if !reflect.DeepEqual(tss, ts.tss) {
+			t.Errorf("'%v' failed: (times) %v was not equal to %v", ts.name, tss, ts.tss)
 		}
 		if !reflect.DeepEqual(o, ts.expectedO) {
 			t.Errorf("'%v' failed: %v was not equal to %v", ts.name, o, ts.expectedO)
