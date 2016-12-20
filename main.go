@@ -25,7 +25,7 @@ func main() {
 	case bar:
 		templData, templ, err = setupBar(fss, sss, o.title, o.scaleType, o.xLabel, o.yLabel)
 	case line:
-		templData, templ, err = setupLine(fss, sss, o.title, o.scaleType, o.xLabel, o.yLabel)
+		templData, templ, err = setupLine(fss, sss, tss, o.title, o.scaleType, o.xLabel, o.yLabel)
 	case scatter:
 		templData, templ, err = setupScatter(fss, sss, tss, o.title, o.scaleType, o.xLabel, o.yLabel)
 	}

@@ -1,27 +1,29 @@
 package main
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestLine(t *testing.T) {
 	tests := []struct {
 		name      string
 		fss       [][]float64
 		sss       [][]string
+		tss       [][]time.Time
 		title     string
 		scaleType scaleType
 		fails     bool
 	}{
 		{
 			name:  "empty case; should fail",
-			fss:   [][]float64{},
-			sss:   [][]string{},
 			title: "",
 			fails: true,
 		},
 		{
 			name:  "inconsistent number of values between data points and labels",
 			fss:   [][]float64{[]float64{1}},
-			sss:   [][]string{},
+			sss:   nil,
 			title: "",
 			fails: true,
 		},
@@ -34,7 +36,7 @@ func TestLine(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		templateData, resultLineTemplate, err := setupLine(ts.fss, ts.sss, ts.title, linear, "", "")
+		templateData, resultLineTemplate, err := setupLine(ts.fss, ts.sss, ts.tss, ts.title, linear, "", "")
 		if ts.fails && err == nil {
 			t.Errorf("'%v' should have failed", ts.name)
 		}
@@ -49,10 +51,10 @@ func TestLine(t *testing.T) {
 			if templateData.(lineTemplateData).Title != ts.title {
 				t.Errorf("'%v' did not use the specified title", ts.name)
 			}
-			if len(templateData.(lineTemplateData).Datasets) == 0 {
+			if len(templateData.(lineTemplateData).FSS) == 0 {
 				t.Errorf("'%v' dataset is empty", ts.name)
 			}
-			ss := templateData.(lineTemplateData).Labels
+			ss := templateData.(lineTemplateData).SSS
 			if len(ts.sss) != len(ss) {
 				t.Errorf("'%v' is returning less labels than specified: %v instead of expected %v", ts.name, len(ss), len(ts.sss))
 			}
