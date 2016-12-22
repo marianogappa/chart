@@ -13,7 +13,7 @@ import (
 func main() {
 	o := mustResolveOptions(os.Args[1:])
 	i := readInput(os.Stdin)
-	fss, sss, tss, _, _, o := preprocess(i, o) //TODO use parsed times
+	fss, sss, tss, minFSS, maxFSS, o := preprocess(i, o)
 
 	var err error
 	var templ *template.Template
@@ -27,7 +27,7 @@ func main() {
 	case line:
 		templData, templ, err = setupLine(fss, sss, tss, o.title, o.scaleType, o.xLabel, o.yLabel)
 	case scatter:
-		templData, templ, err = setupScatter(fss, sss, tss, o.title, o.scaleType, o.xLabel, o.yLabel)
+		templData, templ, err = setupScatter(fss, sss, tss, minFSS, maxFSS, o.title, o.scaleType, o.xLabel, o.yLabel)
 	}
 	if err != nil {
 		log.Fatalf("Could not construct chart because [%v]", err)

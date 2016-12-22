@@ -11,6 +11,8 @@ func TestScatter(t *testing.T) {
 		fss       [][]float64
 		sss       [][]string
 		tss       [][]time.Time
+		minFSS    []float64
+		maxFSS    []float64
 		title     string
 		scaleType scaleType
 		fails     bool
@@ -23,15 +25,17 @@ func TestScatter(t *testing.T) {
 			fails: true,
 		},
 		{
-			name:  "basic working example",
-			fss:   [][]float64{[]float64{1}, []float64{2}, []float64{3}},
-			sss:   [][]string{},
-			title: "Basic working example",
+			name:   "basic working example",
+			fss:    [][]float64{[]float64{1}, []float64{2}, []float64{3}},
+			sss:    nil,
+			minFSS: []float64{1},
+			maxFSS: []float64{3},
+			title:  "Basic working example",
 		},
 	}
 
 	for _, ts := range tests {
-		templateData, resultScatterTemplate, err := setupScatter(ts.fss, ts.sss, ts.tss, ts.title, linear, "", "")
+		templateData, resultScatterTemplate, err := setupScatter(ts.fss, ts.sss, ts.tss, ts.minFSS, ts.maxFSS, ts.title, linear, "", "")
 		if ts.fails && err == nil {
 			t.Errorf("'%v' should have failed", ts.name)
 		}
@@ -46,7 +50,7 @@ func TestScatter(t *testing.T) {
 			if templateData.(scatterTemplateData).Title != ts.title {
 				t.Errorf("'%v' did not use the specified title", ts.name)
 			}
-			if len(templateData.(scatterTemplateData).Floats) == 0 {
+			if len(templateData.(scatterTemplateData).FSS) == 0 {
 				t.Errorf("'%v' dataset is empty", ts.name)
 			}
 		}
