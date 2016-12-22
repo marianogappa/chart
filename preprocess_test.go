@@ -14,6 +14,8 @@ func TestPreprocess(t *testing.T) {
 		fss       [][]float64
 		sss       [][]string
 		tss       [][]time.Time
+		minFSS    []float64
+		maxFSS    []float64
 		expectedO options
 	}{
 		{
@@ -49,12 +51,14 @@ func TestPreprocess(t *testing.T) {
 			tss: [][]time.Time{
 				{tp("2006-01-02", "2016-08-29")}, {tp("2006-01-02", "2016-09-06")}, {tp("2006-01-02", "2016-09-07")}, {tp("2006-01-02", "2016-09-08")},
 			},
+			minFSS:    []float64{0.0000},
+			maxFSS:    []float64{0.0272},
 			expectedO: options{separator: '\t', scaleType: linear, chartType: pie, dateFormat: "2006-01-02"},
 		},
 	}
 
 	for _, ts := range tests {
-		fss, sss, tss, o := preprocess(ts.i, ts.o)
+		fss, sss, tss, minFSS, maxFSS, o := preprocess(ts.i, ts.o)
 		if !reflect.DeepEqual(fss, ts.fss) {
 			t.Errorf("'%v' failed: (floats) %v was not equal to %v", ts.name, fss, ts.fss)
 		}
@@ -63,6 +67,12 @@ func TestPreprocess(t *testing.T) {
 		}
 		if !reflect.DeepEqual(tss, ts.tss) {
 			t.Errorf("'%v' failed: (times) %v was not equal to %v", ts.name, tss, ts.tss)
+		}
+		if !reflect.DeepEqual(minFSS, ts.minFSS) {
+			t.Errorf("'%v' failed: (min floats) %v was not equal to %v", ts.name, minFSS, ts.minFSS)
+		}
+		if !reflect.DeepEqual(maxFSS, ts.maxFSS) {
+			t.Errorf("'%v' failed: (max floats) %v was not equal to %v", ts.name, maxFSS, ts.maxFSS)
 		}
 		if !reflect.DeepEqual(o, ts.expectedO) {
 			t.Errorf("'%v' failed: %v was not equal to %v", ts.name, o, ts.expectedO)
