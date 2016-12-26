@@ -4,7 +4,7 @@ Quick & smart charting for STDIN
 
 ## Learn by example!
 
-(Cheatsheet)[https://marianogappa.github.io/chart/]
+[Cheatsheet](https://marianogappa.github.io/chart/)
 
 ## Syntax
 
@@ -28,7 +28,7 @@ chart [pie|bar|line|scatter|log|' '|';'|','|'\t'|-t %title%|--title %title%|-x %
 go get -u github.com/MarianoGappa/chart
 ```
 
-or get the latest binary for your OS in the (Releases section)[https://github.com/MarianoGappa/chart/releases].
+or get the latest binary for your OS in the [Releases section](https://github.com/MarianoGappa/chart/releases).
 
 ## Example use cases
 
@@ -62,7 +62,7 @@ curl -u $USER:$ACCESS_TOKEN -s "https://api.github.com/user/repos" | \
 
 ## Charting MySQL output
 
-`chart` works great with (sql)[https://github.com/MarianoGappa/sql], or with any `mysql -Nsre '...'` query.
+`chart` works great with [sql](https://github.com/MarianoGappa/sql), or with any `mysql -Nsre '...'` query.
 
 ## Details
 
