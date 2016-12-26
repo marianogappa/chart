@@ -1,9 +1,10 @@
-# chart
+# chart [![Build Status](https://img.shields.io/travis/MarianoGappa/chart.svg)](https://travis-ci.org/MarianoGappa/chart) [![Coverage Status](https://coveralls.io/repos/github/MarianoGappa/chart/badge.svg?branch=master&nocache=1)](https://coveralls.io/github/MarianoGappa/chart?branch=master) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/MarianoGappa/chart/master/LICENSE)
+
 Quick & smart charting for STDIN
 
-[![Build Status](https://img.shields.io/travis/MarianoGappa/chart.svg)](https://travis-ci.org/MarianoGappa/chart)
-[![Coverage Status](https://coveralls.io/repos/github/MarianoGappa/chart/badge.svg?branch=master&nocache=1)](https://coveralls.io/github/MarianoGappa/chart?branch=master)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/MarianoGappa/chart/master/LICENSE)
+## Learn by example!
+
+(Cheatsheet)[https://marianogappa.github.io/chart/]
 
 ## Syntax
 
@@ -24,8 +25,10 @@ chart [pie|bar|line|scatter|log|' '|';'|','|'\t'|-t %title%|--title %title%|-x %
 ## Installation
 
 ```
-go get github.com/MarianoGappa/chart
+go get -u github.com/MarianoGappa/chart
 ```
+
+or get the latest binary for your OS in the (Releases section)[https://github.com/MarianoGappa/chart/releases].
 
 ## Example use cases
 
@@ -57,9 +60,9 @@ curl -u $USER:$ACCESS_TOKEN -s "https://api.github.com/user/repos" | \
 
 ![Bar chart of a Github user's lines of code per language (requires setting up an Access Token)](img/bar.png?v=1)
 
-- MySQL query output charting
+## Charting MySQL output
 
-TODO
+`chart` works great with (sql)[https://github.com/MarianoGappa/sql], or with any `mysql -Nsre '...'` query.
 
 ## Details
 
@@ -71,8 +74,4 @@ TODO
 
 ## Contribute
 
-Yes, please.
-
-## TODO
-
-- Currently implementing datetime support https://github.com/MarianoGappa/chart/issues/2
+Please.
