@@ -1,30 +1,4 @@
-package main
-
-import (
-	"log"
-	"text/template"
-)
-
-var baseTemplate *template.Template
-
-func init() {
-	var err error
-	baseTemplate, err = template.New("base").Parse(baseTemplateString)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-var baseTemplateString = `
-<div style="height:100vh; width:90vw;">
-<canvas id="chart"></canvas>
-</div>
-<script>
-var ctx = document.getElementById("chart");
-var chart = new Chart(ctx, {{.}});
-</script>`
-
-var baseTemplateHeaderString = `<!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html>
 <head>
 <style>
@@ -649,8 +623,684 @@ if(n.options.stacked){for(var r=a.chart,l=r.data.datasets,s=Number(l[t].data[e])
 </script>
 
 </head>
-<body>`
+<body>
+<style>
+body {
+  background-color: #EEE;
+  padding: 15px;
+}
+h1 {
+  font-size: 30px;
+  padding-top: 15px;
+  padding-bottom: 25px;
+  padding-left: 15px;
+}
+h2 {
+  font-family: Lucida Console, Monaco, monospace;
+  font-size: 13px;
+  padding-bottom: 15px;
+  color: #00FF00;
+}
+.chart {
+  height: 300px;
+  width: 650px;
+  padding-bottom: 15px;
+  background-color: #FFF;
+  padding: 10px;
+  padding-top: 30px;
+  padding-bottom: 35px;
+  border-radius: 10px;
+}
+.pre {
+  font-family: Lucida Console, Monaco, monospace;
+  font-size: 13px;
+  display: block;
+  padding-bottom: 15px;
+  color: #00FF00;
+}
+.chart-wrapper {
+  background-color: #000;
+  border-radius: 5px;
+  padding: 15px;
+  margin: 10px;
+  width: 670px;
+  display: inline-block;
+  box-shadow: #333 1px 1px 8px;
+  vertical-align: top;
+}
 
-var baseTemplateFooterString = `
+</style>
+<h1>Chart Cheatsheet</h1>
+
+<div class="chart-wrapper">
+  <h2><pre>$ cat testdata/bar.csv</pre></h2>
+  <div class="pre"><pre>Chrome	57.1<br>Safari	14.5<br>Firefox	11.1<br>Internet Explorer & Edge	9.7<br>Opera	3.1<br></pre></div>
+  <h2><pre>$ cat testdata/bar.csv | chart bar
+</pre></h2>
+  <div class="chart">
+    <canvas id="chart0"></canvas>
+  </div>
+  <script>
+    var ctx0 = document.getElementById("chart0");
+    var chart0 = new Chart(ctx0, {
+    type: 'bar',
+    data: {
+        labels: [`Chrome`,`Safari`,`Firefox`,`Internet Explorer & Edge`,`Opera`],
+        datasets: [{
+            data: [57.1,14.5,11.1,9.7,3.1],
+            backgroundColor: ["#f44336","#9c27b0","#3f51b5","#03a9f4","#009688"]
+        }]
+    },
+    options: {
+        title: {
+            display: false,
+            text: ''
+        },
+        tooltips: {
+            callbacks: {
+                label: function(tti, data) {
+                    var value = data.datasets[0].data[tti.index];
+                    var label = data.labels[tti.index];
+                    return value;
+                }
+            }
+        },
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [{
+                type: "linear",
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }],
+            xAxes: [{
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }]
+        }
+    }
+});
+  </script>
+</div>
+
+<div class="chart-wrapper">
+  <h2><pre>$ cat testdata/freq.csv</pre></h2>
+  <div class="pre"><pre>Trump<br>Hillary<br>Hillary<br>Trump<br>Stein<br>Trump<br>Johnson<br></pre></div>
+  <h2><pre>$ cat testdata/freq.csv | chart 
+</pre></h2>
+  <div class="chart">
+    <canvas id="chart1"></canvas>
+  </div>
+  <script>
+    var ctx1 = document.getElementById("chart1");
+    var chart1 = new Chart(ctx1, {
+    type: 'pie',
+    data: {
+        labels: [`Trump`,`Hillary`,`Stein`,`Johnson`],
+        datasets: [{
+            data: [3,2,1,1],
+            backgroundColor: ["#f44336","#9c27b0","#3f51b5","#03a9f4"]
+        }]
+    },
+    options: {
+        title: {
+            display: false,
+            text: ''
+        },
+        tooltips: {
+            callbacks: {
+                label: function(tti, data) {
+                    var value = data.datasets[0].data[tti.index];
+                    var total = data.datasets[0].data.reduce((a, b) => a + b, 0)
+                    var label = data.labels[tti.index];
+                    var percentage = Math.round(value / total * 100);
+                    return label + ': ' + percentage + '%';
+                }
+            }
+        }
+    }
+});
+  </script>
+</div>
+
+<div class="chart-wrapper">
+  <h2><pre>$ cat testdata/line.csv</pre></h2>
+  <div class="pre"><pre>January	49	55<br>February	54	53<br>March	61	50<br>April	69	50<br>May	73	49<br></pre></div>
+  <h2><pre>$ cat testdata/line.csv | chart line --date-format January
+</pre></h2>
+  <div class="chart">
+    <canvas id="chart2"></canvas>
+  </div>
+  <script>
+    var ctx2 = document.getElementById("chart2");
+    var chart2 = new Chart(ctx2, {
+    type: 'line',
+    data: {
+        datasets: [
+            
+                {
+                  fill: false,
+                  label: 'column 0',
+                  data: [
+                      
+                            {
+                                x: '0000-01-01T00:00:00',
+                                y: 49
+                            }
+                      ,
+                            {
+                                x: '0000-02-01T00:00:00',
+                                y: 54
+                            }
+                      ,
+                            {
+                                x: '0000-03-01T00:00:00',
+                                y: 61
+                            }
+                      ,
+                            {
+                                x: '0000-04-01T00:00:00',
+                                y: 69
+                            }
+                      ,
+                            {
+                                x: '0000-05-01T00:00:00',
+                                y: 73
+                            }
+                      
+                  ],
+                  borderColor: ["#f44336"]
+                }
+            ,
+                {
+                  fill: false,
+                  label: 'column 1',
+                  data: [
+                      
+                            {
+                                x: '0000-01-01T00:00:00',
+                                y: 55
+                            }
+                      ,
+                            {
+                                x: '0000-02-01T00:00:00',
+                                y: 53
+                            }
+                      ,
+                            {
+                                x: '0000-03-01T00:00:00',
+                                y: 50
+                            }
+                      ,
+                            {
+                                x: '0000-04-01T00:00:00',
+                                y: 50
+                            }
+                      ,
+                            {
+                                x: '0000-05-01T00:00:00',
+                                y: 49
+                            }
+                      
+                  ],
+                  borderColor: ["#9c27b0"]
+                }
+            
+        ]
+    },
+    options: {
+        title: {
+            display: false,
+            text: ''
+        },
+        tooltips: {
+            callbacks: {
+                label: function(tti, data) {
+                    var value = data.datasets[0].data[tti.index];
+                    var label = data.labels[tti.index];
+                    return value;
+                }
+            }
+        },
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [{
+                type: "linear",
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }],
+            xAxes: [{
+                type: 'time',
+                position: 'bottom',
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }]
+        }
+    }
+});
+  </script>
+</div>
+
+<div class="chart-wrapper">
+  <h2><pre>$ cat testdata/pie.csv</pre></h2>
+  <div class="pre"><pre>Chrome	57.1<br>Safari	14.5<br>Firefox	11.1<br>Internet Explorer & Edge	9.7<br>Opera	3.1<br></pre></div>
+  <h2><pre>$ cat testdata/pie.csv | chart 
+</pre></h2>
+  <div class="chart">
+    <canvas id="chart3"></canvas>
+  </div>
+  <script>
+    var ctx3 = document.getElementById("chart3");
+    var chart3 = new Chart(ctx3, {
+    type: 'pie',
+    data: {
+        labels: [`Chrome`,`Safari`,`Firefox`,`Internet Explorer & Edge`,`Opera`],
+        datasets: [{
+            data: [57.1,14.5,11.1,9.7,3.1],
+            backgroundColor: ["#f44336","#9c27b0","#3f51b5","#03a9f4","#009688"]
+        }]
+    },
+    options: {
+        title: {
+            display: false,
+            text: ''
+        },
+        tooltips: {
+            callbacks: {
+                label: function(tti, data) {
+                    var value = data.datasets[0].data[tti.index];
+                    var total = data.datasets[0].data.reduce((a, b) => a + b, 0)
+                    var label = data.labels[tti.index];
+                    var percentage = Math.round(value / total * 100);
+                    return label + ': ' + percentage + '%';
+                }
+            }
+        }
+    }
+});
+  </script>
+</div>
+
+<div class="chart-wrapper">
+  <h2><pre>$ cat testdata/scatter-rad-lab.csv</pre></h2>
+  <div class="pre"><pre>14.2	215	70	Nestle<br>16.4	325	70	Häagen-Dazs<br>11.9	185	25	Nestle<br>15.2	332	73	Ben & Jerry\'s<br>18.5	406	81	Häagen-Dazs<br>22.1	522	90	Nestle<br>19.4	412	83	Häagen-Dazs<br>25.1	614	96	Ben & Jerry\'s<br>23.4	544	91	Ben & Jerry\'s<br>18.1	421	85	Häagen-Dazs<br>22.6	445	86	Häagen-Dazs<br>17.2	408	82	Nestle<br></pre></div>
+  <h2><pre>$ cat testdata/scatter-rad-lab.csv | chart scatter
+</pre></h2>
+  <div class="chart">
+    <canvas id="chart4"></canvas>
+  </div>
+  <script>
+    var ctx4 = document.getElementById("chart4");
+    var chart4 = new Chart(ctx4, {
+    type: 'bubble',
+    data: {
+        datasets: [{
+                label: 'Nestle',
+                data: [
+                              {
+                                x:14.2,
+                                y:215,
+                                r:35.690140845070424}
+                ],
+                backgroundColor: "#f44336"
+            },{
+                label: 'Häagen-Dazs',
+                data: [
+                              {
+                                x:16.4,
+                                y:325,
+                                r:35.690140845070424}
+                ],
+                backgroundColor: "#9c27b0"
+            },{
+                label: 'Nestle',
+                data: [
+                              {
+                                x:11.9,
+                                y:185,
+                                r:4}
+                ],
+                backgroundColor: "#f44336"
+            },{
+                label: 'Ben & Jerry\'s',
+                data: [
+                              {
+                                x:15.2,
+                                y:332,
+                                r:37.80281690140845}
+                ],
+                backgroundColor: "#3f51b5"
+            },{
+                label: 'Häagen-Dazs',
+                data: [
+                              {
+                                x:18.5,
+                                y:406,
+                                r:43.436619718309856}
+                ],
+                backgroundColor: "#9c27b0"
+            },{
+                label: 'Nestle',
+                data: [
+                              {
+                                x:22.1,
+                                y:522,
+                                r:49.774647887323944}
+                ],
+                backgroundColor: "#f44336"
+            },{
+                label: 'Häagen-Dazs',
+                data: [
+                              {
+                                x:19.4,
+                                y:412,
+                                r:44.845070422535215}
+                ],
+                backgroundColor: "#9c27b0"
+            },{
+                label: 'Ben & Jerry\'s',
+                data: [
+                              {
+                                x:25.1,
+                                y:614,
+                                r:54}
+                ],
+                backgroundColor: "#3f51b5"
+            },{
+                label: 'Ben & Jerry\'s',
+                data: [
+                              {
+                                x:23.4,
+                                y:544,
+                                r:50.478873239436616}
+                ],
+                backgroundColor: "#3f51b5"
+            },{
+                label: 'Häagen-Dazs',
+                data: [
+                              {
+                                x:18.1,
+                                y:421,
+                                r:46.25352112676056}
+                ],
+                backgroundColor: "#9c27b0"
+            },{
+                label: 'Häagen-Dazs',
+                data: [
+                              {
+                                x:22.6,
+                                y:445,
+                                r:46.95774647887324}
+                ],
+                backgroundColor: "#9c27b0"
+            },{
+                label: 'Nestle',
+                data: [
+                              {
+                                x:17.2,
+                                y:408,
+                                r:44.140845070422536}
+                ],
+                backgroundColor: "#f44336"
+            }]
+    },
+    options: {
+        title: {
+            display: false,
+            text: ''
+        },
+        legend: {
+            display: false
+        },
+         scales: {
+            yAxes: [{
+                type: "linear",
+                ticks: {
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }],
+            xAxes: [{
+                
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }]
+        }
+    }
+});
+  </script>
+</div>
+
+<div class="chart-wrapper">
+  <h2><pre>$ cat testdata/scatter-rad.csv</pre></h2>
+  <div class="pre"><pre>14.2	215	70<br>16.4	325	70<br>11.9	185	25<br>15.2	332	73<br>18.5	406	81<br>22.1	522	90<br>19.4	412	83<br>25.1	614	96<br>23.4	544	91<br>18.1	421	85<br>22.6	445	86<br>17.2	408	82<br></pre></div>
+  <h2><pre>$ cat testdata/scatter-rad.csv | chart scatter --title "Ice cream sales" -x C -y $
+</pre></h2>
+  <div class="chart">
+    <canvas id="chart5"></canvas>
+  </div>
+  <script>
+    var ctx5 = document.getElementById("chart5");
+    var chart5 = new Chart(ctx5, {
+    type: 'bubble',
+    data: {
+        datasets: [
+            {
+                label: '',
+                data: [{
+                                x:14.2,
+                                y:215,
+                                r:35.690140845070424},{
+                                x:16.4,
+                                y:325,
+                                r:35.690140845070424},{
+                                x:11.9,
+                                y:185,
+                                r:4},{
+                                x:15.2,
+                                y:332,
+                                r:37.80281690140845},{
+                                x:18.5,
+                                y:406,
+                                r:43.436619718309856},{
+                                x:22.1,
+                                y:522,
+                                r:49.774647887323944},{
+                                x:19.4,
+                                y:412,
+                                r:44.845070422535215},{
+                                x:25.1,
+                                y:614,
+                                r:54},{
+                                x:23.4,
+                                y:544,
+                                r:50.478873239436616},{
+                                x:18.1,
+                                y:421,
+                                r:46.25352112676056},{
+                                x:22.6,
+                                y:445,
+                                r:46.95774647887324},{
+                                x:17.2,
+                                y:408,
+                                r:44.140845070422536}],
+                backgroundColor: "#f44336"
+            }
+        ]
+    },
+    options: {
+        title: {
+            display: true,
+            text: '"Ice cream sales"'
+        },
+        legend: {
+            display: false
+        },
+        tooltips: {
+            callbacks: {
+                label: function(tti, data) {
+                    var value = data.datasets[0].data[tti.index];
+                    var label = data.labels[tti.index];
+                    return value;
+                }
+            }
+        },
+         scales: {
+            yAxes: [{
+                type: "linear",
+                ticks: {
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: '$'
+                }
+            }],
+            xAxes: [{
+                
+                scaleLabel: {
+                    display: true,
+                    labelString: 'C'
+                }
+            }]
+        }
+    }
+});
+  </script>
+</div>
+
+<div class="chart-wrapper">
+  <h2><pre>$ cat testdata/scatter.csv</pre></h2>
+  <div class="pre"><pre>14.2	215<br>16.4	325<br>11.9	185<br>15.2	332<br>18.5	406<br>22.1	522<br>19.4	412<br>25.1	614<br>23.4	544<br>18.1	421<br>22.6	445<br>17.2	408<br></pre></div>
+  <h2><pre>$ cat testdata/scatter.csv | chart scatter --title "Ice cream sales" -x C -y $
+</pre></h2>
+  <div class="chart">
+    <canvas id="chart6"></canvas>
+  </div>
+  <script>
+    var ctx6 = document.getElementById("chart6");
+    var chart6 = new Chart(ctx6, {
+    type: 'bubble',
+    data: {
+        datasets: [
+            {
+                label: '',
+                data: [{
+                                x:14.2,
+                                y:215,
+                                r:4},{
+                                x:16.4,
+                                y:325,
+                                r:4},{
+                                x:11.9,
+                                y:185,
+                                r:4},{
+                                x:15.2,
+                                y:332,
+                                r:4},{
+                                x:18.5,
+                                y:406,
+                                r:4},{
+                                x:22.1,
+                                y:522,
+                                r:4},{
+                                x:19.4,
+                                y:412,
+                                r:4},{
+                                x:25.1,
+                                y:614,
+                                r:4},{
+                                x:23.4,
+                                y:544,
+                                r:4},{
+                                x:18.1,
+                                y:421,
+                                r:4},{
+                                x:22.6,
+                                y:445,
+                                r:4},{
+                                x:17.2,
+                                y:408,
+                                r:4}],
+                backgroundColor: "#f44336"
+            }
+        ]
+    },
+    options: {
+        title: {
+            display: true,
+            text: '"Ice cream sales"'
+        },
+        legend: {
+            display: false
+        },
+        tooltips: {
+            callbacks: {
+                label: function(tti, data) {
+                    var value = data.datasets[0].data[tti.index];
+                    var label = data.labels[tti.index];
+                    return value;
+                }
+            }
+        },
+         scales: {
+            yAxes: [{
+                type: "linear",
+                ticks: {
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: '$'
+                }
+            }],
+            xAxes: [{
+                
+                scaleLabel: {
+                    display: true,
+                    labelString: 'C'
+                }
+            }]
+        }
+    }
+});
+  </script>
+</div>
+
+
 </body>
-</html>`
+</html>

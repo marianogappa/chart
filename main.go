@@ -25,9 +25,18 @@ func main() {
 		log.WithField("err", err).Fatalf("Could not create temporary file to store the chart.")
 	}
 
+	if _, err := tmpfile.WriteString(baseTemplateHeaderString); err != nil {
+		log.WithField("err", err).Fatalf("Could not write header to temporary file.")
+	}
+
 	if err = baseTemplate.Execute(tmpfile, b.String()); err != nil {
 		log.WithField("err", err).Fatalf("Could not write chart to temporary file.")
 	}
+
+	if _, err := tmpfile.WriteString(baseTemplateFooterString); err != nil {
+		log.WithField("err", err).Fatalf("Could not write footer to temporary file.")
+	}
+
 	if err = tmpfile.Close(); err != nil {
 		log.WithField("err", err).Fatalf("Could not close temporary file after saving chart to it.")
 	}
