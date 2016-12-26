@@ -24,7 +24,7 @@ func init() {
     type: 'line',
     data: {
         labels: [{{ if len .SSS }}{{ range $i,$v := .SSS }}{{if $i}},{{end}}{{if len $v}}{{index $v 0 | preprocessLabel}}{{else}}'row {{$i}}'{{end}}{{end}}{{end}}],
-        dataset: [{{$fss := .FSS}}
+        datasets: [{{$fss := .FSS}}
             {{range $i, $unused := (index $fss 0)}}{{if $i}},{{end}}
                 {
                   fill: false,
