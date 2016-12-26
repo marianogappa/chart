@@ -85,9 +85,9 @@ func TestCheatsheet(t *testing.T) {
 		t.FailNow()
 	}
 
-	err = ioutil.WriteFile("cheatsheet.html", b.Bytes(), os.ModePerm)
+	err = ioutil.WriteFile("index.html", b.Bytes(), os.ModePerm)
 	if err != nil {
-		t.Errorf("Could not write file [%v] [%v]", "cheatsheet.html", err)
+		t.Errorf("Could not write file [%v] [%v]", "index.html", err)
 		t.FailNow()
 	}
 }
