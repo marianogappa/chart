@@ -36,7 +36,7 @@ func TestLine(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		templateData, resultLineTemplate, err := setupLine(ts.fss, ts.sss, ts.tss, ts.title, linear, "", "")
+		templateData, resultLineTemplate, err := setupLine(ts.fss, ts.sss, ts.tss, ts.title, linear, "", "", false)
 		if ts.fails && err == nil {
 			t.Errorf("'%v' should have failed", ts.name)
 		}
