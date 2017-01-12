@@ -15,6 +15,7 @@ type lineTemplateData struct {
 	ScaleType string
 	XLabel    string
 	YLabel    string
+	ZeroBased bool
 }
 
 var lineTemplate, scatterLineTemplate, scatterLineWithTimeTemplate *template.Template
@@ -57,7 +58,7 @@ func init() {
             yAxes: [{
                 type: "{{ .ScaleType }}",
                 ticks: {
-                    beginAtZero: true,
+                    beginAtZero: {{ .ZeroBased }},
                     callback: function(value, index, values) {
                         return value;
                     }
@@ -232,7 +233,7 @@ func init() {
 	}
 }
 
-func setupLine(fss [][]float64, sss [][]string, tss [][]time.Time, title string, scaleType scaleType, xLabel string, yLabel string) (interface{}, *template.Template, error) {
+func setupLine(fss [][]float64, sss [][]string, tss [][]time.Time, title string, scaleType scaleType, xLabel string, yLabel string, zeroBased bool) (interface{}, *template.Template, error) {
 	if fss == nil || (sss == nil && tss == nil && len(fss[0]) < 2) {
 		return nil, nil, fmt.Errorf("Couldn't find values to plot.")
 	}
@@ -245,6 +246,7 @@ func setupLine(fss [][]float64, sss [][]string, tss [][]time.Time, title string,
 		ScaleType: scaleType.string(),
 		XLabel:    xLabel,
 		YLabel:    yLabel,
+		ZeroBased: zeroBased,
 	}
 
 	templ := lineTemplate

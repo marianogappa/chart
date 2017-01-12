@@ -28,6 +28,7 @@ type options struct {
 	xLabel     string
 	yLabel     string
 	dateFormat string
+	zeroBased  bool
 }
 
 func mustResolveOptions(args []string) options {
@@ -43,6 +44,7 @@ func resolveOptions(args []string) (options, error) {
 	xLabelHelp := "Sets the label for the x axis."
 	yLabelHelp := "Sets the label for the y axis."
 	dateFormatHelp := "Sets the date format, according to https://golang.org/src/time/format.go."
+	zeroBasedHelp := "Makes y-axis begin at zero."
 
 	o := options{}
 
@@ -52,6 +54,7 @@ func resolveOptions(args []string) (options, error) {
 	fs.StringVar(&o.xLabel, "x", o.xLabel, xLabelHelp)
 	fs.StringVar(&o.yLabel, "y", o.yLabel, yLabelHelp)
 	fs.StringVar(&o.dateFormat, "date-format", o.dateFormat, dateFormatHelp) //TODO document
+	fs.BoolVar(&o.zeroBased, "zero-based", o.zeroBased, zeroBasedHelp)       //TODO document
 
 	err := fs.Parse(fromFirstDash(args))
 	if err != nil {
