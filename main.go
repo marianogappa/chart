@@ -41,7 +41,12 @@ func main() {
 		log.WithField("err", err).Fatalf("Could not close temporary file after saving chart to it.")
 	}
 
-	open.Run("file://" + tmpfile.Name())
+	newName := tmpfile.Name() + ".html"
+	if err = os.Rename(tmpfile.Name(), newName); err != nil {
+		log.WithField("err", err).Fatalf("Could not add html extension to the temporary file.")
+	}
+
+	open.Run("file://" + newName)
 }
 
 func buildChart(i []string, o options) (bytes.Buffer, error) {
