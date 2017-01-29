@@ -81,4 +81,4 @@ curl -s "https://api.github.com/repos/marianogappa/chart/stargazers?page=1&per_p
 
 ## Contribute
 
-Please.
+PRs are greatly appreciated and are currently [being merged](https://github.com/marianogappa/chart/pull/3).
