@@ -16,7 +16,7 @@ chart [pie|bar|line|scatter|log|' '|';'|','|'\t'|-t %title%|--title %title%|-x %
 - `bar`: render a bar chart
 - `line`: render a line chart
 - `scatter`: render a scatter plot chart
-- `log`: use logarithmmic scale (bar chart only)
+- `log`: use logarithmic scale (bar chart only)
 - `' '|';'|','|'\t'`: this character separates columns on each line (\t = default)
 - `-t|--title`: title for the chart
 - `-x`: label for the x axis
@@ -85,3 +85,4 @@ chart line --date-format 2006-01-02T15:04:05Z
 ## Contribute
 
 PRs are greatly appreciated and are currently [being merged](https://github.com/marianogappa/chart/pull/3).
+If you have a use case that is not supported by `chart`, [I'd love to hear about it](https://github.com/marianogappa/chart/issues), but if it's too complex I'd recommend you to try [gnuplot](http://www.gnuplot.info/).
