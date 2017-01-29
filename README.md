@@ -60,6 +60,13 @@ curl -u $USER:$ACCESS_TOKEN -s "https://api.github.com/user/repos" | \
 
 ![Bar chart of a Github user's lines of code per language (requires setting up an Access Token)](img/bar.png?v=1)
 
+- Line chart of the stargazers of this repo over time up to Jan 2017 (received some attention after the publication of [this](https://movio.co/blog/migrate-Scala-to-Go/) blogpost)
+```
+curl -s "https://api.github.com/repos/marianogappa/chart/stargazers?page=1&per_page=100" -H"Accept: application/vnd.github.v3.star+json" | jq --raw-output 'map(.starred_at) | .[]' | awk '{print NR "\t" $0}' | chart line --date-format 2006-01-02T15:04:05Z
+```
+
+![Line chart of Github stargazers of this repo over time](img/line.png?v-1)
+
 ## Charting MySQL output
 
 `chart` works great with [sql](https://github.com/MarianoGappa/sql), or with any `mysql -Nsre '...'` query.
