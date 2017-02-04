@@ -16,6 +16,9 @@ func main() {
 	i := readInput(os.Stdin)
 
 	b, err := buildChart(i, o)
+	if err == nil && b.Len() == 0 {
+		os.Exit(0)
+	}
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -50,9 +53,33 @@ func main() {
 }
 
 func buildChart(i []string, o options) (bytes.Buffer, error) {
-	fss, sss, tss, minFSS, maxFSS, o := preprocess(i, o)
-
+	fss, sss, tss, minFSS, maxFSS, o, lf := preprocess(i, o)
 	var b bytes.Buffer
+
+	if o.debug {
+		fcn, scn, tcn, rn := 0, 0, 0, 0
+		if len(fss) > 0 {
+			rn = len(fss)
+			fcn = len(fss[0])
+		}
+		if len(sss) > 0 {
+			rn = len(sss)
+			scn = len(sss[0])
+		}
+		if len(tss) > 0 {
+			rn = len(tss)
+			tcn = len(tss[0])
+		}
+		fmt.Printf("Lines read\t%v\n", len(i))
+		fmt.Printf("Line format inferred\t%v\n", lf)
+		fmt.Printf("Lines used\t%v\n", rn)
+		fmt.Printf("Float column count\t%v\n", fcn)
+		fmt.Printf("String column count\t%v\n", scn)
+		fmt.Printf("Date/Time column count\t%v\n", tcn)
+		fmt.Printf("%+v\n", o)
+		return b, nil
+	}
+
 	var err error
 	var templ *template.Template
 	var templData interface{}

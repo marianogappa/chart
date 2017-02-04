@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func preprocess(i []string, o options) ([][]float64, [][]string, [][]time.Time, []float64, []float64, options) {
+func preprocess(i []string, o options) ([][]float64, [][]string, [][]time.Time, []float64, []float64, options, string) {
 	var fss [][]float64
 	var sss [][]string
 	var tss [][]time.Time
@@ -78,5 +78,5 @@ func preprocess(i []string, o options) ([][]float64, [][]string, [][]time.Time, 
 		tss = nil
 	}
 
-	return fss, sss, tss, minFSS, maxFSS, o
+	return fss, sss, tss, minFSS, maxFSS, o, lf
 }

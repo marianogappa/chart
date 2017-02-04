@@ -29,6 +29,7 @@ type options struct {
 	yLabel     string
 	dateFormat string
 	zeroBased  bool
+	debug      bool
 }
 
 func mustResolveOptions(args []string) options {
@@ -45,6 +46,7 @@ func resolveOptions(args []string) (options, error) {
 	yLabelHelp := "Sets the label for the y axis."
 	dateFormatHelp := "Sets the date format, according to https://golang.org/src/time/format.go."
 	zeroBasedHelp := "Makes y-axis begin at zero."
+	debugHelp := "Use to make sure to double-check the chart is showing what you expect."
 
 	o := options{}
 
@@ -55,6 +57,7 @@ func resolveOptions(args []string) (options, error) {
 	fs.StringVar(&o.yLabel, "y", o.yLabel, yLabelHelp)
 	fs.StringVar(&o.dateFormat, "date-format", o.dateFormat, dateFormatHelp) //TODO document
 	fs.BoolVar(&o.zeroBased, "zero-based", o.zeroBased, zeroBasedHelp)       //TODO document
+	fs.BoolVar(&o.debug, "debug", o.debug, debugHelp)                        //TODO document
 
 	err := fs.Parse(fromFirstDash(args))
 	if err != nil {
@@ -111,6 +114,8 @@ func resolveOptions(args []string) (options, error) {
 			o.dateFormat = "Jan _2 15:04:05.000000"
 		case "StampNano":
 			o.dateFormat = "Jan _2 15:04:05.000000000"
+		case "debug":
+			o.debug = true
 		}
 	}
 
