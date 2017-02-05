@@ -12,8 +12,8 @@ import (
 )
 
 func main() {
-	o := mustResolveOptions(os.Args[1:])
 	i := readInput(os.Stdin)
+	o := mustResolveOptions(os.Args[1:], len(i) == 0)
 
 	b, err := buildChart(i, o)
 	if err == nil && b.Len() == 0 {

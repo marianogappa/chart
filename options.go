@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 )
 
@@ -30,23 +31,25 @@ type options struct {
 	dateFormat string
 	zeroBased  bool
 	debug      bool
+	help       bool
 }
 
-func mustResolveOptions(args []string) options {
-	o, err := resolveOptions(args)
+func mustResolveOptions(args []string, noInput bool) options {
+	o, err := resolveOptions(args, noInput)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return o
 }
 
-func resolveOptions(args []string) (options, error) {
+func resolveOptions(args []string, noInput bool) (options, error) {
 	titleHelp := "Sets the title for the chart."
 	xLabelHelp := "Sets the label for the x axis."
 	yLabelHelp := "Sets the label for the y axis."
 	dateFormatHelp := "Sets the date format, according to https://golang.org/src/time/format.go."
 	zeroBasedHelp := "Makes y-axis begin at zero."
 	debugHelp := "Use to make sure to double-check the chart is showing what you expect."
+	helpHelp := "Show help."
 
 	o := options{}
 
@@ -58,6 +61,8 @@ func resolveOptions(args []string) (options, error) {
 	fs.StringVar(&o.dateFormat, "date-format", o.dateFormat, dateFormatHelp) //TODO document
 	fs.BoolVar(&o.zeroBased, "zero-based", o.zeroBased, zeroBasedHelp)       //TODO document
 	fs.BoolVar(&o.debug, "debug", o.debug, debugHelp)                        //TODO document
+	fs.BoolVar(&o.help, "help", o.help, helpHelp)
+	fs.BoolVar(&o.help, "h", o.help, helpHelp)
 
 	err := fs.Parse(fromFirstDash(args))
 	if err != nil {
@@ -116,7 +121,30 @@ func resolveOptions(args []string) (options, error) {
 			o.dateFormat = "Jan _2 15:04:05.000000000"
 		case "debug":
 			o.debug = true
+		case "help":
+			o.help = true
 		}
+	}
+
+	if noInput || o.help {
+		fs.PrintDefaults()
+		fmt.Println(`
+  pie
+	render a pie chart
+  bar
+	render a bar chart
+  line
+	render a line chart
+  scatter
+	render a scatter plot chart
+  log
+	use logarithmic scale (bar chart only)
+  ' '|';'|','|'\t'
+	this character separates columns on each line (\t = default)
+
+More info: https://github.com/marianogappa/chart
+`)
+		return o, fmt.Errorf("Showing usage")
 	}
 
 	if o.separator != ' ' && o.separator != ';' && o.separator != ',' {
