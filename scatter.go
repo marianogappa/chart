@@ -18,6 +18,7 @@ type scatterTemplateData struct {
 	ScaleType string
 	XLabel    string
 	YLabel    string
+	ZeroBased bool
 }
 
 var scatterTemplate, scatterWithLabelsTemplate *template.Template
@@ -84,6 +85,7 @@ func init() {
             yAxes: [{
                 type: "{{ .ScaleType }}",
                 ticks: {
+                    beginAtZero: {{ .ZeroBased }},
                     callback: function(value, index, values) {
                         return value;
                     }
@@ -163,6 +165,7 @@ func init() {
             yAxes: [{
                 type: "{{ .ScaleType }}",
                 ticks: {
+                    beginAtZero: {{ .ZeroBased }},
                     callback: function(value, index, values) {
                         return value;
                     }
@@ -201,7 +204,7 @@ func init() {
 	}
 }
 
-func setupScatter(fss [][]float64, sss [][]string, tss [][]time.Time, minFSS []float64, maxFSS []float64, title string, scaleType scaleType, xLabel string, yLabel string) (interface{}, *template.Template, error) {
+func setupScatter(fss [][]float64, sss [][]string, tss [][]time.Time, minFSS []float64, maxFSS []float64, title string, scaleType scaleType, xLabel string, yLabel string, zeroBased bool) (interface{}, *template.Template, error) {
 	if len(fss) == 0 {
 		return nil, nil, fmt.Errorf("Couldn't find values to plot.")
 	}
@@ -225,6 +228,7 @@ func setupScatter(fss [][]float64, sss [][]string, tss [][]time.Time, minFSS []f
 		ScaleType: scaleType.string(),
 		XLabel:    xLabel,
 		YLabel:    yLabel,
+		ZeroBased: zeroBased,
 	}
 
 	templ := scatterTemplate

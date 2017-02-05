@@ -124,7 +124,7 @@ func init() {
             yAxes: [{
                 type: "{{ .ScaleType }}",
                 ticks: {
-                    beginAtZero: true,
+                    beginAtZero: {{ .ZeroBased }},
                     callback: function(value, index, values) {
                         return value;
                     }
@@ -190,7 +190,7 @@ func init() {
             yAxes: [{
                 type: "{{ .ScaleType }}",
                 ticks: {
-                    beginAtZero: true,
+                    beginAtZero: {{ .ZeroBased }},
                     callback: function(value, index, values) {
                         return value;
                     }

@@ -15,6 +15,7 @@ type barTemplateData struct {
 	ScaleType       string
 	XLabel          string
 	YLabel          string
+	ZeroBased       bool
 }
 
 var barTemplate *template.Template
@@ -50,7 +51,7 @@ func init() {
             yAxes: [{
                 type: "{{ .ScaleType }}",
                 ticks: {
-                    beginAtZero: true,
+                    beginAtZero: {{ .ZeroBased }},
                     callback: function(value, index, values) {
                         return value;
                     }
@@ -80,7 +81,7 @@ func init() {
 	}
 }
 
-func setupBar(fss [][]float64, sss [][]string, title string, scaleType scaleType, xLabel string, yLabel string) (interface{}, *template.Template, error) {
+func setupBar(fss [][]float64, sss [][]string, title string, scaleType scaleType, xLabel string, yLabel string, zeroBased bool) (interface{}, *template.Template, error) {
 	if len(fss) == 0 || len(sss) == 0 {
 		return nil, nil, fmt.Errorf("Couldn't find values to plot.")
 	}
@@ -94,6 +95,7 @@ func setupBar(fss [][]float64, sss [][]string, title string, scaleType scaleType
 		ScaleType:       scaleType.string(),
 		XLabel:          xLabel,
 		YLabel:          yLabel,
+		ZeroBased:       zeroBased,
 	}
 
 	return templateData, barTemplate, nil

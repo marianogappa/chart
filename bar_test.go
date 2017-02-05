@@ -34,7 +34,7 @@ func TestBar(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		templateData, resultBarTemplate, err := setupBar(ts.fss, ts.sss, ts.title, linear, "", "")
+		templateData, resultBarTemplate, err := setupBar(ts.fss, ts.sss, ts.title, linear, "", "", false)
 		if ts.fails && err == nil {
 			t.Errorf("'%v' should have failed", ts.name)
 		}
