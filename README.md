@@ -9,7 +9,7 @@ Quick & smart charting for STDIN
 ## Syntax
 
 ```
-chart [pie|bar|line|scatter|log|' '|';'|','|'\t'|-t %title%|--title %title%|-x %x_label%|-y %y_label%]
+chart [options]
 ```
 
 - `pie`: render a pie chart
@@ -21,6 +21,10 @@ chart [pie|bar|line|scatter|log|' '|';'|','|'\t'|-t %title%|--title %title%|-x %
 - `-t|--title`: title for the chart
 - `-x`: label for the x axis
 - `-y`: label for the y axis
+- `--date-format`: Sets the date format, according to [https://golang.org/src/time/format.go](https://golang.org/src/time/format.go)
+- `--debug`: Use to make sure to double-check the chart is showing what you expect.
+- `-h|--help`: Show help
+- `--zero-based`: Makes y-axis begin at zero
 
 ## Installation
 
@@ -73,6 +77,23 @@ chart line --date-format 2006-01-02T15:04:05Z
 ## Charting MySQL output
 
 `chart` works great with [sql](https://github.com/MarianoGappa/sql), or with any `mysql -Nsre '...'` query.
+
+## I don't trust the chart is correct
+
+Me neither. Add `--debug` to double-check (e.g. some rows could be being ignored due to parse failures, separator could be incorrect, column types could be inferred wrongly).
+
+```
+$ cat /tmp/c | ./chart bar --debug
+Lines read  3
+Line format inferred    ff
+Lines used  3
+Float column count  2
+String column count 0
+Date/Time column count  0
+Chart type  bar
+Scale type  linear
+Separator   [tab]
+```
 
 ## Details
 
