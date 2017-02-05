@@ -46,7 +46,7 @@ func TestCheatsheet(t *testing.T) {
 		r := regexp.MustCompile("'.+'|\".+\"|\\S+")
 		m := r.FindAllString(optionsLine, -1)
 
-		o, err := resolveOptions(m)
+		o, err := resolveOptions(m, false)
 		log.Println(o.title)
 		if err != nil {
 			t.Errorf("[%v] can't resolve options line [%v]", fs, optionsLine)

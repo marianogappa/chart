@@ -72,8 +72,10 @@ func init() {
         tooltips: {
             callbacks: {
                 label: function(tti, data) {
-                    var value = data.datasets[0].data[tti.index];
-                    var label = data.labels[tti.index];
+                    var value = data.datasets[tti.datasetIndex].data[tti.index];
+                    if (value.y) {
+                        value = value.y
+                    }
                     return value;
                 }
             }

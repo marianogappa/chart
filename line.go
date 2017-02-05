@@ -32,7 +32,7 @@ func init() {
                   data: [
                       {{range $j, $v := $fss}}{{if $j}},{{end}}{{if gt (len $v) $i}}{{index $v $i | printf "%g"}}{{else}}0{{end}}{{end}}
                   ],
-                  borderColor: [{{colorIndex $i}}]
+                  borderColor: {{colorIndex $i}}
                 }
             {{end}}
         ]
@@ -45,8 +45,10 @@ func init() {
         tooltips: {
             callbacks: {
                 label: function(tti, data) {
-                    var value = data.datasets[0].data[tti.index];
-                    var label = data.labels[tti.index];
+                    var value = data.datasets[tti.datasetIndex].data[tti.index];
+                    if (value.y) {
+                        value = value.y
+                    }
                     return value;
                 }
             }
@@ -94,7 +96,7 @@ func init() {
                             }
                       {{end}}
                   ],
-                  borderColor: [{{colorIndex $i}}]
+                  borderColor: {{colorIndex $i}}
                 }
             {{end}}{{end}}
         ]
@@ -107,8 +109,10 @@ func init() {
         tooltips: {
             callbacks: {
                 label: function(tti, data) {
-                    var value = data.datasets[0].data[tti.index];
-                    var label = data.labels[tti.index];
+                    var value = data.datasets[tti.datasetIndex].data[tti.index];
+                    if (value.y) {
+                        value = value.y
+                    }
                     return value;
                 }
             }
@@ -158,7 +162,7 @@ func init() {
                             }
                       {{end}}
                   ],
-                  borderColor: [{{colorIndex $i}}]
+                  borderColor: {{colorIndex $i}}
                 }
             {{end}}
         ]
@@ -171,8 +175,10 @@ func init() {
         tooltips: {
             callbacks: {
                 label: function(tti, data) {
-                    var value = data.datasets[0].data[tti.index];
-                    var label = data.labels[tti.index];
+                    var value = data.datasets[tti.datasetIndex].data[tti.index];
+                    if (value.y) {
+                        value = value.y
+                    }
                     return value;
                 }
             }

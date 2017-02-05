@@ -103,7 +103,7 @@ func TestResolveOptions(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		result, err := resolveOptions(ts.args)
+		result, err := resolveOptions(ts.args, false)
 
 		if ts.fails && err == nil {
 			t.Errorf("should have failed with %v", result)
