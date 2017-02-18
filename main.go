@@ -67,7 +67,7 @@ func buildChart(i []string, o options) (bytes.Buffer, error) {
 
 	switch o.chartType {
 	case pie:
-		templData, templ, err = setupPie(fss, sss, o.title)
+		templData, templ, err = setupPie(fss, sss, tss, o.title)
 	case bar:
 		templData, templ, err = setupBar(fss, sss, o.title, o.scaleType, o.xLabel, o.yLabel, o.zeroBased)
 	case line:

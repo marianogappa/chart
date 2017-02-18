@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"text/template"
+	"time"
 )
 
 type pieTemplateData struct {
@@ -54,9 +55,26 @@ func init() {
 	}
 }
 
-func setupPie(fss [][]float64, sss [][]string, title string) (interface{}, *template.Template, error) {
-	if len(fss) == 0 || len(sss) == 0 {
+func setupPie(fss [][]float64, sss [][]string, tss [][]time.Time, title string) (interface{}, *template.Template, error) {
+	if len(fss) == 0 || (len(fss[0]) == 1 && len(sss) == 0 && len(tss) == 0) {
 		return nil, nil, fmt.Errorf("Couldn't find values to plot.")
+	}
+
+	if len(sss) == 0 && len(tss) > 0 {
+		for _, ts := range tss {
+			ss := make([]string, len(ts))
+			for i, t := range ts {
+				ss[i] = t.Format("2006-01-02T15:04:05.999999999")
+			}
+			sss = append(sss, ss)
+		}
+	}
+
+	if len(sss) == 0 && len(tss) == 0 && len(fss[0]) > 1 {
+		for i, fs := range fss {
+			sss = append(sss, []string{fmt.Sprintf("%g", fs[0])})
+			fss[i] = fss[i][1:]
+		}
 	}
 
 	templateData := pieTemplateData{
