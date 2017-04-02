@@ -67,19 +67,42 @@ func buildChart(i []string, o options) (bytes.Buffer, error) {
 
 	switch o.chartType {
 	case pie:
-		templData, templ, err = setupPie(fss, sss, tss, o.title)
+		if len(fss) == 0 || (len(fss[0]) == 1 && len(sss) == 0 && len(tss) == 0) {
+			return b, fmt.Errorf("couldn't find values to plot")
+		}
 	case bar:
-		templData, templ, err = setupBar(fss, sss, tss, o.title, o.scaleType, o.xLabel, o.yLabel, o.zeroBased)
+		if len(fss) == 0 || (len(fss[0]) == 1 && len(sss) == 0 && len(tss) == 0) {
+			return b, fmt.Errorf("couldn't find values to plot")
+		}
 	case line:
-		templData, templ, err = setupLine(fss, sss, tss, o.title, o.scaleType, o.xLabel, o.yLabel, o.zeroBased)
+		if fss == nil || (sss == nil && tss == nil && len(fss[0]) < 2) {
+			return b, fmt.Errorf("couldn't find values to plot")
+		}
 	case scatter:
-		templData, templ, err = setupScatter(fss, sss, tss, minFSS, maxFSS, o.title, o.scaleType, o.xLabel, o.yLabel, o.zeroBased)
+		if len(fss) == 0 {
+			return b, fmt.Errorf("couldn't find values to plot")
+		}
 	}
 	if err != nil {
-		return b, fmt.Errorf("Could not construct chart because [%v]", err)
+		return b, fmt.Errorf("could not construct chart because [%v]", err)
 	}
+
+	templData, templ, err = cjsChart{inData{
+		ChartType: o.chartType.string(),
+		FSS:       fss,
+		SSS:       sss,
+		TSS:       tss,
+		MinFSS:    minFSS,
+		MaxFSS:    maxFSS,
+		Title:     o.title,
+		ScaleType: o.scaleType.string(),
+		XLabel:    o.xLabel,
+		YLabel:    o.yLabel,
+		ZeroBased: o.zeroBased,
+	}}.chart()
+
 	if err := templ.Execute(&b, templData); err != nil {
-		return b, fmt.Errorf("Could not prepare ChartJS js code for chart: [%v]", err)
+		return b, fmt.Errorf("could not prepare ChartJS js code for chart: [%v]", err)
 	}
 
 	return b, nil

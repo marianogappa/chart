@@ -685,50 +685,64 @@ h2 {
     var chart0 = new Chart(ctx0, {
     type: 'bar',
     data: {
-        labels: [`Chrome`,`Safari`,`Firefox`,`Internet Explorer & Edge`,`Opera`],
-        datasets: [{
-            data: [57.1,14.5,11.1,9.7,3.1],
-            backgroundColor: ["#f44336","#9c27b0","#3f51b5","#03a9f4","#009688"]
-        }]
+      labels: [`Chrome`,`Safari`,`Firefox`,`Internet Explorer & Edge`,`Opera`],
+      datasets: [
+        {
+          fill: true,
+          
+          backgroundColor: ["#f44336","#9c27b0","#3f51b5","#03a9f4","#009688"],
+          
+          data: [
+            57.1,14.5,11.1,9.7,3.1
+            
+          ]
+        }
+        
+      ]
     },
     options: {
-        title: {
+      title: {
             display: false,
             text: ''
         },
         tooltips: {
             callbacks: {
                 label: function(tti, data) {
+                  
                     var value = data.datasets[0].data[tti.index];
                     var label = data.labels[tti.index];
                     return value;
+    
                 }
             }
-        },
-        legend: {
-            display: false
-        },
-        scales: {
-            yAxes: [{
-                type: "linear",
-                ticks: {
-                    beginAtZero: false,
-                    callback: function(value, index, values) {
-                        return value;
-                    }
-                },
-                scaleLabel: {
-                    display: false,
-                    labelString: ''
-                }
-            }],
-            xAxes: [{
-                scaleLabel: {
-                    display: false,
-                    labelString: ''
-                }
-            }]
         }
+        ,
+          legend: {
+              display: false
+          },
+          scales: {
+              yAxes: [{
+                  type: "linear",
+                  ticks: {
+                      beginAtZero: false,
+                      callback: function(value, index, values) {
+                          return value;
+                      }
+                  },
+                  scaleLabel: {
+                      display: false,
+                      labelString: ''
+                  }
+              }],
+              xAxes: [{
+                  
+                  scaleLabel: {
+                      display: false,
+                      labelString: ''
+                  }
+              }]
+          }
+        
     }
 });
   </script>
@@ -747,28 +761,40 @@ h2 {
     var chart1 = new Chart(ctx1, {
     type: 'pie',
     data: {
-        labels: [`Trump`,`Hillary`,`Stein`,`Johnson`],
-        datasets: [{
-            data: [3,2,1,1],
-            backgroundColor: ["#f44336","#9c27b0","#3f51b5","#03a9f4"]
-        }]
+      labels: [`Trump`,`Hillary`,`Stein`,`Johnson`],
+      datasets: [
+        {
+          fill: true,
+          
+          backgroundColor: ["#f44336","#9c27b0","#3f51b5","#03a9f4"],
+          
+          data: [
+            3,2,1,1
+            
+          ]
+        }
+        
+      ]
     },
     options: {
-        title: {
+      title: {
             display: false,
             text: ''
         },
         tooltips: {
             callbacks: {
                 label: function(tti, data) {
+                  
                     var value = data.datasets[0].data[tti.index];
                     var total = data.datasets[0].data.reduce((a, b) => a + b, 0)
                     var label = data.labels[tti.index];
                     var percentage = Math.round(value / total * 100);
                     return label + ': ' + percentage + '%';
+    
                 }
             }
         }
+        
     }
 });
   </script>
@@ -787,120 +813,119 @@ h2 {
     var chart2 = new Chart(ctx2, {
     type: 'line',
     data: {
-        datasets: [
+      labels: [],
+      datasets: [
+        {
+          fill: false,
+          label: 'column 0',
+          
+          borderColor: "#f44336",
+          data: [
             
-                {
-                  fill: false,
-                  label: 'column 0',
-                  data: [
-                      
-                            {
-                                x: '0000-01-01T00:00:00',
-                                y: 49
-                            }
-                      ,
-                            {
-                                x: '0000-02-01T00:00:00',
-                                y: 54
-                            }
-                      ,
-                            {
-                                x: '0000-03-01T00:00:00',
-                                y: 61
-                            }
-                      ,
-                            {
-                                x: '0000-04-01T00:00:00',
-                                y: 69
-                            }
-                      ,
-                            {
-                                x: '0000-05-01T00:00:00',
-                                y: 73
-                            }
-                      
-                  ],
-                  borderColor: "#f44336"
-                }
-            ,
-                {
-                  fill: false,
-                  label: 'column 1',
-                  data: [
-                      
-                            {
-                                x: '0000-01-01T00:00:00',
-                                y: 55
-                            }
-                      ,
-                            {
-                                x: '0000-02-01T00:00:00',
-                                y: 53
-                            }
-                      ,
-                            {
-                                x: '0000-03-01T00:00:00',
-                                y: 50
-                            }
-                      ,
-                            {
-                                x: '0000-04-01T00:00:00',
-                                y: 50
-                            }
-                      ,
-                            {
-                                x: '0000-05-01T00:00:00',
-                                y: 49
-                            }
-                      
-                  ],
-                  borderColor: "#9c27b0"
-                }
+            {
+                x: '0000-01-01T00:00:00',
+                y: 49
+              }
+            ,{
+                x: '0000-02-01T00:00:00',
+                y: 54
+              }
+            ,{
+                x: '0000-03-01T00:00:00',
+                y: 61
+              }
+            ,{
+                x: '0000-04-01T00:00:00',
+                y: 69
+              }
+            ,{
+                x: '0000-05-01T00:00:00',
+                y: 73
+              }
             
-        ]
+          ]
+        }
+        ,{
+          fill: false,
+          label: 'column 1',
+          
+          borderColor: "#9c27b0",
+          data: [
+            
+            {
+                x: '0000-01-01T00:00:00',
+                y: 55
+              }
+            ,{
+                x: '0000-02-01T00:00:00',
+                y: 53
+              }
+            ,{
+                x: '0000-03-01T00:00:00',
+                y: 50
+              }
+            ,{
+                x: '0000-04-01T00:00:00',
+                y: 50
+              }
+            ,{
+                x: '0000-05-01T00:00:00',
+                y: 49
+              }
+            
+          ]
+        }
+        
+      ]
     },
     options: {
-        title: {
+      title: {
             display: false,
             text: ''
         },
         tooltips: {
             callbacks: {
                 label: function(tti, data) {
+                  
                     var value = data.datasets[tti.datasetIndex].data[tti.index];
                     if (value.y) {
                         value = value.y
                     }
                     return value;
+    
                 }
             }
-        },
-        legend: {
-            display: false
-        },
-        scales: {
-            yAxes: [{
-                type: "linear",
-                ticks: {
-                    beginAtZero: false,
-                    callback: function(value, index, values) {
-                        return value;
-                    }
-                },
-                scaleLabel: {
-                    display: false,
-                    labelString: ''
-                }
-            }],
-            xAxes: [{
-                type: 'time',
-                position: 'bottom',
-                scaleLabel: {
-                    display: false,
-                    labelString: ''
-                }
-            }]
         }
+        ,
+          legend: {
+              display: false
+          },
+          scales: {
+              yAxes: [{
+                  type: "linear",
+                  ticks: {
+                      beginAtZero: false,
+                      callback: function(value, index, values) {
+                          return value;
+                      }
+                  },
+                  scaleLabel: {
+                      display: false,
+                      labelString: ''
+                  }
+              }],
+              xAxes: [{
+                  
+                  type: 'time',
+                  position: 'bottom',
+                  
+                  scaleLabel: {
+                      display: false,
+                      labelString: ''
+                  }
+              }]
+          }
+        
     }
 });
   </script>
@@ -919,28 +944,40 @@ h2 {
     var chart3 = new Chart(ctx3, {
     type: 'pie',
     data: {
-        labels: [`Chrome`,`Safari`,`Firefox`,`Internet Explorer & Edge`,`Opera`],
-        datasets: [{
-            data: [57.1,14.5,11.1,9.7,3.1],
-            backgroundColor: ["#f44336","#9c27b0","#3f51b5","#03a9f4","#009688"]
-        }]
+      labels: [`Chrome`,`Safari`,`Firefox`,`Internet Explorer & Edge`,`Opera`],
+      datasets: [
+        {
+          fill: true,
+          
+          backgroundColor: ["#f44336","#9c27b0","#3f51b5","#03a9f4","#009688"],
+          
+          data: [
+            57.1,14.5,11.1,9.7,3.1
+            
+          ]
+        }
+        
+      ]
     },
     options: {
-        title: {
+      title: {
             display: false,
             text: ''
         },
         tooltips: {
             callbacks: {
                 label: function(tti, data) {
+                  
                     var value = data.datasets[0].data[tti.index];
                     var total = data.datasets[0].data.reduce((a, b) => a + b, 0)
                     var label = data.labels[tti.index];
                     var percentage = Math.round(value / total * 100);
                     return label + ': ' + percentage + '%';
+    
                 }
             }
         }
+        
     }
 });
   </script>
@@ -959,146 +996,246 @@ h2 {
     var chart4 = new Chart(ctx4, {
     type: 'bubble',
     data: {
-        datasets: [{
-                label: 'Nestle',
-                data: [
-                              {
-                                x:14.2,
-                                y:215,
-                                r:35.690140845070424}
-                ],
-                backgroundColor: "#f44336"
-            },{
-                label: 'Häagen-Dazs',
-                data: [
-                              {
-                                x:16.4,
-                                y:325,
-                                r:35.690140845070424}
-                ],
-                backgroundColor: "#9c27b0"
-            },{
-                label: 'Nestle',
-                data: [
-                              {
-                                x:11.9,
-                                y:185,
-                                r:4}
-                ],
-                backgroundColor: "#f44336"
-            },{
-                label: 'Ben & Jerry\'s',
-                data: [
-                              {
-                                x:15.2,
-                                y:332,
-                                r:37.80281690140845}
-                ],
-                backgroundColor: "#3f51b5"
-            },{
-                label: 'Häagen-Dazs',
-                data: [
-                              {
-                                x:18.5,
-                                y:406,
-                                r:43.436619718309856}
-                ],
-                backgroundColor: "#9c27b0"
-            },{
-                label: 'Nestle',
-                data: [
-                              {
-                                x:22.1,
-                                y:522,
-                                r:49.774647887323944}
-                ],
-                backgroundColor: "#f44336"
-            },{
-                label: 'Häagen-Dazs',
-                data: [
-                              {
-                                x:19.4,
-                                y:412,
-                                r:44.845070422535215}
-                ],
-                backgroundColor: "#9c27b0"
-            },{
-                label: 'Ben & Jerry\'s',
-                data: [
-                              {
-                                x:25.1,
-                                y:614,
-                                r:54}
-                ],
-                backgroundColor: "#3f51b5"
-            },{
-                label: 'Ben & Jerry\'s',
-                data: [
-                              {
-                                x:23.4,
-                                y:544,
-                                r:50.478873239436616}
-                ],
-                backgroundColor: "#3f51b5"
-            },{
-                label: 'Häagen-Dazs',
-                data: [
-                              {
-                                x:18.1,
-                                y:421,
-                                r:46.25352112676056}
-                ],
-                backgroundColor: "#9c27b0"
-            },{
-                label: 'Häagen-Dazs',
-                data: [
-                              {
-                                x:22.6,
-                                y:445,
-                                r:46.95774647887324}
-                ],
-                backgroundColor: "#9c27b0"
-            },{
-                label: 'Nestle',
-                data: [
-                              {
-                                x:17.2,
-                                y:408,
-                                r:44.140845070422536}
-                ],
-                backgroundColor: "#f44336"
-            }]
+      labels: [],
+      datasets: [
+        {
+          fill: true,
+          label: 'Nestle',
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 14.2,
+                y: 215,
+                r: 35.690140845070424
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'Häagen-Dazs',
+          backgroundColor: "#9c27b0",
+          
+          data: [
+            
+            {
+                x: 16.4,
+                y: 325,
+                r: 35.690140845070424
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'Nestle',
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 11.9,
+                y: 185,
+                r: 4
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'Ben & Jerry\'s',
+          backgroundColor: "#3f51b5",
+          
+          data: [
+            
+            {
+                x: 15.2,
+                y: 332,
+                r: 37.80281690140845
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'Häagen-Dazs',
+          backgroundColor: "#9c27b0",
+          
+          data: [
+            
+            {
+                x: 18.5,
+                y: 406,
+                r: 43.436619718309856
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'Nestle',
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 22.1,
+                y: 522,
+                r: 49.774647887323944
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'Häagen-Dazs',
+          backgroundColor: "#9c27b0",
+          
+          data: [
+            
+            {
+                x: 19.4,
+                y: 412,
+                r: 44.845070422535215
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'Ben & Jerry\'s',
+          backgroundColor: "#3f51b5",
+          
+          data: [
+            
+            {
+                x: 25.1,
+                y: 614,
+                r: 54
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'Ben & Jerry\'s',
+          backgroundColor: "#3f51b5",
+          
+          data: [
+            
+            {
+                x: 23.4,
+                y: 544,
+                r: 50.478873239436616
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'Häagen-Dazs',
+          backgroundColor: "#9c27b0",
+          
+          data: [
+            
+            {
+                x: 18.1,
+                y: 421,
+                r: 46.25352112676056
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'Häagen-Dazs',
+          backgroundColor: "#9c27b0",
+          
+          data: [
+            
+            {
+                x: 22.6,
+                y: 445,
+                r: 46.95774647887324
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'Nestle',
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 17.2,
+                y: 408,
+                r: 44.140845070422536
+                
+              }
+            
+          ]
+        }
+        
+      ]
     },
     options: {
-        title: {
+      title: {
             display: false,
             text: ''
         },
-        legend: {
-            display: false
-        },
-         scales: {
-            yAxes: [{
-                type: "linear",
-                ticks: {
-                    beginAtZero: false,
-                    callback: function(value, index, values) {
-                        return value;
-                    }
-                },
-                scaleLabel: {
-                    display: false,
-                    labelString: ''
+        tooltips: {
+            callbacks: {
+                label: function(tti, data) {
+                  
+                    var value = data.datasets[tti.datasetIndex].data[tti.index];
+                    var label = data.datasets[tti.datasetIndex].label;
+                    return (label ? label + ': ' : '') + '(' + value.x + ', ' + value.y + ')';
+    
                 }
-            }],
-            xAxes: [{
-                
-                scaleLabel: {
-                    display: false,
-                    labelString: ''
-                }
-            }]
+            }
         }
+        ,
+          legend: {
+              display: false
+          },
+          scales: {
+              yAxes: [{
+                  type: "linear",
+                  ticks: {
+                      beginAtZero: false,
+                      callback: function(value, index, values) {
+                          return value;
+                      }
+                  },
+                  scaleLabel: {
+                      display: false,
+                      labelString: ''
+                  }
+              }],
+              xAxes: [{
+                  
+                  scaleLabel: {
+                      display: false,
+                      labelString: ''
+                  }
+              }]
+          }
+        
     }
 });
   </script>
@@ -1117,91 +1254,246 @@ h2 {
     var chart5 = new Chart(ctx5, {
     type: 'bubble',
     data: {
-        datasets: [
+      labels: [],
+      datasets: [
+        {
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
             {
-                label: '',
-                data: [{
-                                x:14.2,
-                                y:215,
-                                r:35.690140845070424},{
-                                x:16.4,
-                                y:325,
-                                r:35.690140845070424},{
-                                x:11.9,
-                                y:185,
-                                r:4},{
-                                x:15.2,
-                                y:332,
-                                r:37.80281690140845},{
-                                x:18.5,
-                                y:406,
-                                r:43.436619718309856},{
-                                x:22.1,
-                                y:522,
-                                r:49.774647887323944},{
-                                x:19.4,
-                                y:412,
-                                r:44.845070422535215},{
-                                x:25.1,
-                                y:614,
-                                r:54},{
-                                x:23.4,
-                                y:544,
-                                r:50.478873239436616},{
-                                x:18.1,
-                                y:421,
-                                r:46.25352112676056},{
-                                x:22.6,
-                                y:445,
-                                r:46.95774647887324},{
-                                x:17.2,
-                                y:408,
-                                r:44.140845070422536}],
-                backgroundColor: "#f44336"
-            }
-        ]
+                x: 14.2,
+                y: 215,
+                r: 35.690140845070424
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 16.4,
+                y: 325,
+                r: 35.690140845070424
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 11.9,
+                y: 185,
+                r: 4
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 15.2,
+                y: 332,
+                r: 37.80281690140845
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 18.5,
+                y: 406,
+                r: 43.436619718309856
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 22.1,
+                y: 522,
+                r: 49.774647887323944
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 19.4,
+                y: 412,
+                r: 44.845070422535215
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 25.1,
+                y: 614,
+                r: 54
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 23.4,
+                y: 544,
+                r: 50.478873239436616
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 18.1,
+                y: 421,
+                r: 46.25352112676056
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 22.6,
+                y: 445,
+                r: 46.95774647887324
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 17.2,
+                y: 408,
+                r: 44.140845070422536
+                
+              }
+            
+          ]
+        }
+        
+      ]
     },
     options: {
-        title: {
+      title: {
             display: true,
             text: '"Ice cream sales"'
-        },
-        legend: {
-            display: false
         },
         tooltips: {
             callbacks: {
                 label: function(tti, data) {
+                  
                     var value = data.datasets[tti.datasetIndex].data[tti.index];
-                    if (value.y) {
-                        value = value.y
-                    }
-                    return value;
+                    var label = data.datasets[tti.datasetIndex].label;
+                    return (label ? label + ': ' : '') + '(' + value.x + ', ' + value.y + ')';
+    
                 }
             }
-        },
-         scales: {
-            yAxes: [{
-                type: "linear",
-                ticks: {
-                    beginAtZero: false,
-                    callback: function(value, index, values) {
-                        return value;
-                    }
-                },
-                scaleLabel: {
-                    display: true,
-                    labelString: '$'
-                }
-            }],
-            xAxes: [{
-                
-                scaleLabel: {
-                    display: true,
-                    labelString: 'C'
-                }
-            }]
         }
+        ,
+          legend: {
+              display: false
+          },
+          scales: {
+              yAxes: [{
+                  type: "linear",
+                  ticks: {
+                      beginAtZero: false,
+                      callback: function(value, index, values) {
+                          return value;
+                      }
+                  },
+                  scaleLabel: {
+                      display: true,
+                      labelString: '$'
+                  }
+              }],
+              xAxes: [{
+                  
+                  scaleLabel: {
+                      display: true,
+                      labelString: 'C'
+                  }
+              }]
+          }
+        
     }
 });
   </script>
@@ -1220,91 +1512,246 @@ h2 {
     var chart6 = new Chart(ctx6, {
     type: 'bubble',
     data: {
-        datasets: [
+      labels: [],
+      datasets: [
+        {
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
             {
-                label: '',
-                data: [{
-                                x:14.2,
-                                y:215,
-                                r:4},{
-                                x:16.4,
-                                y:325,
-                                r:4},{
-                                x:11.9,
-                                y:185,
-                                r:4},{
-                                x:15.2,
-                                y:332,
-                                r:4},{
-                                x:18.5,
-                                y:406,
-                                r:4},{
-                                x:22.1,
-                                y:522,
-                                r:4},{
-                                x:19.4,
-                                y:412,
-                                r:4},{
-                                x:25.1,
-                                y:614,
-                                r:4},{
-                                x:23.4,
-                                y:544,
-                                r:4},{
-                                x:18.1,
-                                y:421,
-                                r:4},{
-                                x:22.6,
-                                y:445,
-                                r:4},{
-                                x:17.2,
-                                y:408,
-                                r:4}],
-                backgroundColor: "#f44336"
-            }
-        ]
+                x: 14.2,
+                y: 215,
+                r: 4
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 16.4,
+                y: 325,
+                r: 4
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 11.9,
+                y: 185,
+                r: 4
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 15.2,
+                y: 332,
+                r: 4
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 18.5,
+                y: 406,
+                r: 4
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 22.1,
+                y: 522,
+                r: 4
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 19.4,
+                y: 412,
+                r: 4
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 25.1,
+                y: 614,
+                r: 4
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 23.4,
+                y: 544,
+                r: 4
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 18.1,
+                y: 421,
+                r: 4
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 22.6,
+                y: 445,
+                r: 4
+                
+              }
+            
+          ]
+        }
+        ,{
+          fill: true,
+          
+          backgroundColor: "#f44336",
+          
+          data: [
+            
+            {
+                x: 17.2,
+                y: 408,
+                r: 4
+                
+              }
+            
+          ]
+        }
+        
+      ]
     },
     options: {
-        title: {
+      title: {
             display: true,
             text: '"Ice cream sales"'
-        },
-        legend: {
-            display: false
         },
         tooltips: {
             callbacks: {
                 label: function(tti, data) {
+                  
                     var value = data.datasets[tti.datasetIndex].data[tti.index];
-                    if (value.y) {
-                        value = value.y
-                    }
-                    return value;
+                    var label = data.datasets[tti.datasetIndex].label;
+                    return (label ? label + ': ' : '') + '(' + value.x + ', ' + value.y + ')';
+    
                 }
             }
-        },
-         scales: {
-            yAxes: [{
-                type: "linear",
-                ticks: {
-                    beginAtZero: false,
-                    callback: function(value, index, values) {
-                        return value;
-                    }
-                },
-                scaleLabel: {
-                    display: true,
-                    labelString: '$'
-                }
-            }],
-            xAxes: [{
-                
-                scaleLabel: {
-                    display: true,
-                    labelString: 'C'
-                }
-            }]
         }
+        ,
+          legend: {
+              display: false
+          },
+          scales: {
+              yAxes: [{
+                  type: "linear",
+                  ticks: {
+                      beginAtZero: false,
+                      callback: function(value, index, values) {
+                          return value;
+                      }
+                  },
+                  scaleLabel: {
+                      display: true,
+                      labelString: '$'
+                  }
+              }],
+              xAxes: [{
+                  
+                  scaleLabel: {
+                      display: true,
+                      labelString: 'C'
+                  }
+              }]
+          }
+        
     }
 });
   </script>
