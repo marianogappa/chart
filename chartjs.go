@@ -165,7 +165,7 @@ func (c cjsChart) data() cjsData {
 
 func (c cjsChart) labelsAndDatasets() cjsData {
 	var usesTimeScale bool
-	if c.inData.ChartType == "line" && !c.inData.hasStrings() {
+	if c.inData.ChartType == "line" && (!c.inData.hasStrings() || c.inData.hasTimes()) {
 		c.inData.ChartType = "scatterline"
 	}
 	switch c.inData.ChartType {
