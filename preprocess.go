@@ -17,7 +17,7 @@ func preprocess(i []string, o options) ([][]float64, [][]string, [][]time.Time, 
 	for _, l := range i {
 		fs, ss, ts, err := parseLine(l, lf, sep, o.dateFormat)
 		if err != nil {
-			break
+			continue
 		}
 
 		for i, f := range fs {
