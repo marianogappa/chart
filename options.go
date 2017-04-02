@@ -117,8 +117,8 @@ func resolveOptions(args []string, noInput bool) (options, error) {
 			o.dateFormat = "Jan _2 15:04:05.000"
 		case "StampMicro":
 			o.dateFormat = "Jan _2 15:04:05.000000"
-		case "StampNano":
-			o.dateFormat = "Jan _2 15:04:05.000000000"
+		case "mysql":
+			o.dateFormat = "2006-01-02 15:04:05"
 		case "debug":
 			o.debug = true
 		case "help":
