@@ -241,7 +241,10 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 				}
 			} else {
 				d.X = fmt.Sprintf("%g", c.inData.FSS[i][0])
-				d.Y = fmt.Sprintf("%g", c.inData.FSS[i][1])
+				d.Y = "0"
+				if len(c.inData.FSS[i]) >= 2 {
+					d.Y = fmt.Sprintf("%g", c.inData.FSS[i][1])
+				}
 				if len(c.inData.FSS[i]) >= 3 {
 					d.R = fmt.Sprintf("%v", scatterRadius(c.inData.FSS[i][2], c.inData.MinFSS[2], c.inData.MaxFSS[2]))
 				} else {
