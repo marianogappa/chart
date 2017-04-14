@@ -41,6 +41,10 @@ func preprocess(i []string, o options) ([][]float64, [][]string, [][]time.Time, 
 	}
 	o.chartType = resolveChartType(o.chartType, lf, fss, sss)
 
+	if o.chartType == bar {
+		o.zeroBased = true // https://github.com/marianogappa/chart/issues/11
+	}
+
 	if strings.Index(lf, "f") == -1 {
 		fss, sss = preprocessFreq(sss)
 	}
