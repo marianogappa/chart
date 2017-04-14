@@ -42,3 +42,7 @@ func colorFirstN(n int) string {
 	}
 	return strings.Join(cs, ",")
 }
+
+func colorRepeat(i, n int) string {
+	return strings.Repeat(colorIndex(i)+",", n)
+}

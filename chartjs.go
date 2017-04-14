@@ -169,7 +169,7 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 		c.inData.ChartType = "scatterline"
 	}
 	switch c.inData.ChartType {
-	case "pie", "bar":
+	case "pie":
 		return cjsData{
 			Labels: c.marshalLabels(),
 			Datasets: []cjsDataset{{
@@ -177,6 +177,29 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 				SimpleData:      c.marshalSimpleData(0),
 				BackgroundColor: colorFirstN(len(c.inData.FSS)),
 			}},
+		}
+	case "bar":
+		if len(c.inData.FSS[0]) == 1 {
+			return cjsData{
+				Labels: c.marshalLabels(),
+				Datasets: []cjsDataset{{
+					Fill:            true,
+					SimpleData:      c.marshalSimpleData(0),
+					BackgroundColor: colorFirstN(len(c.inData.FSS)),
+				}},
+			}
+		}
+		ds := []cjsDataset{}
+		for i := range c.inData.FSS[0] {
+			ds = append(ds, cjsDataset{
+				Fill:            true,
+				SimpleData:      c.marshalSimpleData(i),
+				BackgroundColor: colorRepeat(i, len(c.inData.FSS)),
+			})
+		}
+		return cjsData{
+			Labels:   c.marshalLabels(),
+			Datasets: ds,
 		}
 	case "line":
 		ds := []cjsDataset{}
@@ -332,7 +355,7 @@ func (c cjsChart) tooltipCallback() string {
     `
 	case "bar":
 		return `
-                    var value = data.datasets[0].data[tti.index];
+                    var value = data.datasets[tti.datasetIndex].data[tti.index];
                     var label = data.labels[tti.index];
                     return value;
     `
