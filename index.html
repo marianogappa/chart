@@ -801,9 +801,9 @@ h2 {
 </div>
 
 <div class="chart-wrapper">
-  <h2><pre>$ cat testdata/line.csv</pre></h2>
+  <h2><pre>$ cat testdata/line-time.csv</pre></h2>
   <div class="pre"><pre>January	49	55<br>February	54	53<br>March	61	50<br>April	69	50<br>May	73	49<br></pre></div>
-  <h2><pre>$ cat testdata/line.csv | chart line --date-format January
+  <h2><pre>$ cat testdata/line-time.csv | chart line --date-format January
 </pre></h2>
   <div class="chart">
     <canvas id="chart2"></canvas>
@@ -932,9 +932,9 @@ h2 {
 </div>
 
 <div class="chart-wrapper">
-  <h2><pre>$ cat testdata/multi-bar.csv</pre></h2>
-  <div class="pre"><pre>January	50	25	25<br>February	40	35	25<br>March	30	55	15<br>April	25	55	20<br></pre></div>
-  <h2><pre>$ cat testdata/multi-bar.csv | chart bar
+  <h2><pre>$ cat testdata/line.csv</pre></h2>
+  <div class="pre"><pre>0,1.1,2<br>1,2,3<br>2,6,4<br>4,4.6,5<br>5,5,6<br></pre></div>
+  <h2><pre>$ cat testdata/line.csv | chart line ,
 </pre></h2>
   <div class="chart">
     <canvas id="chart3"></canvas>
@@ -942,6 +942,137 @@ h2 {
   <script>
     var ctx3 = document.getElementById("chart3");
     var chart3 = new Chart(ctx3, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        {
+          fill: false,
+          label: 'column 0',
+          
+          borderColor: "#f44336",
+          data: [
+            
+            {
+                x: 0,
+                y: 1.1
+              }
+            ,{
+                x: 1,
+                y: 2
+              }
+            ,{
+                x: 2,
+                y: 6
+              }
+            ,{
+                x: 4,
+                y: 4.6
+              }
+            ,{
+                x: 5,
+                y: 5
+              }
+            
+          ]
+        }
+        ,{
+          fill: false,
+          label: 'column 1',
+          
+          borderColor: "#9c27b0",
+          data: [
+            
+            {
+                x: 0,
+                y: 2
+              }
+            ,{
+                x: 1,
+                y: 3
+              }
+            ,{
+                x: 2,
+                y: 4
+              }
+            ,{
+                x: 4,
+                y: 5
+              }
+            ,{
+                x: 5,
+                y: 6
+              }
+            
+          ]
+        }
+        
+      ]
+    },
+    options: {
+      title: {
+            display: false,
+            text: ''
+        },
+        tooltips: {
+            callbacks: {
+                label: function(tti, data) {
+                  
+                    var value = data.datasets[tti.datasetIndex].data[tti.index];
+                    if (value.y) {
+                        value = value.y
+                    }
+                    return value;
+    
+                }
+            }
+        }
+        ,
+          legend: {
+              display: false
+          },
+          scales: {
+              yAxes: [{
+                  type: "linear",
+                  ticks: {
+                      beginAtZero: false,
+                      callback: function(value, index, values) {
+                          return value;
+                      }
+                  },
+                  scaleLabel: {
+                      display: false,
+                      labelString: ''
+                  }
+              }],
+              xAxes: [{
+                  
+                  type: 'linear',
+                  position: 'bottom',
+                  
+                  scaleLabel: {
+                      display: false,
+                      labelString: ''
+                  }
+              }]
+          }
+        
+    }
+});
+  </script>
+</div>
+
+<div class="chart-wrapper">
+  <h2><pre>$ cat testdata/multi-bar.csv</pre></h2>
+  <div class="pre"><pre>January	50	25	25<br>February	40	35	25<br>March	30	55	15<br>April	25	55	20<br></pre></div>
+  <h2><pre>$ cat testdata/multi-bar.csv | chart bar
+</pre></h2>
+  <div class="chart">
+    <canvas id="chart4"></canvas>
+  </div>
+  <script>
+    var ctx4 = document.getElementById("chart4");
+    var chart4 = new Chart(ctx4, {
     type: 'bar',
     data: {
       labels: [`January`,`February`,`March`,`April`],
@@ -1033,11 +1164,11 @@ h2 {
   <h2><pre>$ cat testdata/pie.csv | chart 
 </pre></h2>
   <div class="chart">
-    <canvas id="chart4"></canvas>
+    <canvas id="chart5"></canvas>
   </div>
   <script>
-    var ctx4 = document.getElementById("chart4");
-    var chart4 = new Chart(ctx4, {
+    var ctx5 = document.getElementById("chart5");
+    var chart5 = new Chart(ctx5, {
     type: 'pie',
     data: {
       labels: [`Chrome`,`Safari`,`Firefox`,`Internet Explorer & Edge`,`Opera`],
@@ -1085,11 +1216,11 @@ h2 {
   <h2><pre>$ cat testdata/scatter-rad-lab.csv | chart scatter
 </pre></h2>
   <div class="chart">
-    <canvas id="chart5"></canvas>
+    <canvas id="chart6"></canvas>
   </div>
   <script>
-    var ctx5 = document.getElementById("chart5");
-    var chart5 = new Chart(ctx5, {
+    var ctx6 = document.getElementById("chart6");
+    var chart6 = new Chart(ctx6, {
     type: 'bubble',
     data: {
       labels: [],
@@ -1343,11 +1474,11 @@ h2 {
   <h2><pre>$ cat testdata/scatter-rad.csv | chart scatter --title "Ice cream sales" -x C -y $
 </pre></h2>
   <div class="chart">
-    <canvas id="chart6"></canvas>
+    <canvas id="chart7"></canvas>
   </div>
   <script>
-    var ctx6 = document.getElementById("chart6");
-    var chart6 = new Chart(ctx6, {
+    var ctx7 = document.getElementById("chart7");
+    var chart7 = new Chart(ctx7, {
     type: 'bubble',
     data: {
       labels: [],
@@ -1601,11 +1732,11 @@ h2 {
   <h2><pre>$ cat testdata/scatter.csv | chart scatter --title "Ice cream sales" -x C -y $
 </pre></h2>
   <div class="chart">
-    <canvas id="chart7"></canvas>
+    <canvas id="chart8"></canvas>
   </div>
   <script>
-    var ctx7 = document.getElementById("chart7");
-    var chart7 = new Chart(ctx7, {
+    var ctx8 = document.getElementById("chart8");
+    var chart8 = new Chart(ctx8, {
     type: 'bubble',
     data: {
       labels: [],

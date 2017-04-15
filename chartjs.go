@@ -73,6 +73,9 @@ func init() {
                   {{ if .UsesTimeScale }}
                   type: 'time',
                   position: 'bottom',
+                  {{ else if eq .ChartType "line" }}
+                  type: 'linear',
+                  position: 'bottom',
                   {{end}}
                   scaleLabel: {
                       display: {{if eq .XLabel ""}}false{{else}}true{{end}},
@@ -216,6 +219,7 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 		}
 	case "scatterline":
 		dss := []cjsDataset{}
+	outerLoop:
 		for n := range c.inData.FSS[0] {
 			ds := []cjsDataPoint{}
 			for i := range c.inData.FSS {
@@ -225,6 +229,9 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 					d.X = "'" + c.inData.TSS[i][0].Format("2006-01-02T15:04:05.999999999") + "'"
 					d.Y = fmt.Sprintf("%g", c.inData.FSS[i][n])
 				} else {
+					if n == len(c.inData.FSS[0])-1 {
+						break outerLoop
+					}
 					d.X = fmt.Sprintf("%g", c.inData.FSS[i][0])
 					d.Y = fmt.Sprintf("%g", c.inData.FSS[i][n+1])
 				}

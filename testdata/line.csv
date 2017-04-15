@@ -1,7 +1,7 @@
-line --date-format January
+line ,
 
-January	49	55
-February	54	53
-March	61	50
-April	69	50
-May	73	49
+0,1.1,2
+1,2,3
+2,6,4
+4,4.6,5
+5,5,6
