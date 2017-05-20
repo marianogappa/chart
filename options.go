@@ -34,15 +34,15 @@ type options struct {
 	help       bool
 }
 
-func mustResolveOptions(args []string, noInput bool) options {
-	o, err := resolveOptions(args, noInput)
+func mustResolveOptions(args []string) options {
+	o, err := resolveOptions(args)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return o
 }
 
-func resolveOptions(args []string, noInput bool) (options, error) {
+func resolveOptions(args []string) (options, error) {
 	titleHelp := "Sets the title for the chart."
 	xLabelHelp := "Sets the label for the x axis."
 	yLabelHelp := "Sets the label for the y axis."
@@ -126,7 +126,7 @@ func resolveOptions(args []string, noInput bool) (options, error) {
 		}
 	}
 
-	if noInput || o.help {
+	if o.help {
 		fs.PrintDefaults()
 		fmt.Println(`
   pie
