@@ -29,7 +29,7 @@ chart [options]
 ## Installation
 
 ```
-go get -u github.com/MarianoGappa/chart
+go get -u github.com/marianogappa/chart
 ```
 
 or get the latest binary for your OS in the [Releases section](https://github.com/MarianoGappa/chart/releases).
