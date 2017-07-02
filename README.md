@@ -105,6 +105,10 @@ Separator   [tab]
 - when input data is string-only, `chart` infers a "word frequency pie chart" use case.
 - should work on Linux/Mac/Windows thanks to [open-golang](https://github.com/skratchdot/open-golang).
 
+## Known issues
+
+- Javascript's floating point messes up y-axis https://github.com/marianogappa/chart/issues/15
+
 ## Contribute
 
 PRs are greatly appreciated and are currently [being merged](https://github.com/marianogappa/chart/pull/3).
