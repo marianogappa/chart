@@ -14,7 +14,7 @@ func TestResolveChartType(t *testing.T) {
 		{
 			name:      "default case",
 			t:         undefinedChartType,
-			lf:        "s,f",
+			lf:        "sf",
 			fss:       [][]float64{},
 			sss:       [][]string{},
 			expectedT: pie,
@@ -22,7 +22,7 @@ func TestResolveChartType(t *testing.T) {
 		{
 			name:      "pie selected; inference ignored",
 			t:         pie,
-			lf:        "s,f",
+			lf:        "sf",
 			fss:       [][]float64{},
 			sss:       [][]string{},
 			expectedT: pie,
@@ -30,7 +30,7 @@ func TestResolveChartType(t *testing.T) {
 		{
 			name:      "bar selected; inference ignored",
 			t:         bar,
-			lf:        "s,f",
+			lf:        "sf",
 			fss:       [][]float64{},
 			sss:       [][]string{},
 			expectedT: bar,
@@ -38,7 +38,7 @@ func TestResolveChartType(t *testing.T) {
 		{
 			name:      "more than one column of floats, with strings",
 			t:         undefinedChartType,
-			lf:        "s,f,f",
+			lf:        "sff",
 			fss:       [][]float64{},
 			sss:       [][]string{},
 			expectedT: line,
@@ -46,7 +46,7 @@ func TestResolveChartType(t *testing.T) {
 		{
 			name:      "more than one column of floats, without strings",
 			t:         undefinedChartType,
-			lf:        "f,f",
+			lf:        "ff",
 			fss:       [][]float64{},
 			sss:       [][]string{},
 			expectedT: scatter,
