@@ -147,7 +147,7 @@ h2 {
   <div class="pre"><pre>{{range .Lines}}{{.}}<br>{{end}}</pre></div>
   <h2><pre>$ cat {{.Title}} | chart {{.OptionsLine}}</pre></h2>
   <div class="chart">
-    <canvas id="chart{{.ID}}"></canvas>
+    <canvas id="chart{{.ID}}" height="300px" width="650px"></canvas>
   </div>
   <script>
     var ctx{{.ID}} = document.getElementById("chart{{.ID}}");
