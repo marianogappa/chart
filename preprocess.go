@@ -1,11 +1,12 @@
 package main
 
 import (
+	"io"
 	"strings"
 	"time"
 )
 
-func preprocess(i []string, o options) ([][]float64, [][]string, [][]time.Time, []float64, []float64, options, string) {
+func preprocess(r io.Reader, o options) ([][]float64, [][]string, [][]time.Time, []float64, []float64, options, string, []string) {
 	var fss [][]float64
 	var sss [][]string
 	var tss [][]time.Time
@@ -13,8 +14,8 @@ func preprocess(i []string, o options) ([][]float64, [][]string, [][]time.Time, 
 	var maxFSS []float64
 
 	sep := o.separator
-	lf := parseFormat(i, sep, o.dateFormat)
-	for _, l := range i {
+	ls, lf := readAndParseFormat(r, sep, o.dateFormat)
+	for _, l := range ls {
 		fs, ss, ts, err := parseLine(l, lf, sep, o.dateFormat)
 		if err != nil {
 			continue
@@ -82,5 +83,5 @@ func preprocess(i []string, o options) ([][]float64, [][]string, [][]time.Time, 
 		tss = nil
 	}
 
-	return fss, sss, tss, minFSS, maxFSS, o, lf
+	return fss, sss, tss, minFSS, maxFSS, o, lf, ls
 }

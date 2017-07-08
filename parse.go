@@ -1,22 +1,36 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
 )
 
-func parseFormat(i []string, sep rune, df string) string {
-	lfs := make(map[string]int)
-	for _, l := range i {
-		if len(strings.TrimSpace(l)) == 0 {
+func readAndParseFormat(r io.Reader, sep rune, df string) ([]string, string) {
+	var (
+		ls  = make([]string, 0, 500)
+		lfs = make(map[string]int)
+		rd  = bufio.NewReader(r)
+		l   string
+		err error
+	)
+	for {
+		l, err = rd.ReadString('\n')
+		if err == io.EOF {
+			break
+		}
+		l = strings.TrimSpace(l)
+		if len(l) == 0 {
 			continue
 		}
-		lfs[parseLineFormat(l, sep, df)] += 1
+		ls = append(ls, l)
+		lfs[parseLineFormat(l, sep, df)]++
 	}
-	return maxLineFormat(lfs)
+	return ls, maxLineFormat(lfs)
 }
 
 func maxLineFormat(lfs map[string]int) string {

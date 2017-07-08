@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func showDebug(i []string, fss [][]float64, sss [][]string, tss [][]time.Time, minFSS []float64, maxFSS []float64, o options, lf string) {
+func showDebug(ls []string, fss [][]float64, sss [][]string, tss [][]time.Time, minFSS []float64, maxFSS []float64, o options, lf string) {
 	fcn, scn, tcn, rn := 0, 0, 0, 0
 	if len(fss) > 0 {
 		rn = len(fss)
@@ -19,7 +19,7 @@ func showDebug(i []string, fss [][]float64, sss [][]string, tss [][]time.Time, m
 		rn = len(tss)
 		tcn = len(tss[0])
 	}
-	fmt.Printf("Lines read\t%v\n", len(i))
+	fmt.Printf("Lines read\t%v\n", len(ls))
 	fmt.Printf("Line format inferred\t%v\n", lf)
 	fmt.Printf("Lines used\t%v\n", rn)
 	fmt.Printf("Float column count\t%v\n", fcn)

@@ -2,6 +2,7 @@ package main
 
 import (
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 )
@@ -107,33 +108,39 @@ func TestParseLineFormat(t *testing.T) {
 func TestParseFormat(t *testing.T) {
 	tests := []struct {
 		name     string
-		i        []string
+		i        string
 		sep      rune
 		df       string
 		expected string
 	}{
 		{
 			name:     "empty case",
-			i:        []string{},
+			i:        ``,
 			sep:      '\t',
 			expected: "",
 		},
 		{
-			name:     "string, float",
-			i:        []string{"a\t1", "b\t2", "c\t3"},
+			name: "string, float",
+			i: `a	1
+b	2
+c	3
+`,
 			sep:      '\t',
 			expected: "sf",
 		},
 		{
-			name:     "string, float with one outlier (minority)",
-			i:        []string{"a\t1", "onlystring", "c\t3"},
+			name: "string, float with one outlier (minority)",
+			i: `a	1
+onlystring
+c	3
+`,
 			sep:      '\t',
 			expected: "sf",
 		},
 	}
 
 	for _, ts := range tests {
-		result := parseFormat(ts.i, ts.sep, ts.df)
+		_, result := readAndParseFormat(strings.NewReader(ts.i), ts.sep, ts.df)
 		if !reflect.DeepEqual(result, ts.expected) {
 			t.Errorf("'%v' failed: %v was not equal to %v", ts.name, result, ts.expected)
 		}

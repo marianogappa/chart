@@ -57,20 +57,13 @@ func TestCheatsheet(t *testing.T) {
 			t.FailNow()
 		}
 
-		i := readInput(rd)
-		if len(i) == 0 {
-			t.Errorf("[%v] doesn't have data", fs)
-			t.FailNow()
-		}
-		defer fh.Close()
-
-		b, err := buildChart(i, o)
+		ls, b, err := buildChart(rd, o)
 		if err != nil {
 			t.Errorf("[%v] breaks building chart with: [%v]", fs, err)
 			t.FailNow()
 		}
 
-		cheetsheetExamples[j] = cheatsheetExample{ID: j, Title: f, OptionsLine: optionsLine, Lines: i, HTML: b.String()}
+		cheetsheetExamples[j] = cheatsheetExample{ID: j, Title: f, OptionsLine: optionsLine, Lines: ls, HTML: b.String()}
 	}
 
 	cheetsheetExamplesTemplate, err := template.New("").Parse(cheetsheetExamplesTemplateString)

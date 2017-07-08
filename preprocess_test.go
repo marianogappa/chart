@@ -2,6 +2,7 @@ package main
 
 import (
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 )
@@ -9,7 +10,7 @@ import (
 func TestPreprocess(t *testing.T) {
 	tests := []struct {
 		name       string
-		i          []string
+		i          string
 		o          options
 		fss        [][]float64
 		sss        [][]string
@@ -21,7 +22,7 @@ func TestPreprocess(t *testing.T) {
 	}{
 		{
 			name:      "empty case",
-			i:         []string{},
+			i:         ``,
 			o:         options{separator: '\t', scaleType: linear, chartType: pie},
 			fss:       nil,
 			sss:       nil,
@@ -30,21 +31,27 @@ func TestPreprocess(t *testing.T) {
 		},
 		{
 			name: "just strings",
-			i:    []string{"a", "b", "c", "a"},
-			o:    options{separator: '\t', scaleType: linear, chartType: pie},
+			i: `a
+b
+c
+a
+`,
+			o: options{separator: '\t', scaleType: linear, chartType: pie},
 			fss: [][]float64{
 				[]float64{2}, []float64{1}, []float64{1},
 			},
-			sss: [][]string{
-				[]string{"a"}, []string{"b"}, []string{"c"},
-			},
+			sss:        [][]string{[]string{"a"}, []string{"b"}, []string{"c"}},
 			tss:        nil,
 			expectedO:  options{separator: '\t', scaleType: linear, chartType: pie},
 			expectedLF: "s",
 		},
 		{
 			name: "dates and floats with many spaces in between",
-			i: []string{"2016-08-29	0.0125", "2016-09-06	0.0272", "2016-09-07	0.0000", "2016-09-08	0.0000"},
+			i: `2016-08-29	0.0125
+2016-09-06	0.0272
+2016-09-07	0.0000
+2016-09-08	0.0000
+`,
 			o: options{separator: '\t', scaleType: linear, chartType: pie, dateFormat: "2006-01-02"},
 			fss: [][]float64{
 				[]float64{0.0125}, []float64{0.0272}, []float64{0}, []float64{0},
@@ -61,7 +68,7 @@ func TestPreprocess(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		fss, sss, tss, minFSS, maxFSS, o, lf := preprocess(ts.i, ts.o)
+		fss, sss, tss, minFSS, maxFSS, o, lf, _ := preprocess(strings.NewReader(ts.i), ts.o)
 		if !reflect.DeepEqual(fss, ts.fss) {
 			t.Errorf("'%v' failed: (floats) %v was not equal to %v", ts.name, fss, ts.fss)
 		}
