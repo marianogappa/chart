@@ -6,82 +6,87 @@ import (
 	"time"
 )
 
-func preprocess(r io.Reader, o options) ([][]float64, [][]string, [][]time.Time, []float64, []float64, options, string, []string) {
-	var fss [][]float64
-	var sss [][]string
-	var tss [][]time.Time
-	var minFSS []float64
-	var maxFSS []float64
+type dataset struct {
+	fss    [][]float64
+	sss    [][]string
+	tss    [][]time.Time
+	minFSS []float64
+	maxFSS []float64
+}
 
-	sep := o.separator
-	ls, lf := readAndParseFormat(r, sep, o.dateFormat)
+func newDataset() dataset {
+	return dataset{
+		fss:    make([][]float64, 0, 500),
+		sss:    make([][]string, 0, 500),
+		tss:    make([][]time.Time, 0, 500),
+		minFSS: make([]float64, 0, 500),
+		maxFSS: make([]float64, 0, 500),
+	}
+}
+
+func preprocess(r io.Reader, o options) (dataset, options, string, []string) {
+	var (
+		d                      = newDataset()
+		sep                    = o.separator
+		ls, lf                 = readAndParseFormat(r, sep, o.dateFormat)
+		nilSSS, nilFSS, nilTSS = true, true, true
+	)
+
 	for _, l := range ls {
 		fs, ss, ts, err := parseLine(l, lf, sep, o.dateFormat)
 		if err != nil {
 			continue
 		}
+		if nilSSS && len(ss) > 0 {
+			nilSSS = false
+		}
+		if nilFSS && len(fs) > 0 {
+			nilFSS = false
+		}
+		if nilTSS && len(ts) > 0 {
+			nilTSS = false
+		}
 
 		for i, f := range fs {
-			if len(minFSS) == i {
-				minFSS = append(minFSS, f)
+			if len(d.minFSS) == i {
+				d.minFSS = append(d.minFSS, f)
 			}
-			if len(maxFSS) == i {
-				maxFSS = append(maxFSS, f)
+			if len(d.maxFSS) == i {
+				d.maxFSS = append(d.maxFSS, f)
 			}
-			if f < minFSS[i] {
-				minFSS[i] = f
+			if f < d.minFSS[i] {
+				d.minFSS[i] = f
 			}
-			if f > maxFSS[i] {
-				maxFSS[i] = f
+			if f > d.maxFSS[i] {
+				d.maxFSS[i] = f
 			}
 		}
 
-		fss = append(fss, fs)
-		sss = append(sss, ss)
-		tss = append(tss, ts)
+		d.fss = append(d.fss, fs)
+		d.sss = append(d.sss, ss)
+		d.tss = append(d.tss, ts)
 	}
-	o.chartType = resolveChartType(o.chartType, lf, fss, sss)
+	if nilSSS {
+		d.sss = nil
+	}
+	if nilFSS {
+		d.fss = nil
+		d.minFSS = nil
+		d.maxFSS = nil
+	}
+	if nilTSS {
+		d.tss = nil
+	}
+
+	o.chartType = resolveChartType(o.chartType, lf, d.fss, d.sss)
 
 	if o.chartType == bar {
 		o.zeroBased = true // https://github.com/marianogappa/chart/issues/11
 	}
 
-	if strings.Index(lf, "f") == -1 {
-		fss, sss = preprocessFreq(sss)
+	if strings.Index(lf, "f") == -1 && len(d.sss) > 0 {
+		d.fss, d.sss = preprocessFreq(d.sss)
 	}
 
-	nilSSS := true
-	for _, ss := range sss {
-		if len(ss) > 0 {
-			nilSSS = false
-			break
-		}
-	}
-	if nilSSS {
-		sss = nil
-	}
-
-	nilFSS := true
-	for _, fs := range fss {
-		if len(fs) > 0 {
-			nilFSS = false
-			break
-		}
-	}
-	if nilFSS {
-		fss = nil
-	}
-
-	nilTSS := true
-	for _, ts := range tss {
-		if len(ts) > 0 {
-			nilTSS = false
-			break
-		}
-	}
-	if nilTSS {
-		tss = nil
-	}
-
-	return fss, sss, tss, minFSS, maxFSS, o, lf, ls
+	return d, o, lf, ls
 }

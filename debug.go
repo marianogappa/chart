@@ -2,22 +2,21 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
-func showDebug(ls []string, fss [][]float64, sss [][]string, tss [][]time.Time, minFSS []float64, maxFSS []float64, o options, lf string) {
+func showDebug(ls []string, d dataset, o options, lf string) {
 	fcn, scn, tcn, rn := 0, 0, 0, 0
-	if len(fss) > 0 {
-		rn = len(fss)
-		fcn = len(fss[0])
+	if len(d.fss) > 0 {
+		rn = len(d.fss)
+		fcn = len(d.fss[0])
 	}
-	if len(sss) > 0 {
-		rn = len(sss)
-		scn = len(sss[0])
+	if len(d.sss) > 0 {
+		rn = len(d.sss)
+		scn = len(d.sss[0])
 	}
-	if len(tss) > 0 {
-		rn = len(tss)
-		tcn = len(tss[0])
+	if len(d.tss) > 0 {
+		rn = len(d.tss)
+		tcn = len(d.tss[0])
 	}
 	fmt.Printf("Lines read\t%v\n", len(ls))
 	fmt.Printf("Line format inferred\t%v\n", lf)

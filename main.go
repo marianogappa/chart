@@ -53,11 +53,11 @@ func main() {
 }
 
 func buildChart(r io.Reader, o options) ([]string, bytes.Buffer, error) {
-	fss, sss, tss, minFSS, maxFSS, o, lf, ls := preprocess(r, o)
+	d, o, lf, ls := preprocess(r, o)
 	var b bytes.Buffer
 
 	if o.debug {
-		showDebug(ls, fss, sss, tss, minFSS, maxFSS, o, lf)
+		showDebug(ls, d, o, lf)
 		return ls, b, nil
 	}
 
@@ -67,19 +67,19 @@ func buildChart(r io.Reader, o options) ([]string, bytes.Buffer, error) {
 
 	switch o.chartType {
 	case pie:
-		if len(fss) == 0 || (len(fss[0]) == 1 && len(sss) == 0 && len(tss) == 0) {
+		if len(d.fss) == 0 || (len(d.fss[0]) == 1 && len(d.sss) == 0 && len(d.tss) == 0) {
 			return ls, b, fmt.Errorf("couldn't find values to plot")
 		}
 	case bar:
-		if len(fss) == 0 || (len(fss[0]) == 1 && len(sss) == 0 && len(tss) == 0) {
+		if len(d.fss) == 0 || (len(d.fss[0]) == 1 && len(d.sss) == 0 && len(d.tss) == 0) {
 			return ls, b, fmt.Errorf("couldn't find values to plot")
 		}
 	case line:
-		if fss == nil || (sss == nil && tss == nil && len(fss[0]) < 2) {
+		if d.fss == nil || (d.sss == nil && d.tss == nil && len(d.fss[0]) < 2) {
 			return ls, b, fmt.Errorf("couldn't find values to plot")
 		}
 	case scatter:
-		if len(fss) == 0 {
+		if len(d.fss) == 0 {
 			return ls, b, fmt.Errorf("couldn't find values to plot")
 		}
 	}
@@ -89,11 +89,11 @@ func buildChart(r io.Reader, o options) ([]string, bytes.Buffer, error) {
 
 	templData, templ, err = cjsChart{inData{
 		ChartType: o.chartType.string(),
-		FSS:       fss,
-		SSS:       sss,
-		TSS:       tss,
-		MinFSS:    minFSS,
-		MaxFSS:    maxFSS,
+		FSS:       d.fss,
+		SSS:       d.sss,
+		TSS:       d.tss,
+		MinFSS:    d.minFSS,
+		MaxFSS:    d.maxFSS,
 		Title:     o.title,
 		ScaleType: o.scaleType.string(),
 		XLabel:    o.xLabel,
