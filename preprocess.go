@@ -2,6 +2,7 @@ package main
 
 import (
 	"io"
+	"sort"
 	"strings"
 	"time"
 )
@@ -14,13 +15,36 @@ type dataset struct {
 	maxFSS []float64
 }
 
-func newDataset() dataset {
-	return dataset{
+func newDataset() *dataset {
+	return &dataset{
 		fss:    make([][]float64, 0, 500),
 		sss:    make([][]string, 0, 500),
 		tss:    make([][]time.Time, 0, 500),
 		minFSS: make([]float64, 0, 500),
 		maxFSS: make([]float64, 0, 500),
+	}
+}
+
+func (d *dataset) Len() int {
+	if d.fss == nil {
+		return len(d.tss)
+	}
+	return len(d.fss)
+}
+
+func (d *dataset) Less(i, j int) bool {
+	if d.tss == nil {
+		return d.fss[i][0] < d.fss[j][0]
+	}
+	return d.tss[i][0].Before(d.tss[j][0])
+}
+
+func (d *dataset) Swap(i, j int) {
+	if d.fss != nil {
+		d.fss[i], d.fss[j] = d.fss[j], d.fss[i]
+	}
+	if d.tss != nil {
+		d.tss[i], d.tss[j] = d.tss[j], d.tss[i]
 	}
 }
 
@@ -88,5 +112,9 @@ func preprocess(r io.Reader, o options) (dataset, options, string, []string) {
 		d.fss, d.sss = preprocessFreq(d.sss)
 	}
 
-	return d, o, lf, ls
+	if o.chartType == line && nilSSS && (!nilFSS || !nilTSS) { // if scatter line
+		sort.Sort(d)
+	}
+
+	return *d, o, lf, ls
 }

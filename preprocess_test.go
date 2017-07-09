@@ -32,6 +32,22 @@ func TestPreprocess(t *testing.T) {
 			expectedO: options{separator: '\t', scaleType: linear, chartType: pie},
 		},
 		{
+			name: "sorts scatter line charts",
+			i: `2	4
+1	3
+4	4
+3	3
+`,
+			o:          options{separator: '\t', scaleType: linear, chartType: line},
+			fss:        [][]float64{{1, 3}, {2, 4}, {3, 3}, {4, 4}},
+			sss:        nil,
+			tss:        nil,
+			minFSS:     []float64{1, 3},
+			maxFSS:     []float64{4, 4},
+			expectedO:  options{separator: '\t', scaleType: linear, chartType: line},
+			expectedLF: "ff",
+		},
+		{
 			name: "just strings",
 			i: `a
 		b
