@@ -1,2 +1,3 @@
 chart
 *.tar.gz
+.goreleaser.yml
