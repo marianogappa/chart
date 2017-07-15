@@ -73,7 +73,7 @@ func init() {
                   {{ if .UsesTimeScale }}
                   type: 'time',
                   position: 'bottom',
-                  {{ else if eq .ChartType "line" }}
+                  {{ else if eq .ActualChartType "scatterline" }}
                   type: 'linear',
                   position: 'bottom',
                   {{end}}
@@ -121,7 +121,8 @@ func (c cjsChart) chart() (interface{}, *template.Template, error) {
 }
 
 type cjsData struct {
-	ChartType       string
+	ChartType       string // for Chart.js
+	ActualChartType string // for algorithm
 	Title           string
 	ScaleType       string
 	XLabel          string
@@ -149,19 +150,13 @@ type cjsDataPoint struct {
 
 func (c cjsChart) data() cjsData {
 	d := c.labelsAndDatasets()
-	d.ChartType = c.inData.ChartType
+	fmt.Printf("%+v", d)
 	d.Title = c.inData.Title
 	d.ScaleType = c.inData.ScaleType
 	d.XLabel = c.inData.XLabel
 	d.YLabel = c.inData.YLabel
 	d.ZeroBased = c.inData.ZeroBased
 	d.TooltipCallback = c.tooltipCallback()
-	switch d.ChartType {
-	case "scatterline":
-		d.ChartType = "line"
-	case "scatter":
-		d.ChartType = "bubble"
-	}
 
 	return d
 }
@@ -174,7 +169,9 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 	switch c.inData.ChartType {
 	case "pie":
 		return cjsData{
-			Labels: c.marshalLabels(),
+			ChartType:       "pie",
+			ActualChartType: "pie",
+			Labels:          c.marshalLabels(),
 			Datasets: []cjsDataset{{
 				Fill:            true,
 				SimpleData:      c.marshalSimpleData(0),
@@ -184,7 +181,9 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 	case "bar":
 		if len(c.inData.FSS[0]) == 1 {
 			return cjsData{
-				Labels: c.marshalLabels(),
+				ChartType:       "bar",
+				ActualChartType: "bar",
+				Labels:          c.marshalLabels(),
 				Datasets: []cjsDataset{{
 					Fill:            true,
 					SimpleData:      c.marshalSimpleData(0),
@@ -201,8 +200,10 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 			})
 		}
 		return cjsData{
-			Labels:   c.marshalLabels(),
-			Datasets: ds,
+			ChartType:       "bar",
+			ActualChartType: "bar",
+			Labels:          c.marshalLabels(),
+			Datasets:        ds,
 		}
 	case "line":
 		ds := []cjsDataset{}
@@ -214,8 +215,10 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 			})
 		}
 		return cjsData{
-			Labels:   c.marshalLabels(),
-			Datasets: ds,
+			ChartType:       "line",
+			ActualChartType: "line",
+			Labels:          c.marshalLabels(),
+			Datasets:        ds,
 		}
 	case "scatterline":
 		dss := []cjsDataset{}
@@ -245,8 +248,10 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 			})
 		}
 		return cjsData{
-			Datasets:      dss,
-			UsesTimeScale: usesTimeScale,
+			ChartType:       "line",
+			ActualChartType: "scatterline",
+			Datasets:        dss,
+			UsesTimeScale:   usesTimeScale,
 		}
 	case "scatter":
 		css := map[string]string{}
@@ -295,8 +300,10 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 			})
 		}
 		return cjsData{
-			Datasets:      dss,
-			UsesTimeScale: usesTimeScale,
+			ChartType:       "bubble",
+			ActualChartType: "scatter",
+			Datasets:        dss,
+			UsesTimeScale:   usesTimeScale,
 		}
 	default:
 		log.Fatalf("Unknown chart type: %v", c.inData.ChartType)
