@@ -124,6 +124,20 @@ func (i inData) hasFloats() bool  { return len(i.FSS) > 0 }
 func (i inData) hasStrings() bool { return len(i.SSS) > 0 }
 func (i inData) hasTimes() bool   { return len(i.TSS) > 0 }
 
+func (i inData) timeFieldLen() int {
+	if !i.hasTimes() {
+		return 0
+	}
+	return len(i.TSS[0])
+}
+
+func (i inData) floatFieldLen() int {
+	if !i.hasFloats() {
+		return 0
+	}
+	return len(i.FSS[0])
+}
+
 type cjsChart struct {
 	inData inData
 }
@@ -176,6 +190,9 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 	var usesTimeScale bool
 	if c.inData.ChartType == "line" && (!c.inData.hasStrings() || c.inData.hasTimes()) {
 		c.inData.ChartType = "scatterline"
+		if c.inData.hasStrings() && c.inData.floatFieldLen()+c.inData.timeFieldLen() >= 2 {
+			c.inData.ChartType = "denormalised-scatterline" // every line is one datapoint rather than a column
+		}
 	}
 	switch c.inData.ChartType {
 	case "pie":
@@ -257,6 +274,44 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 				ComplexData: ds,
 				BorderColor: colorIndex(n),
 			})
+		}
+		return cjsData{
+			ChartType:       "line",
+			ActualChartType: "scatterline",
+			Datasets:        dss,
+			UsesTimeScale:   usesTimeScale,
+		}
+	case "denormalised-scatterline":
+		mdss := map[string]cjsDataset{}
+		for i := range c.inData.FSS {
+			d := cjsDataPoint{}
+			if c.inData.hasTimes() {
+				usesTimeScale = true
+				d.X = "'" + c.inData.TSS[i][0].Format("2006-01-02T15:04:05.999999999") + "'"
+				d.Y = fmt.Sprintf("%g", c.inData.FSS[i][0])
+			} else {
+				d.X = fmt.Sprintf("%g", c.inData.FSS[i][0])
+				d.Y = fmt.Sprintf("%g", c.inData.FSS[i][1])
+			}
+			ds := c.inData.SSS[i][0]
+			if _, ok := mdss[ds]; !ok {
+				mdss[ds] = cjsDataset{
+					Fill:        false,
+					Label:       ds,
+					ComplexData: []cjsDataPoint{d},
+					BorderColor: colorIndex(len(mdss))}
+			} else {
+				m := mdss[ds]
+				m.ComplexData = append(m.ComplexData, d)
+				mdss[ds] = m
+			}
+		}
+
+		dss := make([]cjsDataset, len(mdss))
+		i := 0
+		for _, v := range mdss {
+			dss[i] = v
+			i++
 		}
 		return cjsData{
 			ChartType:       "line",

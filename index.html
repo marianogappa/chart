@@ -850,9 +850,9 @@ h2 {
 </div>
 
 <div class="chart-wrapper">
-  <h2><pre>$ cat testdata/freq.csv</pre></h2>
-  <div class="pre"><pre>Trump<br>Hillary<br>Hillary<br>Trump<br>Stein<br>Trump<br>Johnson<br></pre></div>
-  <h2><pre>$ cat testdata/freq.csv | chart 
+  <h2><pre>$ cat testdata/denormalised-scatter-line.csv</pre></h2>
+  <div class="pre"><pre>server1	2017-07-12	66<br>server1	2017-07-13	353<br>server1	2017-07-15	47<br>server2	2017-07-12	1226<br>server2	2017-07-13	3359<br>server2	2017-07-14	691<br>server2	2017-07-15	122<br>server3	2017-07-13	2<br>server3	2017-07-14	101<br>server3	2017-07-15	9<br>server4	2017-07-12	49664<br>server4	2017-07-13	439<br>server4	2017-07-14	3518<br></pre></div>
+  <h2><pre>$ cat testdata/denormalised-scatter-line.csv | chart line log --date-format 2006-01-02
 </pre></h2>
   <div class="chart">
     <canvas id="chart2" height="300px" width="650px"></canvas>
@@ -860,6 +860,181 @@ h2 {
   <script>
     var ctx2 = document.getElementById("chart2");
     var chart2 = new Chart(ctx2, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        {
+          fill: false,
+          label: 'server1',
+          
+          borderColor: "#f44336",
+          data: [
+            
+            {
+                x: '2017-07-12T00:00:00',
+                y: 66
+              }
+            ,{
+                x: '2017-07-13T00:00:00',
+                y: 353
+              }
+            ,{
+                x: '2017-07-15T00:00:00',
+                y: 47
+              }
+            
+          ]
+        }
+        ,{
+          fill: false,
+          label: 'server2',
+          
+          borderColor: "#9c27b0",
+          data: [
+            
+            {
+                x: '2017-07-12T00:00:00',
+                y: 1226
+              }
+            ,{
+                x: '2017-07-13T00:00:00',
+                y: 3359
+              }
+            ,{
+                x: '2017-07-14T00:00:00',
+                y: 691
+              }
+            ,{
+                x: '2017-07-15T00:00:00',
+                y: 122
+              }
+            
+          ]
+        }
+        ,{
+          fill: false,
+          label: 'server4',
+          
+          borderColor: "#3f51b5",
+          data: [
+            
+            {
+                x: '2017-07-12T00:00:00',
+                y: 49664
+              }
+            ,{
+                x: '2017-07-13T00:00:00',
+                y: 439
+              }
+            ,{
+                x: '2017-07-14T00:00:00',
+                y: 3518
+              }
+            
+          ]
+        }
+        ,{
+          fill: false,
+          label: 'server3',
+          
+          borderColor: "#03a9f4",
+          data: [
+            
+            {
+                x: '2017-07-13T00:00:00',
+                y: 2
+              }
+            ,{
+                x: '2017-07-14T00:00:00',
+                y: 101
+              }
+            ,{
+                x: '2017-07-15T00:00:00',
+                y: 9
+              }
+            
+          ]
+        }
+        
+      ]
+    },
+    options: {
+      title: {
+            display: false,
+            text: ''
+      },
+      tooltips: {
+          callbacks: {
+              label: function(tti, data) {
+                
+                    var value = data.datasets[tti.datasetIndex].data[tti.index];
+                    if (value.y) {
+                        value = value.y
+                    }
+                    return value;
+    
+              }
+          }
+      },
+      
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [{
+                type: "logarithmic",
+                ticks: {
+                    beginAtZero: false,
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }],
+            xAxes: [{
+                
+                type: 'time',
+                position: 'bottom',
+                
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }]
+        },
+        elements: {
+            line: {
+                tension: 0, // disables bezier curves
+            },
+        },
+        
+        animation: {
+            duration: 0, // general animation time
+        },
+        hover: {
+            animationDuration: 0, // duration of animations when hovering an item
+        },
+        responsiveAnimationDuration: 0, // animation duration after a resize
+    }
+});
+  </script>
+</div>
+
+<div class="chart-wrapper">
+  <h2><pre>$ cat testdata/freq.csv</pre></h2>
+  <div class="pre"><pre>Trump<br>Hillary<br>Hillary<br>Trump<br>Stein<br>Trump<br>Johnson<br></pre></div>
+  <h2><pre>$ cat testdata/freq.csv | chart 
+</pre></h2>
+  <div class="chart">
+    <canvas id="chart3" height="300px" width="650px"></canvas>
+  </div>
+  <script>
+    var ctx3 = document.getElementById("chart3");
+    var chart3 = new Chart(ctx3, {
     type: 'pie',
     data: {
       labels: [`Trump`,`Hillary`,`Stein`,`Johnson`],
@@ -914,11 +1089,11 @@ h2 {
   <h2><pre>$ cat testdata/line-time.csv | chart line --date-format January
 </pre></h2>
   <div class="chart">
-    <canvas id="chart3" height="300px" width="650px"></canvas>
+    <canvas id="chart4" height="300px" width="650px"></canvas>
   </div>
   <script>
-    var ctx3 = document.getElementById("chart3");
-    var chart3 = new Chart(ctx3, {
+    var ctx4 = document.getElementById("chart4");
+    var chart4 = new Chart(ctx4, {
     type: 'line',
     data: {
       labels: [],
@@ -1057,11 +1232,11 @@ h2 {
   <h2><pre>$ cat testdata/line.csv | chart line ,
 </pre></h2>
   <div class="chart">
-    <canvas id="chart4" height="300px" width="650px"></canvas>
+    <canvas id="chart5" height="300px" width="650px"></canvas>
   </div>
   <script>
-    var ctx4 = document.getElementById("chart4");
-    var chart4 = new Chart(ctx4, {
+    var ctx5 = document.getElementById("chart5");
+    var chart5 = new Chart(ctx5, {
     type: 'line',
     data: {
       labels: [],
@@ -1200,11 +1375,11 @@ h2 {
   <h2><pre>$ cat testdata/multi-bar.csv | chart bar
 </pre></h2>
   <div class="chart">
-    <canvas id="chart5" height="300px" width="650px"></canvas>
+    <canvas id="chart6" height="300px" width="650px"></canvas>
   </div>
   <script>
-    var ctx5 = document.getElementById("chart5");
-    var chart5 = new Chart(ctx5, {
+    var ctx6 = document.getElementById("chart6");
+    var chart6 = new Chart(ctx6, {
     type: 'bar',
     data: {
       labels: [`January`,`February`,`March`,`April`],
@@ -1308,11 +1483,11 @@ h2 {
   <h2><pre>$ cat testdata/pie.csv | chart 
 </pre></h2>
   <div class="chart">
-    <canvas id="chart6" height="300px" width="650px"></canvas>
+    <canvas id="chart7" height="300px" width="650px"></canvas>
   </div>
   <script>
-    var ctx6 = document.getElementById("chart6");
-    var chart6 = new Chart(ctx6, {
+    var ctx7 = document.getElementById("chart7");
+    var chart7 = new Chart(ctx7, {
     type: 'pie',
     data: {
       labels: [`Chrome`,`Safari`,`Firefox`,`Internet Explorer & Edge`,`Opera`],
@@ -1367,11 +1542,11 @@ h2 {
   <h2><pre>$ cat testdata/scatter-rad-lab.csv | chart scatter
 </pre></h2>
   <div class="chart">
-    <canvas id="chart7" height="300px" width="650px"></canvas>
+    <canvas id="chart8" height="300px" width="650px"></canvas>
   </div>
   <script>
-    var ctx7 = document.getElementById("chart7");
-    var chart7 = new Chart(ctx7, {
+    var ctx8 = document.getElementById("chart8");
+    var chart8 = new Chart(ctx8, {
     type: 'bubble',
     data: {
       labels: [],
@@ -1637,11 +1812,11 @@ h2 {
   <h2><pre>$ cat testdata/scatter-rad.csv | chart scatter --title "Ice cream sales" -x C -y $
 </pre></h2>
   <div class="chart">
-    <canvas id="chart8" height="300px" width="650px"></canvas>
+    <canvas id="chart9" height="300px" width="650px"></canvas>
   </div>
   <script>
-    var ctx8 = document.getElementById("chart8");
-    var chart8 = new Chart(ctx8, {
+    var ctx9 = document.getElementById("chart9");
+    var chart9 = new Chart(ctx9, {
     type: 'bubble',
     data: {
       labels: [],
@@ -1907,11 +2082,11 @@ h2 {
   <h2><pre>$ cat testdata/scatter.csv | chart scatter --title "Ice cream sales" -x C -y $
 </pre></h2>
   <div class="chart">
-    <canvas id="chart9" height="300px" width="650px"></canvas>
+    <canvas id="chart10" height="300px" width="650px"></canvas>
   </div>
   <script>
-    var ctx9 = document.getElementById("chart9");
-    var chart9 = new Chart(ctx9, {
+    var ctx10 = document.getElementById("chart10");
+    var chart10 = new Chart(ctx10, {
     type: 'bubble',
     data: {
       labels: [],

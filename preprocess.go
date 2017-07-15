@@ -46,6 +46,28 @@ func (d *dataset) Swap(i, j int) {
 	if d.tss != nil {
 		d.tss[i], d.tss[j] = d.tss[j], d.tss[i]
 	}
+	if d.sss != nil {
+		d.sss[i], d.sss[j] = d.sss[j], d.sss[i]
+	}
+}
+
+func (d *dataset) hasFloats() bool  { return len(d.fss) > 0 }
+func (d *dataset) hasStrings() bool { return len(d.sss) > 0 }
+func (d *dataset) hasTimes() bool   { return len(d.tss) > 0 }
+func (d *dataset) timeFieldLen() int {
+	if !d.hasTimes() {
+		return 0
+	}
+	return len(d.tss[0])
+}
+func (d *dataset) floatFieldLen() int {
+	if !d.hasFloats() {
+		return 0
+	}
+	return len(d.fss[0])
+}
+func (d *dataset) canBeScatterLine() bool {
+	return d.floatFieldLen()+d.timeFieldLen() >= 2
 }
 
 func preprocess(r io.Reader, o options) (dataset, options, string, []string) {
@@ -112,7 +134,7 @@ func preprocess(r io.Reader, o options) (dataset, options, string, []string) {
 		d.fss, d.sss = preprocessFreq(d.sss)
 	}
 
-	if o.chartType == line && nilSSS && (!nilFSS || !nilTSS) { // if scatter line
+	if o.chartType == line && d.canBeScatterLine() {
 		sort.Sort(d)
 	}
 
