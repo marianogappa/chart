@@ -1,3 +1,4 @@
 chart
 *.tar.gz
 .goreleaser.yml
+dist/
