@@ -155,7 +155,6 @@ type cjsDataPoint struct {
 
 func (c cjsChart) data() cjsData {
 	d := c.labelsAndDatasets()
-	fmt.Printf("%+v", d)
 	d.Title = c.inData.Title
 	d.ScaleType = c.inData.ScaleType
 	d.XLabel = c.inData.XLabel
