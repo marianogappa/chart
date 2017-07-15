@@ -50,8 +50,8 @@ func init() {
                 {{ .TooltipCallback }}
               }
           }
-      }
-      {{ if ne .ChartType "pie" }},
+      },
+      {{ if ne .ChartType "pie" }}
         legend: {
             display: false
         },
@@ -86,9 +86,16 @@ func init() {
         elements: {
             line: {
                 tension: 0, // disables bezier curves
-            }
-        }
+            },
+        },
         {{end}}
+        animation: {
+            duration: 0, // general animation time
+        },
+        hover: {
+            animationDuration: 0, // duration of animations when hovering an item
+        },
+        responsiveAnimationDuration: 0, // animation duration after a resize
     }
 }`
 
