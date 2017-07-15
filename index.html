@@ -703,44 +703,49 @@ h2 {
       title: {
             display: false,
             text: ''
-        },
-        tooltips: {
-            callbacks: {
-                label: function(tti, data) {
-                  
+      },
+      tooltips: {
+          callbacks: {
+              label: function(tti, data) {
+                
                     var value = data.datasets[tti.datasetIndex].data[tti.index];
                     var label = data.labels[tti.index];
                     return value;
     
+              }
+          }
+      }
+      ,
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [{
+                type: "linear",
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
                 }
+            }],
+            xAxes: [{
+                
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }]
+        },
+        elements: {
+            line: {
+                tension: 0, // disables bezier curves
             }
         }
-        ,
-          legend: {
-              display: false
-          },
-          scales: {
-              yAxes: [{
-                  type: "linear",
-                  ticks: {
-                      beginAtZero: true,
-                      callback: function(value, index, values) {
-                          return value;
-                      }
-                  },
-                  scaleLabel: {
-                      display: false,
-                      labelString: ''
-                  }
-              }],
-              xAxes: [{
-                  
-                  scaleLabel: {
-                      display: false,
-                      labelString: ''
-                  }
-              }]
-          }
         
     }
 });
@@ -779,46 +784,51 @@ h2 {
       title: {
             display: false,
             text: ''
-        },
-        tooltips: {
-            callbacks: {
-                label: function(tti, data) {
-                  
+      },
+      tooltips: {
+          callbacks: {
+              label: function(tti, data) {
+                
                     var value = data.datasets[tti.datasetIndex].data[tti.index];
                     if (value.y) {
                         value = value.y
                     }
                     return value;
     
+              }
+          }
+      }
+      ,
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [{
+                type: "linear",
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
                 }
+            }],
+            xAxes: [{
+                
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }]
+        },
+        elements: {
+            line: {
+                tension: 0, // disables bezier curves
             }
         }
-        ,
-          legend: {
-              display: false
-          },
-          scales: {
-              yAxes: [{
-                  type: "linear",
-                  ticks: {
-                      beginAtZero: true,
-                      callback: function(value, index, values) {
-                          return value;
-                      }
-                  },
-                  scaleLabel: {
-                      display: false,
-                      labelString: ''
-                  }
-              }],
-              xAxes: [{
-                  
-                  scaleLabel: {
-                      display: false,
-                      labelString: ''
-                  }
-              }]
-          }
         
     }
 });
@@ -857,21 +867,21 @@ h2 {
       title: {
             display: false,
             text: ''
-        },
-        tooltips: {
-            callbacks: {
-                label: function(tti, data) {
-                  
+      },
+      tooltips: {
+          callbacks: {
+              label: function(tti, data) {
+                
                     var value = data.datasets[0].data[tti.index];
                     var total = data.datasets[0].data.reduce((a, b) => a + b, 0)
                     var label = data.labels[tti.index];
                     var percentage = Math.round(value / total * 100);
                     return label + ': ' + percentage + '%';
     
-                }
-            }
-        }
-        
+              }
+          }
+      }
+      
     }
 });
   </script>
@@ -959,49 +969,54 @@ h2 {
       title: {
             display: false,
             text: ''
-        },
-        tooltips: {
-            callbacks: {
-                label: function(tti, data) {
-                  
+      },
+      tooltips: {
+          callbacks: {
+              label: function(tti, data) {
+                
                     var value = data.datasets[tti.datasetIndex].data[tti.index];
                     if (value.y) {
                         value = value.y
                     }
                     return value;
     
+              }
+          }
+      }
+      ,
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [{
+                type: "linear",
+                ticks: {
+                    beginAtZero: false,
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
                 }
+            }],
+            xAxes: [{
+                
+                type: 'time',
+                position: 'bottom',
+                
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }]
+        },
+        elements: {
+            line: {
+                tension: 0, // disables bezier curves
             }
         }
-        ,
-          legend: {
-              display: false
-          },
-          scales: {
-              yAxes: [{
-                  type: "linear",
-                  ticks: {
-                      beginAtZero: false,
-                      callback: function(value, index, values) {
-                          return value;
-                      }
-                  },
-                  scaleLabel: {
-                      display: false,
-                      labelString: ''
-                  }
-              }],
-              xAxes: [{
-                  
-                  type: 'time',
-                  position: 'bottom',
-                  
-                  scaleLabel: {
-                      display: false,
-                      labelString: ''
-                  }
-              }]
-          }
         
     }
 });
@@ -1090,49 +1105,54 @@ h2 {
       title: {
             display: false,
             text: ''
-        },
-        tooltips: {
-            callbacks: {
-                label: function(tti, data) {
-                  
+      },
+      tooltips: {
+          callbacks: {
+              label: function(tti, data) {
+                
                     var value = data.datasets[tti.datasetIndex].data[tti.index];
                     if (value.y) {
                         value = value.y
                     }
                     return value;
     
+              }
+          }
+      }
+      ,
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [{
+                type: "linear",
+                ticks: {
+                    beginAtZero: false,
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
                 }
+            }],
+            xAxes: [{
+                
+                type: 'linear',
+                position: 'bottom',
+                
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }]
+        },
+        elements: {
+            line: {
+                tension: 0, // disables bezier curves
             }
         }
-        ,
-          legend: {
-              display: false
-          },
-          scales: {
-              yAxes: [{
-                  type: "linear",
-                  ticks: {
-                      beginAtZero: false,
-                      callback: function(value, index, values) {
-                          return value;
-                      }
-                  },
-                  scaleLabel: {
-                      display: false,
-                      labelString: ''
-                  }
-              }],
-              xAxes: [{
-                  
-                  type: 'linear',
-                  position: 'bottom',
-                  
-                  scaleLabel: {
-                      display: false,
-                      labelString: ''
-                  }
-              }]
-          }
         
     }
 });
@@ -1191,44 +1211,49 @@ h2 {
       title: {
             display: false,
             text: ''
-        },
-        tooltips: {
-            callbacks: {
-                label: function(tti, data) {
-                  
+      },
+      tooltips: {
+          callbacks: {
+              label: function(tti, data) {
+                
                     var value = data.datasets[tti.datasetIndex].data[tti.index];
                     var label = data.labels[tti.index];
                     return value;
     
+              }
+          }
+      }
+      ,
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [{
+                type: "linear",
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
                 }
+            }],
+            xAxes: [{
+                
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }]
+        },
+        elements: {
+            line: {
+                tension: 0, // disables bezier curves
             }
         }
-        ,
-          legend: {
-              display: false
-          },
-          scales: {
-              yAxes: [{
-                  type: "linear",
-                  ticks: {
-                      beginAtZero: true,
-                      callback: function(value, index, values) {
-                          return value;
-                      }
-                  },
-                  scaleLabel: {
-                      display: false,
-                      labelString: ''
-                  }
-              }],
-              xAxes: [{
-                  
-                  scaleLabel: {
-                      display: false,
-                      labelString: ''
-                  }
-              }]
-          }
         
     }
 });
@@ -1267,21 +1292,21 @@ h2 {
       title: {
             display: false,
             text: ''
-        },
-        tooltips: {
-            callbacks: {
-                label: function(tti, data) {
-                  
+      },
+      tooltips: {
+          callbacks: {
+              label: function(tti, data) {
+                
                     var value = data.datasets[0].data[tti.index];
                     var total = data.datasets[0].data.reduce((a, b) => a + b, 0)
                     var label = data.labels[tti.index];
                     var percentage = Math.round(value / total * 100);
                     return label + ': ' + percentage + '%';
     
-                }
-            }
-        }
-        
+              }
+          }
+      }
+      
     }
 });
   </script>
@@ -1501,44 +1526,49 @@ h2 {
       title: {
             display: false,
             text: ''
-        },
-        tooltips: {
-            callbacks: {
-                label: function(tti, data) {
-                  
+      },
+      tooltips: {
+          callbacks: {
+              label: function(tti, data) {
+                
                     var value = data.datasets[tti.datasetIndex].data[tti.index];
                     var label = data.datasets[tti.datasetIndex].label;
                     return (label ? label + ': ' : '') + '(' + value.x + ', ' + value.y + ')';
     
+              }
+          }
+      }
+      ,
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [{
+                type: "linear",
+                ticks: {
+                    beginAtZero: false,
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
                 }
+            }],
+            xAxes: [{
+                
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }]
+        },
+        elements: {
+            line: {
+                tension: 0, // disables bezier curves
             }
         }
-        ,
-          legend: {
-              display: false
-          },
-          scales: {
-              yAxes: [{
-                  type: "linear",
-                  ticks: {
-                      beginAtZero: false,
-                      callback: function(value, index, values) {
-                          return value;
-                      }
-                  },
-                  scaleLabel: {
-                      display: false,
-                      labelString: ''
-                  }
-              }],
-              xAxes: [{
-                  
-                  scaleLabel: {
-                      display: false,
-                      labelString: ''
-                  }
-              }]
-          }
         
     }
 });
@@ -1759,44 +1789,49 @@ h2 {
       title: {
             display: true,
             text: '"Ice cream sales"'
-        },
-        tooltips: {
-            callbacks: {
-                label: function(tti, data) {
-                  
+      },
+      tooltips: {
+          callbacks: {
+              label: function(tti, data) {
+                
                     var value = data.datasets[tti.datasetIndex].data[tti.index];
                     var label = data.datasets[tti.datasetIndex].label;
                     return (label ? label + ': ' : '') + '(' + value.x + ', ' + value.y + ')';
     
+              }
+          }
+      }
+      ,
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [{
+                type: "linear",
+                ticks: {
+                    beginAtZero: false,
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: '$'
                 }
+            }],
+            xAxes: [{
+                
+                scaleLabel: {
+                    display: true,
+                    labelString: 'C'
+                }
+            }]
+        },
+        elements: {
+            line: {
+                tension: 0, // disables bezier curves
             }
         }
-        ,
-          legend: {
-              display: false
-          },
-          scales: {
-              yAxes: [{
-                  type: "linear",
-                  ticks: {
-                      beginAtZero: false,
-                      callback: function(value, index, values) {
-                          return value;
-                      }
-                  },
-                  scaleLabel: {
-                      display: true,
-                      labelString: '$'
-                  }
-              }],
-              xAxes: [{
-                  
-                  scaleLabel: {
-                      display: true,
-                      labelString: 'C'
-                  }
-              }]
-          }
         
     }
 });
@@ -2017,44 +2052,49 @@ h2 {
       title: {
             display: true,
             text: '"Ice cream sales"'
-        },
-        tooltips: {
-            callbacks: {
-                label: function(tti, data) {
-                  
+      },
+      tooltips: {
+          callbacks: {
+              label: function(tti, data) {
+                
                     var value = data.datasets[tti.datasetIndex].data[tti.index];
                     var label = data.datasets[tti.datasetIndex].label;
                     return (label ? label + ': ' : '') + '(' + value.x + ', ' + value.y + ')';
     
+              }
+          }
+      }
+      ,
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [{
+                type: "linear",
+                ticks: {
+                    beginAtZero: false,
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: '$'
                 }
+            }],
+            xAxes: [{
+                
+                scaleLabel: {
+                    display: true,
+                    labelString: 'C'
+                }
+            }]
+        },
+        elements: {
+            line: {
+                tension: 0, // disables bezier curves
             }
         }
-        ,
-          legend: {
-              display: false
-          },
-          scales: {
-              yAxes: [{
-                  type: "linear",
-                  ticks: {
-                      beginAtZero: false,
-                      callback: function(value, index, values) {
-                          return value;
-                      }
-                  },
-                  scaleLabel: {
-                      display: true,
-                      labelString: '$'
-                  }
-              }],
-              xAxes: [{
-                  
-                  scaleLabel: {
-                      display: true,
-                      labelString: 'C'
-                  }
-              }]
-          }
         
     }
 });

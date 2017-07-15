@@ -43,46 +43,51 @@ func init() {
       title: {
             display: {{ if len .Title }}true{{else}}false{{end}},
             text: '{{ .Title }}'
+      },
+      tooltips: {
+          callbacks: {
+              label: function(tti, data) {
+                {{ .TooltipCallback }}
+              }
+          }
+      }
+      {{ if ne .ChartType "pie" }},
+        legend: {
+            display: false
         },
-        tooltips: {
-            callbacks: {
-                label: function(tti, data) {
-                  {{ .TooltipCallback }}
+        scales: {
+            yAxes: [{
+                type: "{{ .ScaleType }}",
+                ticks: {
+                    beginAtZero: {{ .ZeroBased }},
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: {{if eq .YLabel ""}}false{{else}}true{{end}},
+                    labelString: '{{ .YLabel }}'
                 }
+            }],
+            xAxes: [{
+                {{ if .UsesTimeScale }}
+                type: 'time',
+                position: 'bottom',
+                {{ else if eq .ActualChartType "scatterline" }}
+                type: 'linear',
+                position: 'bottom',
+                {{end}}
+                scaleLabel: {
+                    display: {{if eq .XLabel ""}}false{{else}}true{{end}},
+                    labelString: '{{ .XLabel }}'
+                }
+            }]
+        },
+        elements: {
+            line: {
+                tension: 0, // disables bezier curves
             }
         }
-        {{ if ne .ChartType "pie" }},
-          legend: {
-              display: false
-          },
-          scales: {
-              yAxes: [{
-                  type: "{{ .ScaleType }}",
-                  ticks: {
-                      beginAtZero: {{ .ZeroBased }},
-                      callback: function(value, index, values) {
-                          return value;
-                      }
-                  },
-                  scaleLabel: {
-                      display: {{if eq .YLabel ""}}false{{else}}true{{end}},
-                      labelString: '{{ .YLabel }}'
-                  }
-              }],
-              xAxes: [{
-                  {{ if .UsesTimeScale }}
-                  type: 'time',
-                  position: 'bottom',
-                  {{ else if eq .ActualChartType "scatterline" }}
-                  type: 'linear',
-                  position: 'bottom',
-                  {{end}}
-                  scaleLabel: {
-                      display: {{if eq .XLabel ""}}false{{else}}true{{end}},
-                      labelString: '{{ .XLabel }}'
-                  }
-              }]
-          }
         {{end}}
     }
 }`
