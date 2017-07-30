@@ -15,7 +15,7 @@ import (
 func main() {
 	o := mustResolveOptions(os.Args[1:])
 
-	_, b, err := buildChart(os.Stdin, o)
+	_, o, b, err := buildChart(os.Stdin, o)
 	if err == nil && b.Len() == 0 {
 		os.Exit(0)
 	}
@@ -32,7 +32,11 @@ func main() {
 		log.WithField("err", err).Fatalf("Could not write header to temporary file.")
 	}
 
-	if err = baseTemplate.Execute(tmpfile, b.String()); err != nil {
+	t := baseTemplate
+	if o.chartType == pie {
+		t = basePieTemplate
+	}
+	if err = t.Execute(tmpfile, b.String()); err != nil {
 		log.WithField("err", err).Fatalf("Could not write chart to temporary file.")
 	}
 
@@ -52,13 +56,13 @@ func main() {
 	open.Run("file://" + newName)
 }
 
-func buildChart(r io.Reader, o options) ([]string, bytes.Buffer, error) {
+func buildChart(r io.Reader, o options) ([]string, options, bytes.Buffer, error) {
 	d, o, lf, ls := preprocess(r, o)
 	var b bytes.Buffer
 
 	if o.debug {
 		showDebug(ls, d, o, lf)
-		return ls, b, nil
+		return ls, o, b, nil
 	}
 
 	var err error
@@ -68,23 +72,23 @@ func buildChart(r io.Reader, o options) ([]string, bytes.Buffer, error) {
 	switch o.chartType {
 	case pie:
 		if len(d.fss) == 0 || (len(d.fss[0]) == 1 && len(d.sss) == 0 && len(d.tss) == 0) {
-			return ls, b, fmt.Errorf("couldn't find values to plot")
+			return ls, o, b, fmt.Errorf("couldn't find values to plot")
 		}
 	case bar:
 		if len(d.fss) == 0 || (len(d.fss[0]) == 1 && len(d.sss) == 0 && len(d.tss) == 0) {
-			return ls, b, fmt.Errorf("couldn't find values to plot")
+			return ls, o, b, fmt.Errorf("couldn't find values to plot")
 		}
 	case line:
 		if d.fss == nil || (d.sss == nil && d.tss == nil && len(d.fss[0]) < 2) {
-			return ls, b, fmt.Errorf("couldn't find values to plot")
+			return ls, o, b, fmt.Errorf("couldn't find values to plot")
 		}
 	case scatter:
 		if len(d.fss) == 0 {
-			return ls, b, fmt.Errorf("couldn't find values to plot")
+			return ls, o, b, fmt.Errorf("couldn't find values to plot")
 		}
 	}
 	if err != nil {
-		return ls, b, fmt.Errorf("could not construct chart because [%v]", err)
+		return ls, o, b, fmt.Errorf("could not construct chart because [%v]", err)
 	}
 
 	templData, templ, err = cjsChart{inData{
@@ -102,8 +106,8 @@ func buildChart(r io.Reader, o options) ([]string, bytes.Buffer, error) {
 	}}.chart()
 
 	if err := templ.Execute(&b, templData); err != nil {
-		return ls, b, fmt.Errorf("could not prepare ChartJS js code for chart: [%v]", err)
+		return ls, o, b, fmt.Errorf("could not prepare ChartJS js code for chart: [%v]", err)
 	}
 
-	return ls, b, nil
+	return ls, o, b, nil
 }

@@ -57,7 +57,7 @@ func TestCheatsheet(t *testing.T) {
 			t.FailNow()
 		}
 
-		ls, b, err := buildChart(rd, o)
+		ls, _, b, err := buildChart(rd, o)
 		if err != nil {
 			t.Errorf("[%v] breaks building chart with: [%v]", fs, err)
 			t.FailNow()

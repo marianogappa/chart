@@ -5,7 +5,7 @@ import (
 	"text/template"
 )
 
-var baseTemplate *template.Template
+var baseTemplate, basePieTemplate *template.Template
 
 func init() {
 	var err error
@@ -13,11 +13,25 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	basePieTemplate, err = template.New("base").Parse(basePieTemplateString)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 var baseTemplateString = `
-<div style="height:100vh; width:90vw;">
+<div style="height:90vh; width:90vw;">
 <canvas id="chart"></canvas>
+</div>
+<script>
+var ctx = document.getElementById("chart");
+var chart = new Chart(ctx, {{.}});
+</script>`
+
+// https://github.com/marianogappa/chart/issues/25
+var basePieTemplateString = `
+<div style="height:50vh; width:50vw;">
+<canvas id="chart" height="100%" width="100%"></canvas>
 </div>
 <script>
 var ctx = document.getElementById("chart");
