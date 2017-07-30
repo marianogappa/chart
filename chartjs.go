@@ -53,7 +53,8 @@ func init() {
       },
       {{ if ne .ChartType "pie" }}
         legend: {
-            display: false
+            display: {{ if gt (len .Datasets) 1 }}true,
+            position: 'bottom'{{else}}false{{end}}
         },
         scales: {
             yAxes: [{
@@ -223,6 +224,7 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 		for i := range c.inData.FSS[0] {
 			ds = append(ds, cjsDataset{
 				Fill:            true,
+				Label:           fmt.Sprintf("category %v", i),
 				SimpleData:      c.marshalSimpleData(i),
 				BackgroundColor: colorRepeat(i, len(c.inData.FSS)),
 			})
@@ -237,9 +239,11 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 		ds := []cjsDataset{}
 		for i := range c.inData.FSS[0] {
 			ds = append(ds, cjsDataset{
-				Fill:        false,
-				SimpleData:  c.marshalSimpleData(i),
-				BorderColor: colorIndex(i),
+				Fill:            false,
+				Label:           fmt.Sprintf("category %v", i),
+				SimpleData:      c.marshalSimpleData(i),
+				BorderColor:     colorIndex(i),
+				BackgroundColor: colorIndex(i),
 			})
 		}
 		return cjsData{
@@ -269,10 +273,11 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 				ds = append(ds, d)
 			}
 			dss = append(dss, cjsDataset{
-				Fill:        false,
-				Label:       fmt.Sprintf("column %v", n),
-				ComplexData: ds,
-				BorderColor: colorIndex(n),
+				Fill:            false,
+				Label:           fmt.Sprintf("category %v", n),
+				ComplexData:     ds,
+				BorderColor:     colorIndex(n),
+				BackgroundColor: colorIndex(n),
 			})
 		}
 		return cjsData{
@@ -296,10 +301,12 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 			ds := c.inData.SSS[i][0]
 			if _, ok := mdss[ds]; !ok {
 				mdss[ds] = cjsDataset{
-					Fill:        false,
-					Label:       ds,
-					ComplexData: []cjsDataPoint{d},
-					BorderColor: colorIndex(len(mdss))}
+					Fill:            false,
+					Label:           ds,
+					ComplexData:     []cjsDataPoint{d},
+					BorderColor:     colorIndex(len(mdss)),
+					BackgroundColor: colorIndex(len(mdss)),
+				}
 			} else {
 				m := mdss[ds]
 				m.ComplexData = append(m.ComplexData, d)
@@ -320,15 +327,39 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 			UsesTimeScale:   usesTimeScale,
 		}
 	case "scatter":
-		css := map[string]string{}
-		colorReset()
+		css := map[string]int{}
+		ils := map[int]string{}
+		i := 0
 		for _, ss := range c.inData.SSS {
-			if len(ss) > 0 && css[ss[0]] == "" {
-				css[ss[0]] = colorNext()
+			if len(ss) == 0 {
+				break
+			}
+			if _, ok := css[ss[0]]; !ok {
+				css[ss[0]] = i
+				ils[i] = ss[0]
+				i++
+			}
+		}
+		dss := make([]cjsDataset, i)
+		if i == 0 {
+			dss = append(dss, cjsDataset{
+				Fill:            true,
+				Label:           "category 0",
+				ComplexData:     []cjsDataPoint{},
+				BackgroundColor: colorIndex(0),
+				BorderColor:     colorIndex(0),
+			})
+		}
+		for j := 0; j < i; j++ {
+			dss[j] = cjsDataset{
+				Fill:            true,
+				Label:           ils[j],
+				ComplexData:     []cjsDataPoint{},
+				BackgroundColor: colorIndex(j),
+				BorderColor:     colorIndex(j),
 			}
 		}
 
-		dss := []cjsDataset{}
 		for i := range c.inData.FSS {
 			d := cjsDataPoint{UsesR: true}
 			if c.inData.hasTimes() {
@@ -352,18 +383,13 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 					d.R = fmt.Sprintf("%v", 4)
 				}
 			}
-			color := colorFirstN(1)
-			label := ""
+			j := 0
 			if c.inData.hasStrings() {
-				color = css[c.inData.SSS[i][0]]
-				label = c.inData.SSS[i][0]
+				j = css[c.inData.SSS[i][0]]
 			}
-			dss = append(dss, cjsDataset{
-				Fill:            true,
-				Label:           label,
-				ComplexData:     []cjsDataPoint{d},
-				BackgroundColor: color,
-			})
+			cd := dss[j].ComplexData
+			cd = append(cd, d)
+			dss[j].ComplexData = cd
 		}
 		return cjsData{
 			ChartType:       "bubble",

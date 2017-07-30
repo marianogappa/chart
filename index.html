@@ -776,8 +776,8 @@ h2 {
       datasets: [
         {
           fill: false,
-          
-          
+          label: 'category 0',
+          backgroundColor: "#f44336",
           borderColor: "#f44336",
           data: [
             5188,5608,5807,6774,6272,6994,6778,7883
@@ -867,7 +867,7 @@ h2 {
         {
           fill: false,
           label: 'server1',
-          
+          backgroundColor: "#f44336",
           borderColor: "#f44336",
           data: [
             
@@ -889,7 +889,7 @@ h2 {
         ,{
           fill: false,
           label: 'server2',
-          
+          backgroundColor: "#9c27b0",
           borderColor: "#9c27b0",
           data: [
             
@@ -915,7 +915,7 @@ h2 {
         ,{
           fill: false,
           label: 'server4',
-          
+          backgroundColor: "#3f51b5",
           borderColor: "#3f51b5",
           data: [
             
@@ -937,7 +937,7 @@ h2 {
         ,{
           fill: false,
           label: 'server3',
-          
+          backgroundColor: "#03a9f4",
           borderColor: "#03a9f4",
           data: [
             
@@ -979,7 +979,8 @@ h2 {
       },
       
         legend: {
-            display: false
+            display: true,
+            position: 'bottom'
         },
         scales: {
             yAxes: [{
@@ -1100,8 +1101,8 @@ h2 {
       datasets: [
         {
           fill: false,
-          label: 'column 0',
-          
+          label: 'category 0',
+          backgroundColor: "#f44336",
           borderColor: "#f44336",
           data: [
             
@@ -1130,8 +1131,8 @@ h2 {
         }
         ,{
           fill: false,
-          label: 'column 1',
-          
+          label: 'category 1',
+          backgroundColor: "#9c27b0",
           borderColor: "#9c27b0",
           data: [
             
@@ -1181,7 +1182,8 @@ h2 {
       },
       
         legend: {
-            display: false
+            display: true,
+            position: 'bottom'
         },
         scales: {
             yAxes: [{
@@ -1243,8 +1245,8 @@ h2 {
       datasets: [
         {
           fill: false,
-          label: 'column 0',
-          
+          label: 'category 0',
+          backgroundColor: "#f44336",
           borderColor: "#f44336",
           data: [
             
@@ -1273,8 +1275,8 @@ h2 {
         }
         ,{
           fill: false,
-          label: 'column 1',
-          
+          label: 'category 1',
+          backgroundColor: "#9c27b0",
           borderColor: "#9c27b0",
           data: [
             
@@ -1324,7 +1326,8 @@ h2 {
       },
       
         legend: {
-            display: false
+            display: true,
+            position: 'bottom'
         },
         scales: {
             yAxes: [{
@@ -1386,7 +1389,7 @@ h2 {
       datasets: [
         {
           fill: true,
-          
+          label: 'category 0',
           backgroundColor: ["#f44336","#f44336","#f44336","#f44336",],
           
           data: [
@@ -1396,7 +1399,7 @@ h2 {
         }
         ,{
           fill: true,
-          
+          label: 'category 1',
           backgroundColor: ["#9c27b0","#9c27b0","#9c27b0","#9c27b0",],
           
           data: [
@@ -1406,7 +1409,7 @@ h2 {
         }
         ,{
           fill: true,
-          
+          label: 'category 2',
           backgroundColor: ["#3f51b5","#3f51b5","#3f51b5","#3f51b5",],
           
           data: [
@@ -1435,7 +1438,8 @@ h2 {
       },
       
         legend: {
-            display: false
+            display: true,
+            position: 'bottom'
         },
         scales: {
             yAxes: [{
@@ -1555,7 +1559,7 @@ h2 {
           fill: true,
           label: 'Nestle',
           backgroundColor: "#f44336",
-          
+          borderColor: "#f44336",
           data: [
             
             {
@@ -1564,6 +1568,24 @@ h2 {
                 r: 35.690140845070424
                 
               }
+            ,{
+                x: 11.9,
+                y: 185,
+                r: 4
+                
+              }
+            ,{
+                x: 22.1,
+                y: 522,
+                r: 49.774647887323944
+                
+              }
+            ,{
+                x: 17.2,
+                y: 408,
+                r: 44.140845070422536
+                
+              }
             
           ]
         }
@@ -1571,7 +1593,7 @@ h2 {
           fill: true,
           label: 'Häagen-Dazs',
           backgroundColor: "#9c27b0",
-          
+          borderColor: "#9c27b0",
           data: [
             
             {
@@ -1580,145 +1602,25 @@ h2 {
                 r: 35.690140845070424
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          label: 'Nestle',
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
-                x: 11.9,
-                y: 185,
-                r: 4
-                
-              }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          label: 'Ben & Jerry\'s',
-          backgroundColor: "#3f51b5",
-          
-          data: [
-            
-            {
-                x: 15.2,
-                y: 332,
-                r: 37.80281690140845
-                
-              }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          label: 'Häagen-Dazs',
-          backgroundColor: "#9c27b0",
-          
-          data: [
-            
-            {
+            ,{
                 x: 18.5,
                 y: 406,
                 r: 43.436619718309856
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          label: 'Nestle',
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
-                x: 22.1,
-                y: 522,
-                r: 49.774647887323944
-                
-              }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          label: 'Häagen-Dazs',
-          backgroundColor: "#9c27b0",
-          
-          data: [
-            
-            {
+            ,{
                 x: 19.4,
                 y: 412,
                 r: 44.845070422535215
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          label: 'Ben & Jerry\'s',
-          backgroundColor: "#3f51b5",
-          
-          data: [
-            
-            {
-                x: 25.1,
-                y: 614,
-                r: 54
-                
-              }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          label: 'Ben & Jerry\'s',
-          backgroundColor: "#3f51b5",
-          
-          data: [
-            
-            {
-                x: 23.4,
-                y: 544,
-                r: 50.478873239436616
-                
-              }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          label: 'Häagen-Dazs',
-          backgroundColor: "#9c27b0",
-          
-          data: [
-            
-            {
+            ,{
                 x: 18.1,
                 y: 421,
                 r: 46.25352112676056
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          label: 'Häagen-Dazs',
-          backgroundColor: "#9c27b0",
-          
-          data: [
-            
-            {
+            ,{
                 x: 22.6,
                 y: 445,
                 r: 46.95774647887324
@@ -1729,15 +1631,27 @@ h2 {
         }
         ,{
           fill: true,
-          label: 'Nestle',
-          backgroundColor: "#f44336",
-          
+          label: 'Ben & Jerry\'s',
+          backgroundColor: "#3f51b5",
+          borderColor: "#3f51b5",
           data: [
             
             {
-                x: 17.2,
-                y: 408,
-                r: 44.140845070422536
+                x: 15.2,
+                y: 332,
+                r: 37.80281690140845
+                
+              }
+            ,{
+                x: 25.1,
+                y: 614,
+                r: 54
+                
+              }
+            ,{
+                x: 23.4,
+                y: 544,
+                r: 50.478873239436616
                 
               }
             
@@ -1764,7 +1678,8 @@ h2 {
       },
       
         legend: {
-            display: false
+            display: true,
+            position: 'bottom'
         },
         scales: {
             yAxes: [{
@@ -1823,9 +1738,9 @@ h2 {
       datasets: [
         {
           fill: true,
-          
+          label: 'category 0',
           backgroundColor: "#f44336",
-          
+          borderColor: "#f44336",
           data: [
             
             {
@@ -1834,177 +1749,67 @@ h2 {
                 r: 35.690140845070424
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 16.4,
                 y: 325,
                 r: 35.690140845070424
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 11.9,
                 y: 185,
                 r: 4
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 15.2,
                 y: 332,
                 r: 37.80281690140845
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 18.5,
                 y: 406,
                 r: 43.436619718309856
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 22.1,
                 y: 522,
                 r: 49.774647887323944
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 19.4,
                 y: 412,
                 r: 44.845070422535215
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 25.1,
                 y: 614,
                 r: 54
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 23.4,
                 y: 544,
                 r: 50.478873239436616
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 18.1,
                 y: 421,
                 r: 46.25352112676056
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 22.6,
                 y: 445,
                 r: 46.95774647887324
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 17.2,
                 y: 408,
                 r: 44.140845070422536
@@ -2093,9 +1898,9 @@ h2 {
       datasets: [
         {
           fill: true,
-          
+          label: 'category 0',
           backgroundColor: "#f44336",
-          
+          borderColor: "#f44336",
           data: [
             
             {
@@ -2104,177 +1909,67 @@ h2 {
                 r: 4
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 16.4,
                 y: 325,
                 r: 4
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 11.9,
                 y: 185,
                 r: 4
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 15.2,
                 y: 332,
                 r: 4
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 18.5,
                 y: 406,
                 r: 4
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 22.1,
                 y: 522,
                 r: 4
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 19.4,
                 y: 412,
                 r: 4
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 25.1,
                 y: 614,
                 r: 4
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 23.4,
                 y: 544,
                 r: 4
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 18.1,
                 y: 421,
                 r: 4
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 22.6,
                 y: 445,
                 r: 4
                 
               }
-            
-          ]
-        }
-        ,{
-          fill: true,
-          
-          backgroundColor: "#f44336",
-          
-          data: [
-            
-            {
+            ,{
                 x: 17.2,
                 y: 408,
                 r: 4
