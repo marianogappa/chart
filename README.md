@@ -99,8 +99,7 @@ Separator   [tab]
 
 ## Details
 
-- `chart` is still experimental.
-- it infers STDIN format by analysing line format on each line (doesn't infer separator though; defaults to `\t` and accepts user overrides) and computing the winner format.
+- `chart` infers STDIN format by analysing line format on each line (doesn't infer separator though; defaults to `\t`) and computing the winner format.
 - it uses the awesome [ChartJS](http://www.chartjs.org/) library to plot the charts.
 - when input data is string-only, `chart` infers a "word frequency pie chart" use case.
 - should work on Linux/Mac/Windows thanks to [open-golang](https://github.com/skratchdot/open-golang).
@@ -108,6 +107,7 @@ Separator   [tab]
 ## Known issues
 
 - Javascript's floating point messes up y-axis https://github.com/marianogappa/chart/issues/15
+- No histogram support (ChartJS doesn't provide it) https://github.com/marianogappa/chart/issues/22
 
 ## Contribute
 
