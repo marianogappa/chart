@@ -8,6 +8,7 @@ import (
 
 type chartType int
 type scaleType int
+type colorType int
 
 const (
 	undefinedChartType chartType = iota
@@ -20,12 +21,18 @@ const (
 	linear scaleType = iota
 	logarithmic
 )
+const (
+	defaultColor colorType = iota
+	legacyColor
+	gradient
+)
 
 type options struct {
 	title      string
 	separator  rune
 	scaleType  scaleType
 	chartType  chartType
+	colorType  colorType
 	xLabel     string
 	yLabel     string
 	dateFormat string
@@ -83,6 +90,10 @@ func resolveOptions(args []string) (options, error) {
 			o.chartType = line
 		case "scatter":
 			o.chartType = scatter
+		case "legacy-color":
+			o.colorType = legacyColor
+		case "gradient":
+			o.colorType = gradient
 		case ",":
 			o.separator = ','
 		case ";":
@@ -137,6 +148,10 @@ func resolveOptions(args []string) (options, error) {
 	render a line chart
   scatter
 	render a scatter plot chart
+  legacy-color
+    use legacy colors
+  gradient
+  	use color gradients
   log
 	use logarithmic scale (bar chart only)
   ' '|';'|','|'\t'

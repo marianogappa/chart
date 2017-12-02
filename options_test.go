@@ -18,6 +18,7 @@ func TestResolveOptions(t *testing.T) {
 				separator: '\t',
 				scaleType: linear,
 				chartType: undefinedChartType,
+				colorType: defaultColor,
 			},
 		},
 		{
@@ -27,6 +28,7 @@ func TestResolveOptions(t *testing.T) {
 				separator: '\t',
 				scaleType: linear,
 				chartType: undefinedChartType,
+				colorType: defaultColor,
 			},
 		},
 		{
@@ -36,6 +38,7 @@ func TestResolveOptions(t *testing.T) {
 				separator: '\t',
 				scaleType: linear,
 				chartType: undefinedChartType,
+				colorType: defaultColor,
 			},
 		},
 		{
@@ -53,6 +56,7 @@ func TestResolveOptions(t *testing.T) {
 				separator: ',',
 				scaleType: logarithmic,
 				chartType: bar,
+				colorType: defaultColor,
 			},
 		},
 		{
@@ -62,6 +66,7 @@ func TestResolveOptions(t *testing.T) {
 				separator: ';',
 				scaleType: linear,
 				chartType: bar,
+				colorType: defaultColor,
 			},
 		},
 		{
@@ -71,6 +76,7 @@ func TestResolveOptions(t *testing.T) {
 				separator: ' ',
 				scaleType: linear,
 				chartType: undefinedChartType,
+				colorType: defaultColor,
 			},
 		},
 		{
@@ -80,6 +86,7 @@ func TestResolveOptions(t *testing.T) {
 				separator: ' ',
 				scaleType: linear,
 				chartType: pie,
+				colorType: defaultColor,
 			},
 		},
 		{
@@ -89,6 +96,7 @@ func TestResolveOptions(t *testing.T) {
 				separator: '\t',
 				scaleType: linear,
 				chartType: line,
+				colorType: defaultColor,
 			},
 		},
 		{
@@ -98,6 +106,27 @@ func TestResolveOptions(t *testing.T) {
 				separator: '\t',
 				scaleType: linear,
 				chartType: scatter,
+				colorType: defaultColor,
+			},
+		},
+		{
+			args: []string{"-title", "title", "legacy-color", "1"},
+			expected: options{
+				title:     "title",
+				separator: '\t',
+				scaleType: linear,
+				chartType: undefinedChartType,
+				colorType: legacyColor,
+			},
+		},
+		{
+			args: []string{"-title", "title", "gradient", "1"},
+			expected: options{
+				title:     "title",
+				separator: '\t',
+				scaleType: linear,
+				chartType: undefinedChartType,
+				colorType: gradient,
 			},
 		},
 	}

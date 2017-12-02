@@ -119,6 +119,7 @@ type inData struct {
 	XLabel    string
 	YLabel    string
 	ZeroBased bool
+	ColorType int
 }
 
 func (i inData) hasFloats() bool  { return len(i.FSS) > 0 }
@@ -159,6 +160,7 @@ type cjsData struct {
 	Datasets        []cjsDataset
 	TooltipCallback string
 	UsesTimeScale   bool
+	ColorType		int
 }
 
 type cjsDataset struct {
@@ -179,6 +181,7 @@ func (c cjsChart) data() cjsData {
 	d := c.labelsAndDatasets()
 	d.Title = c.inData.Title
 	d.ScaleType = c.inData.ScaleType
+	d.ColorType = c.inData.ColorType
 	d.XLabel = c.inData.XLabel
 	d.YLabel = c.inData.YLabel
 	d.ZeroBased = c.inData.ZeroBased
@@ -204,7 +207,7 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 			Datasets: []cjsDataset{{
 				Fill:            true,
 				SimpleData:      c.marshalSimpleData(0),
-				BackgroundColor: colorFirstN(len(c.inData.FSS)),
+				BackgroundColor: colorFirstN(c.inData.ColorType, len(c.inData.FSS)),
 			}},
 		}
 	case "bar":
@@ -216,7 +219,7 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 				Datasets: []cjsDataset{{
 					Fill:            true,
 					SimpleData:      c.marshalSimpleData(0),
-					BackgroundColor: colorFirstN(len(c.inData.FSS)),
+					BackgroundColor: colorFirstN(c.inData.ColorType, len(c.inData.FSS)),
 				}},
 			}
 		}
@@ -226,7 +229,7 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 				Fill:            true,
 				Label:           fmt.Sprintf("category %v", i),
 				SimpleData:      c.marshalSimpleData(i),
-				BackgroundColor: colorRepeat(i, len(c.inData.FSS)),
+				BackgroundColor: colorRepeat(c.inData.ColorType, i, len(c.inData.FSS)),
 			})
 		}
 		return cjsData{
@@ -242,8 +245,8 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 				Fill:            false,
 				Label:           fmt.Sprintf("category %v", i),
 				SimpleData:      c.marshalSimpleData(i),
-				BorderColor:     colorIndex(i),
-				BackgroundColor: colorIndex(i),
+				BorderColor:     colorIndex(c.inData.ColorType, i),
+				BackgroundColor: colorIndex(c.inData.ColorType, i),
 			})
 		}
 		return cjsData{
@@ -276,8 +279,8 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 				Fill:            false,
 				Label:           fmt.Sprintf("category %v", n),
 				ComplexData:     ds,
-				BorderColor:     colorIndex(n),
-				BackgroundColor: colorIndex(n),
+				BorderColor:     colorIndex(c.inData.ColorType, n),
+				BackgroundColor: colorIndex(c.inData.ColorType, n),
 			})
 		}
 		return cjsData{
@@ -304,8 +307,8 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 					Fill:            false,
 					Label:           ds,
 					ComplexData:     []cjsDataPoint{d},
-					BorderColor:     colorIndex(len(mdss)),
-					BackgroundColor: colorIndex(len(mdss)),
+					BorderColor:     colorIndex(c.inData.ColorType, len(mdss)),
+					BackgroundColor: colorIndex(c.inData.ColorType, len(mdss)),
 				}
 			} else {
 				m := mdss[ds]
@@ -346,8 +349,8 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 				Fill:            true,
 				Label:           "category 0",
 				ComplexData:     []cjsDataPoint{},
-				BackgroundColor: colorIndex(0),
-				BorderColor:     colorIndex(0),
+				BackgroundColor: colorIndex(c.inData.ColorType, 0),
+				BorderColor:     colorIndex(c.inData.ColorType, 0),
 			})
 		}
 		for j := 0; j < i; j++ {
@@ -355,8 +358,8 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 				Fill:            true,
 				Label:           ils[j],
 				ComplexData:     []cjsDataPoint{},
-				BackgroundColor: colorIndex(j),
-				BorderColor:     colorIndex(j),
+				BackgroundColor: colorIndex(c.inData.ColorType, j),
+				BorderColor:     colorIndex(c.inData.ColorType, j),
 			}
 		}
 
