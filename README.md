@@ -19,6 +19,8 @@ chart [options]
 - `line`: render a line chart
 - `scatter`: render a scatter plot chart
 - `log`: use logarithmic scale (bar chart only)
+- `legacy-color`: use legacy colors
+- `gradient`: use color gradients
 - `' '|';'|','|'\t'`: this character separates columns on each line (\t = default)
 - `-t|--title`: title for the chart
 - `-x`: label for the x axis

@@ -2241,8 +2241,8 @@ h2 {
 
 <div class="chart-wrapper">
   <h2><pre>$ cat testdata/multi-bar.csv</pre></h2>
-  <div class="pre"><pre>March	30	55	15<br>April	25	55	20<br></pre></div>
-  <h2><pre>$ cat testdata/multi-bar.csv | chart January	50	25	25
+  <div class="pre"><pre>January	50	25	25<br>February	40	35	25<br>March	30	55	15<br>April	25	55	20<br></pre></div>
+  <h2><pre>$ cat testdata/multi-bar.csv | chart bar
 </pre></h2>
   <div class="chart">
     <canvas id="chart9" height="300px" width="650px"></canvas>
@@ -2250,37 +2250,37 @@ h2 {
   <script>
     var ctx9 = document.getElementById("chart9");
     var chart9 = new Chart(ctx9, {
-    type: 'line',
+    type: 'bar',
     data: {
-      labels: [`April`,`March`],
+      labels: [`January`,`February`,`March`,`April`],
       datasets: [
         {
-          fill: false,
+          fill: true,
           label: 'category 0',
-          backgroundColor: "#ffbb00",
-          borderColor: "#ffbb00",
+          backgroundColor: ["#ffbb00","#ffbb00","#ffbb00","#ffbb00",],
+          
           data: [
-            25,30
+            50,40,30,25
             
           ]
         }
         ,{
-          fill: false,
+          fill: true,
           label: 'category 1',
-          backgroundColor: "#f90085",
-          borderColor: "#f90085",
+          backgroundColor: ["#f90085","#f90085","#f90085","#f90085",],
+          
           data: [
-            55,55
+            25,35,55,55
             
           ]
         }
         ,{
-          fill: false,
+          fill: true,
           label: 'category 2',
-          backgroundColor: "#00bfb2",
-          borderColor: "#00bfb2",
+          backgroundColor: ["#00bfb2","#00bfb2","#00bfb2","#00bfb2",],
+          
           data: [
-            20,15
+            25,25,15,20
             
           ]
         }
@@ -2297,9 +2297,7 @@ h2 {
               label: function(tti, data) {
                 
                     var value = data.datasets[tti.datasetIndex].data[tti.index];
-                    if (value.y) {
-                        value = value.y
-                    }
+                    var label = data.labels[tti.index];
                     return value;
     
               }
@@ -2314,7 +2312,7 @@ h2 {
             yAxes: [{
                 type: "linear",
                 ticks: {
-                    beginAtZero: false,
+                    beginAtZero: true,
                     callback: function(value, index, values) {
                         return value;
                     }

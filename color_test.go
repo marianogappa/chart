@@ -7,7 +7,7 @@ import (
 )
 
 func TestColorNextCycles(t *testing.T) {
-	for i := 0; i < len(colorPalette); i++{
+	for i := 0; i < len(colorPalette); i++ {
 		colorReset()
 		color := colorNext(i)
 		for j := 0; j < len(colorPalette[i])-1; j++ {
@@ -22,7 +22,7 @@ func TestColorNextCycles(t *testing.T) {
 }
 
 func TestColorReset(t *testing.T) {
-	for i := 0; i < len(colorPalette); i++{
+	for i := 0; i < len(colorPalette); i++ {
 		colorReset()
 		color := colorNext(i)
 		for j := 0; j < len(colorPalette[i])/2; j++ {
@@ -38,7 +38,7 @@ func TestColorReset(t *testing.T) {
 }
 
 func TestColorFirstN(t *testing.T) {
-	for i := 0; i < len(colorPalette); i++{
+	for i := 0; i < len(colorPalette); i++ {
 		for j := 0; j < len(colorPalette[i])-1; j++ {
 			cs := strings.Split(colorFirstN(i, j), ",")
 			if j > 0 && len(cs) != j {

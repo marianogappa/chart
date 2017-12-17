@@ -160,7 +160,7 @@ type cjsData struct {
 	Datasets        []cjsDataset
 	TooltipCallback string
 	UsesTimeScale   bool
-	ColorType		int
+	ColorType       int
 }
 
 type cjsDataset struct {
