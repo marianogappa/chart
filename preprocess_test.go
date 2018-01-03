@@ -74,9 +74,9 @@ func TestPreprocess(t *testing.T) {
 		`,
 			o: options{separator: '\t', scaleType: linear, chartType: pie},
 			fss: [][]float64{
-				[]float64{2}, []float64{1}, []float64{1},
+				{2}, {1}, {1},
 			},
-			sss:        [][]string{[]string{"a"}, []string{"b"}, []string{"c"}},
+			sss:        [][]string{{"a"}, {"b"}, {"c"}},
 			tss:        nil,
 			minFSS:     nil,
 			maxFSS:     nil,
@@ -92,7 +92,7 @@ func TestPreprocess(t *testing.T) {
 		`,
 			o: options{separator: '\t', scaleType: linear, chartType: pie, dateFormat: "2006-01-02"},
 			fss: [][]float64{
-				[]float64{0.0125}, []float64{0.0272}, []float64{0}, []float64{0},
+				{0.0125}, {0.0272}, {0}, {0},
 			},
 			sss: nil,
 			tss: [][]time.Time{

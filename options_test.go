@@ -16,8 +16,6 @@ func TestResolveOptions(t *testing.T) {
 			expected: options{
 				title:     "",
 				separator: '\t',
-				scaleType: linear,
-				chartType: undefinedChartType,
 			},
 		},
 		{
@@ -25,8 +23,6 @@ func TestResolveOptions(t *testing.T) {
 			expected: options{
 				title:     "title",
 				separator: '\t',
-				scaleType: linear,
-				chartType: undefinedChartType,
 			},
 		},
 		{
@@ -34,8 +30,6 @@ func TestResolveOptions(t *testing.T) {
 			expected: options{
 				title:     "title",
 				separator: '\t',
-				scaleType: linear,
-				chartType: undefinedChartType,
 			},
 		},
 		{
@@ -60,7 +54,6 @@ func TestResolveOptions(t *testing.T) {
 			expected: options{
 				title:     "",
 				separator: ';',
-				scaleType: linear,
 				chartType: bar,
 			},
 		},
@@ -69,8 +62,6 @@ func TestResolveOptions(t *testing.T) {
 			expected: options{
 				title:     "",
 				separator: ' ',
-				scaleType: linear,
-				chartType: undefinedChartType,
 			},
 		},
 		{
@@ -78,7 +69,6 @@ func TestResolveOptions(t *testing.T) {
 			expected: options{
 				title:     "",
 				separator: ' ',
-				scaleType: linear,
 				chartType: pie,
 			},
 		},
@@ -87,7 +77,6 @@ func TestResolveOptions(t *testing.T) {
 			expected: options{
 				title:     "",
 				separator: '\t',
-				scaleType: linear,
 				chartType: line,
 			},
 		},
@@ -96,8 +85,23 @@ func TestResolveOptions(t *testing.T) {
 			expected: options{
 				title:     "",
 				separator: '\t',
-				scaleType: linear,
 				chartType: scatter,
+			},
+		},
+		{
+			args: []string{"-title", "title", "legacy-color", "1"},
+			expected: options{
+				title:     "title",
+				separator: '\t',
+				colorType: legacyColor,
+			},
+		},
+		{
+			args: []string{"-title", "title", "gradient", "1"},
+			expected: options{
+				title:     "title",
+				separator: '\t',
+				colorType: gradient,
 			},
 		},
 	}

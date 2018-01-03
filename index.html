@@ -689,7 +689,7 @@ h2 {
         {
           fill: true,
           
-          backgroundColor: ["#f44336","#9c27b0","#3f51b5","#03a9f4","#009688"],
+          backgroundColor: ["#ffbb00","#f90085","#00bfb2","#008ffc","#fc4f00"],
           
           data: [
             57.1,14.5,11.1,9.7,3.1
@@ -777,8 +777,8 @@ h2 {
         {
           fill: false,
           label: 'category 0',
-          backgroundColor: "#f44336",
-          borderColor: "#f44336",
+          backgroundColor: "#ffbb00",
+          borderColor: "#ffbb00",
           data: [
             5188,5608,5807,6774,6272,6994,6778,7883
             
@@ -867,8 +867,8 @@ h2 {
         {
           fill: false,
           label: 'server1',
-          backgroundColor: "#f44336",
-          borderColor: "#f44336",
+          backgroundColor: "#ffbb00",
+          borderColor: "#ffbb00",
           data: [
             
             {
@@ -889,8 +889,8 @@ h2 {
         ,{
           fill: false,
           label: 'server2',
-          backgroundColor: "#9c27b0",
-          borderColor: "#9c27b0",
+          backgroundColor: "#f90085",
+          borderColor: "#f90085",
           data: [
             
             {
@@ -915,8 +915,8 @@ h2 {
         ,{
           fill: false,
           label: 'server4',
-          backgroundColor: "#3f51b5",
-          borderColor: "#3f51b5",
+          backgroundColor: "#00bfb2",
+          borderColor: "#00bfb2",
           data: [
             
             {
@@ -937,8 +937,8 @@ h2 {
         ,{
           fill: false,
           label: 'server3',
-          backgroundColor: "#03a9f4",
-          borderColor: "#03a9f4",
+          backgroundColor: "#008ffc",
+          borderColor: "#008ffc",
           data: [
             
             {
@@ -1043,7 +1043,7 @@ h2 {
         {
           fill: true,
           
-          backgroundColor: ["#f44336","#9c27b0","#3f51b5","#03a9f4"],
+          backgroundColor: ["#ffbb00","#f90085","#00bfb2","#008ffc"],
           
           data: [
             3,2,1,1
@@ -1102,8 +1102,8 @@ h2 {
         {
           fill: false,
           label: 'category 0',
-          backgroundColor: "#f44336",
-          borderColor: "#f44336",
+          backgroundColor: "#ffbb00",
+          borderColor: "#ffbb00",
           data: [
             
             {
@@ -1132,8 +1132,8 @@ h2 {
         ,{
           fill: false,
           label: 'category 1',
-          backgroundColor: "#9c27b0",
-          borderColor: "#9c27b0",
+          backgroundColor: "#f90085",
+          borderColor: "#f90085",
           data: [
             
             {
@@ -1246,8 +1246,8 @@ h2 {
         {
           fill: false,
           label: 'category 0',
-          backgroundColor: "#f44336",
-          borderColor: "#f44336",
+          backgroundColor: "#ffbb00",
+          borderColor: "#ffbb00",
           data: [
             
             {
@@ -1276,8 +1276,8 @@ h2 {
         ,{
           fill: false,
           label: 'category 1',
-          backgroundColor: "#9c27b0",
-          borderColor: "#9c27b0",
+          backgroundColor: "#f90085",
+          borderColor: "#f90085",
           data: [
             
             {
@@ -1373,9 +1373,9 @@ h2 {
 </div>
 
 <div class="chart-wrapper">
-  <h2><pre>$ cat testdata/multi-bar.csv</pre></h2>
-  <div class="pre"><pre>January	50	25	25<br>February	40	35	25<br>March	30	55	15<br>April	25	55	20<br></pre></div>
-  <h2><pre>$ cat testdata/multi-bar.csv | chart bar
+  <h2><pre>$ cat testdata/multi-bar-large-gradient.csv</pre></h2>
+  <div class="pre"><pre>January	50	25	25	33	55	67	34	56	43	22	33	40	30	50	45	20	56	40	55	30	25<br></pre></div>
+  <h2><pre>$ cat testdata/multi-bar-large-gradient.csv | chart bar gradient
 </pre></h2>
   <div class="chart">
     <canvas id="chart6" height="300px" width="650px"></canvas>
@@ -1385,12 +1385,879 @@ h2 {
     var chart6 = new Chart(ctx6, {
     type: 'bar',
     data: {
+      labels: [`January`],
+      datasets: [
+        {
+          fill: true,
+          label: 'category 0',
+          backgroundColor: ["#08306b",],
+          
+          data: [
+            50
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 1',
+          backgroundColor: ["#08519c",],
+          
+          data: [
+            25
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 2',
+          backgroundColor: ["#2171b5",],
+          
+          data: [
+            25
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 3',
+          backgroundColor: ["#4292c6",],
+          
+          data: [
+            33
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 4',
+          backgroundColor: ["#6baed6",],
+          
+          data: [
+            55
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 5',
+          backgroundColor: ["#9ecae1",],
+          
+          data: [
+            67
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 6',
+          backgroundColor: ["#c6dbef",],
+          
+          data: [
+            34
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 7',
+          backgroundColor: ["#deebf7",],
+          
+          data: [
+            56
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 8',
+          backgroundColor: ["#00441b",],
+          
+          data: [
+            43
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 9',
+          backgroundColor: ["#006d2c",],
+          
+          data: [
+            22
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 10',
+          backgroundColor: ["#238b45",],
+          
+          data: [
+            33
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 11',
+          backgroundColor: ["#41ab5d",],
+          
+          data: [
+            40
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 12',
+          backgroundColor: ["#74c476",],
+          
+          data: [
+            30
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 13',
+          backgroundColor: ["#a1d99b",],
+          
+          data: [
+            50
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 14',
+          backgroundColor: ["#c7e9c0",],
+          
+          data: [
+            45
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 15',
+          backgroundColor: ["#e5f5e0",],
+          
+          data: [
+            20
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 16',
+          backgroundColor: ["#7f2704",],
+          
+          data: [
+            56
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 17',
+          backgroundColor: ["#a63603",],
+          
+          data: [
+            40
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 18',
+          backgroundColor: ["#d94801",],
+          
+          data: [
+            55
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 19',
+          backgroundColor: ["#f16913",],
+          
+          data: [
+            30
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 20',
+          backgroundColor: ["#fd8d3c",],
+          
+          data: [
+            25
+            
+          ]
+        }
+        
+      ]
+    },
+    options: {
+      title: {
+            display: false,
+            text: ''
+      },
+      tooltips: {
+          callbacks: {
+              label: function(tti, data) {
+                
+                    var value = data.datasets[tti.datasetIndex].data[tti.index];
+                    var label = data.labels[tti.index];
+                    return value;
+    
+              }
+          }
+      },
+      
+        legend: {
+            display: true,
+            position: 'bottom'
+        },
+        scales: {
+            yAxes: [{
+                type: "linear",
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }],
+            xAxes: [{
+                
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }]
+        },
+        elements: {
+            line: {
+                tension: 0, // disables bezier curves
+            },
+        },
+        
+        animation: {
+            duration: 0, // general animation time
+        },
+        hover: {
+            animationDuration: 0, // duration of animations when hovering an item
+        },
+        responsiveAnimationDuration: 0, // animation duration after a resize
+    }
+});
+  </script>
+</div>
+
+<div class="chart-wrapper">
+  <h2><pre>$ cat testdata/multi-bar-large-legacy-color.csv</pre></h2>
+  <div class="pre"><pre>January	50	25	25	33	55	67	34	56	43	22	33	40	30	50	45	20	56	40	55	30	25<br></pre></div>
+  <h2><pre>$ cat testdata/multi-bar-large-legacy-color.csv | chart bar legacy-color
+</pre></h2>
+  <div class="chart">
+    <canvas id="chart7" height="300px" width="650px"></canvas>
+  </div>
+  <script>
+    var ctx7 = document.getElementById("chart7");
+    var chart7 = new Chart(ctx7, {
+    type: 'bar',
+    data: {
+      labels: [`January`],
+      datasets: [
+        {
+          fill: true,
+          label: 'category 0',
+          backgroundColor: ["#f44336",],
+          
+          data: [
+            50
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 1',
+          backgroundColor: ["#9c27b0",],
+          
+          data: [
+            25
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 2',
+          backgroundColor: ["#3f51b5",],
+          
+          data: [
+            25
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 3',
+          backgroundColor: ["#03a9f4",],
+          
+          data: [
+            33
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 4',
+          backgroundColor: ["#009688",],
+          
+          data: [
+            55
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 5',
+          backgroundColor: ["#8bc34a",],
+          
+          data: [
+            67
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 6',
+          backgroundColor: ["#ffeb3b",],
+          
+          data: [
+            34
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 7',
+          backgroundColor: ["#ff9800",],
+          
+          data: [
+            56
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 8',
+          backgroundColor: ["#795548",],
+          
+          data: [
+            43
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 9',
+          backgroundColor: ["#607d8b",],
+          
+          data: [
+            22
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 10',
+          backgroundColor: ["#e91e63",],
+          
+          data: [
+            33
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 11',
+          backgroundColor: ["#673ab7",],
+          
+          data: [
+            40
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 12',
+          backgroundColor: ["#2196f3",],
+          
+          data: [
+            30
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 13',
+          backgroundColor: ["#00bcd4",],
+          
+          data: [
+            50
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 14',
+          backgroundColor: ["#4caf50",],
+          
+          data: [
+            45
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 15',
+          backgroundColor: ["#cddc39",],
+          
+          data: [
+            20
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 16',
+          backgroundColor: ["#ffc107",],
+          
+          data: [
+            56
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 17',
+          backgroundColor: ["#ff5722",],
+          
+          data: [
+            40
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 18',
+          backgroundColor: ["#9e9e9e",],
+          
+          data: [
+            55
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 19',
+          backgroundColor: ["#f44336",],
+          
+          data: [
+            30
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 20',
+          backgroundColor: ["#9c27b0",],
+          
+          data: [
+            25
+            
+          ]
+        }
+        
+      ]
+    },
+    options: {
+      title: {
+            display: false,
+            text: ''
+      },
+      tooltips: {
+          callbacks: {
+              label: function(tti, data) {
+                
+                    var value = data.datasets[tti.datasetIndex].data[tti.index];
+                    var label = data.labels[tti.index];
+                    return value;
+    
+              }
+          }
+      },
+      
+        legend: {
+            display: true,
+            position: 'bottom'
+        },
+        scales: {
+            yAxes: [{
+                type: "linear",
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }],
+            xAxes: [{
+                
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }]
+        },
+        elements: {
+            line: {
+                tension: 0, // disables bezier curves
+            },
+        },
+        
+        animation: {
+            duration: 0, // general animation time
+        },
+        hover: {
+            animationDuration: 0, // duration of animations when hovering an item
+        },
+        responsiveAnimationDuration: 0, // animation duration after a resize
+    }
+});
+  </script>
+</div>
+
+<div class="chart-wrapper">
+  <h2><pre>$ cat testdata/multi-bar-large.csv</pre></h2>
+  <div class="pre"><pre>January	50	25	25	33	55	67	34	56	43	22	33	40	30	50	45	20	56	40	55	30	25<br></pre></div>
+  <h2><pre>$ cat testdata/multi-bar-large.csv | chart bar
+</pre></h2>
+  <div class="chart">
+    <canvas id="chart8" height="300px" width="650px"></canvas>
+  </div>
+  <script>
+    var ctx8 = document.getElementById("chart8");
+    var chart8 = new Chart(ctx8, {
+    type: 'bar',
+    data: {
+      labels: [`January`],
+      datasets: [
+        {
+          fill: true,
+          label: 'category 0',
+          backgroundColor: ["#ffbb00",],
+          
+          data: [
+            50
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 1',
+          backgroundColor: ["#f90085",],
+          
+          data: [
+            25
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 2',
+          backgroundColor: ["#00bfb2",],
+          
+          data: [
+            25
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 3',
+          backgroundColor: ["#008ffc",],
+          
+          data: [
+            33
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 4',
+          backgroundColor: ["#fc4f00",],
+          
+          data: [
+            55
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 5',
+          backgroundColor: ["#9d00ff",],
+          
+          data: [
+            67
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 6',
+          backgroundColor: ["#ff0000",],
+          
+          data: [
+            34
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 7',
+          backgroundColor: ["#00b515",],
+          
+          data: [
+            56
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 8',
+          backgroundColor: ["#c7f400",],
+          
+          data: [
+            43
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 9',
+          backgroundColor: ["#f9a2a2",],
+          
+          data: [
+            22
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 10',
+          backgroundColor: ["#007072",],
+          
+          data: [
+            33
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 11',
+          backgroundColor: ["#e6beff",],
+          
+          data: [
+            40
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 12',
+          backgroundColor: ["#aa5b00",],
+          
+          data: [
+            30
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 13',
+          backgroundColor: ["#fff266",],
+          
+          data: [
+            50
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 14',
+          backgroundColor: ["#7f0000",],
+          
+          data: [
+            45
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 15',
+          backgroundColor: ["#aaffc3",],
+          
+          data: [
+            20
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 16',
+          backgroundColor: ["#7f7f00",],
+          
+          data: [
+            56
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 17',
+          backgroundColor: ["#ffe0c1",],
+          
+          data: [
+            40
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 18',
+          backgroundColor: ["#000080",],
+          
+          data: [
+            55
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 19',
+          backgroundColor: ["#808080",],
+          
+          data: [
+            30
+            
+          ]
+        }
+        ,{
+          fill: true,
+          label: 'category 20',
+          backgroundColor: ["#000000",],
+          
+          data: [
+            25
+            
+          ]
+        }
+        
+      ]
+    },
+    options: {
+      title: {
+            display: false,
+            text: ''
+      },
+      tooltips: {
+          callbacks: {
+              label: function(tti, data) {
+                
+                    var value = data.datasets[tti.datasetIndex].data[tti.index];
+                    var label = data.labels[tti.index];
+                    return value;
+    
+              }
+          }
+      },
+      
+        legend: {
+            display: true,
+            position: 'bottom'
+        },
+        scales: {
+            yAxes: [{
+                type: "linear",
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value, index, values) {
+                        return value;
+                    }
+                },
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }],
+            xAxes: [{
+                
+                scaleLabel: {
+                    display: false,
+                    labelString: ''
+                }
+            }]
+        },
+        elements: {
+            line: {
+                tension: 0, // disables bezier curves
+            },
+        },
+        
+        animation: {
+            duration: 0, // general animation time
+        },
+        hover: {
+            animationDuration: 0, // duration of animations when hovering an item
+        },
+        responsiveAnimationDuration: 0, // animation duration after a resize
+    }
+});
+  </script>
+</div>
+
+<div class="chart-wrapper">
+  <h2><pre>$ cat testdata/multi-bar.csv</pre></h2>
+  <div class="pre"><pre>January	50	25	25<br>February	40	35	25<br>March	30	55	15<br>April	25	55	20<br></pre></div>
+  <h2><pre>$ cat testdata/multi-bar.csv | chart bar
+</pre></h2>
+  <div class="chart">
+    <canvas id="chart9" height="300px" width="650px"></canvas>
+  </div>
+  <script>
+    var ctx9 = document.getElementById("chart9");
+    var chart9 = new Chart(ctx9, {
+    type: 'bar',
+    data: {
       labels: [`January`,`February`,`March`,`April`],
       datasets: [
         {
           fill: true,
           label: 'category 0',
-          backgroundColor: ["#f44336","#f44336","#f44336","#f44336",],
+          backgroundColor: ["#ffbb00","#ffbb00","#ffbb00","#ffbb00",],
           
           data: [
             50,40,30,25
@@ -1400,7 +2267,7 @@ h2 {
         ,{
           fill: true,
           label: 'category 1',
-          backgroundColor: ["#9c27b0","#9c27b0","#9c27b0","#9c27b0",],
+          backgroundColor: ["#f90085","#f90085","#f90085","#f90085",],
           
           data: [
             25,35,55,55
@@ -1410,7 +2277,7 @@ h2 {
         ,{
           fill: true,
           label: 'category 2',
-          backgroundColor: ["#3f51b5","#3f51b5","#3f51b5","#3f51b5",],
+          backgroundColor: ["#00bfb2","#00bfb2","#00bfb2","#00bfb2",],
           
           data: [
             25,25,15,20
@@ -1487,11 +2354,11 @@ h2 {
   <h2><pre>$ cat testdata/pie.csv | chart 
 </pre></h2>
   <div class="chart">
-    <canvas id="chart7" height="300px" width="650px"></canvas>
+    <canvas id="chart10" height="300px" width="650px"></canvas>
   </div>
   <script>
-    var ctx7 = document.getElementById("chart7");
-    var chart7 = new Chart(ctx7, {
+    var ctx10 = document.getElementById("chart10");
+    var chart10 = new Chart(ctx10, {
     type: 'pie',
     data: {
       labels: [`Chrome`,`Safari`,`Firefox`,`Internet Explorer & Edge`,`Opera`],
@@ -1499,7 +2366,7 @@ h2 {
         {
           fill: true,
           
-          backgroundColor: ["#f44336","#9c27b0","#3f51b5","#03a9f4","#009688"],
+          backgroundColor: ["#ffbb00","#f90085","#00bfb2","#008ffc","#fc4f00"],
           
           data: [
             57.1,14.5,11.1,9.7,3.1
@@ -1546,11 +2413,11 @@ h2 {
   <h2><pre>$ cat testdata/scatter-rad-lab.csv | chart scatter
 </pre></h2>
   <div class="chart">
-    <canvas id="chart8" height="300px" width="650px"></canvas>
+    <canvas id="chart11" height="300px" width="650px"></canvas>
   </div>
   <script>
-    var ctx8 = document.getElementById("chart8");
-    var chart8 = new Chart(ctx8, {
+    var ctx11 = document.getElementById("chart11");
+    var chart11 = new Chart(ctx11, {
     type: 'bubble',
     data: {
       labels: [],
@@ -1558,8 +2425,8 @@ h2 {
         {
           fill: true,
           label: 'Nestle',
-          backgroundColor: "#f44336",
-          borderColor: "#f44336",
+          backgroundColor: "#ffbb00",
+          borderColor: "#ffbb00",
           data: [
             
             {
@@ -1592,8 +2459,8 @@ h2 {
         ,{
           fill: true,
           label: 'Häagen-Dazs',
-          backgroundColor: "#9c27b0",
-          borderColor: "#9c27b0",
+          backgroundColor: "#f90085",
+          borderColor: "#f90085",
           data: [
             
             {
@@ -1632,8 +2499,8 @@ h2 {
         ,{
           fill: true,
           label: 'Ben & Jerry\'s',
-          backgroundColor: "#3f51b5",
-          borderColor: "#3f51b5",
+          backgroundColor: "#00bfb2",
+          borderColor: "#00bfb2",
           data: [
             
             {
@@ -1727,11 +2594,11 @@ h2 {
   <h2><pre>$ cat testdata/scatter-rad.csv | chart scatter --title "Ice cream sales" -x C -y $
 </pre></h2>
   <div class="chart">
-    <canvas id="chart9" height="300px" width="650px"></canvas>
+    <canvas id="chart12" height="300px" width="650px"></canvas>
   </div>
   <script>
-    var ctx9 = document.getElementById("chart9");
-    var chart9 = new Chart(ctx9, {
+    var ctx12 = document.getElementById("chart12");
+    var chart12 = new Chart(ctx12, {
     type: 'bubble',
     data: {
       labels: [],
@@ -1739,8 +2606,8 @@ h2 {
         {
           fill: true,
           label: 'category 0',
-          backgroundColor: "#f44336",
-          borderColor: "#f44336",
+          backgroundColor: "#ffbb00",
+          borderColor: "#ffbb00",
           data: [
             
             {
@@ -1887,11 +2754,11 @@ h2 {
   <h2><pre>$ cat testdata/scatter.csv | chart scatter --title "Ice cream sales" -x C -y $
 </pre></h2>
   <div class="chart">
-    <canvas id="chart10" height="300px" width="650px"></canvas>
+    <canvas id="chart13" height="300px" width="650px"></canvas>
   </div>
   <script>
-    var ctx10 = document.getElementById("chart10");
-    var chart10 = new Chart(ctx10, {
+    var ctx13 = document.getElementById("chart13");
+    var chart13 = new Chart(ctx13, {
     type: 'bubble',
     data: {
       labels: [],
@@ -1899,8 +2766,8 @@ h2 {
         {
           fill: true,
           label: 'category 0',
-          backgroundColor: "#f44336",
-          borderColor: "#f44336",
+          backgroundColor: "#ffbb00",
+          borderColor: "#ffbb00",
           data: [
             
             {

@@ -103,6 +103,7 @@ func buildChart(r io.Reader, o options) ([]string, options, bytes.Buffer, error)
 		XLabel:    o.xLabel,
 		YLabel:    o.yLabel,
 		ZeroBased: o.zeroBased,
+		ColorType: int(o.colorType),
 	}}.chart()
 
 	if err := templ.Execute(&b, templData); err != nil {
