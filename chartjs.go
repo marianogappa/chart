@@ -42,7 +42,8 @@ func init() {
     options: {
       title: {
             display: {{ if len .Title }}true{{else}}false{{end}},
-            text: '{{ .Title }}'
+            text: '{{ .Title }}',
+            fontSize: 20
       },
       tooltips: {
           callbacks: {
@@ -54,7 +55,8 @@ func init() {
       {{ if ne .ChartType "pie" }}
         legend: {
             display: {{ if gt (len .Datasets) 1 }}true,
-            position: 'bottom'{{else}}false{{end}}
+            position: 'bottom'{{else}}false{{end}},
+            labels: {fontSize: 16}
         },
         scales: {
             yAxes: [{
