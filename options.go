@@ -157,8 +157,7 @@ func resolveOptions(args []string) (options, error) {
   ' '|';'|','|'\t'
 	this character separates columns on each line (\t = default)
 
-More info: https://github.com/marianogappa/chart
-`)
+More info: https://github.com/marianogappa/chart`)
 		return o, fmt.Errorf("Showing usage")
 	}
 

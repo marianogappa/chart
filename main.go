@@ -88,7 +88,7 @@ func buildChart(r io.Reader, o options) ([]string, options, bytes.Buffer, error)
 		}
 	}
 	if err != nil {
-		return ls, o, b, fmt.Errorf("could not construct chart because [%v]", err)
+		return ls, o, b, fmt.Errorf("couldn't construct chart because [%v]", err)
 	}
 
 	templData, templ, err = cjsChart{inData{
@@ -105,9 +105,12 @@ func buildChart(r io.Reader, o options) ([]string, options, bytes.Buffer, error)
 		ZeroBased: o.zeroBased,
 		ColorType: int(o.colorType),
 	}}.chart()
+	if err != nil {
+		return ls, o, b, fmt.Errorf("couldn't construct chart because [%v]", err)
+	}
 
 	if err := templ.Execute(&b, templData); err != nil {
-		return ls, o, b, fmt.Errorf("could not prepare ChartJS js code for chart: [%v]", err)
+		return ls, o, b, fmt.Errorf("could't prepare ChartJS js code for chart: [%v]", err)
 	}
 
 	return ls, o, b, nil
