@@ -62,7 +62,6 @@ func (f freqs) Swap(i, j int) { f.fs[i], f.fs[j] = f.fs[j], f.fs[i] }
 func (f freqs) Less(i, j int) bool {
 	if f.fs[i].f == f.fs[j].f {
 		return i < j
-	} else {
-		return f.fs[i].f > f.fs[j].f
 	}
+	return f.fs[i].f > f.fs[j].f
 }
