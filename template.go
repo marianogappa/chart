@@ -274,9 +274,9 @@ c=gb(b.GG,a._a[ae],wa(sb(),1,4).year),d=gb(b.W,1),e=gb(b.E,1),(e<1||e>7)&&(i=!0)
 d=gb(b.w,j.week),null!=b.d?(
 // weekday -- low day numbers are considered next week
 e=b.d,(e<0||e>6)&&(i=!0)):null!=b.e?(
-// local weekday -- counting starts from begining of week
+// local weekday -- counting starts from beginning of week
 e=b.e+f,(b.e<0||b.e>6)&&(i=!0)):
-// default to begining of week
+// default to beginning of week
 e=f}d<1||d>xa(c,f,g)?m(a)._overflowWeeks=!0:null!=i?m(a)._overflowWeekday=!0:(h=va(c,d,e,f,g),a._a[ae]=h.year,a._dayOfYear=h.dayOfYear)}
 // date from string and format string
 function kb(b){

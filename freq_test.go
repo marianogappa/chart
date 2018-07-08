@@ -16,7 +16,7 @@ func TestFreq(t *testing.T) {
 			expectedSSS: [][]string{},
 		},
 		{
-			name: "one column, all diferent",
+			name: "one column, all different",
 			isss: [][]string{
 				{"a"},
 				{"b"},
