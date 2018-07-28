@@ -4,7 +4,10 @@ import (
 	"fmt"
 )
 
-func showDebug(ls []string, d dataset, o options, lf string) {
+func showDebug(d dataset, o options, err error) {
+	if err != nil {
+		fmt.Printf("Error trying to chart: %v\n", err)
+	}
 	fcn, scn, tcn, rn := 0, 0, 0, 0
 	if len(d.fss) > 0 {
 		rn = len(d.fss)
@@ -18,8 +21,8 @@ func showDebug(ls []string, d dataset, o options, lf string) {
 		rn = len(d.tss)
 		tcn = len(d.tss[0])
 	}
-	fmt.Printf("Lines read\t%v\n", len(ls))
-	fmt.Printf("Line format inferred\t%v\n", lf)
+	fmt.Printf("Lines read\t%v\n", d.stdinLen)
+	fmt.Printf("Line format inferred\t%v\n", d.lf)
 	fmt.Printf("Lines used\t%v\n", rn)
 	fmt.Printf("Float column count\t%v\n", fcn)
 	fmt.Printf("String column count\t%v\n", scn)

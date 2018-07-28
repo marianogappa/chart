@@ -57,13 +57,20 @@ func TestCheatsheet(t *testing.T) {
 			t.FailNow()
 		}
 
-		ls, _, b, err := buildChart(rd, o)
+		d, o := preprocess(rd, o)
+		b, err := buildChart(d, o)
 		if err != nil {
 			t.Errorf("[%v] breaks building chart with: [%v]", fs, err)
 			t.FailNow()
 		}
 
-		cheetsheetExamples[j] = cheatsheetExample{ID: j, Title: f, OptionsLine: optionsLine, Lines: ls, HTML: b.String()}
+		cheetsheetExamples[j] = cheatsheetExample{
+			ID:          j,
+			Title:       f,
+			OptionsLine: optionsLine,
+			Lines:       mustReadLines(f, t),
+			HTML:        b.String(),
+		}
 	}
 
 	cheetsheetExamplesTemplate, err := template.New("").Parse(cheetsheetExamplesTemplateString)
@@ -83,6 +90,33 @@ func TestCheatsheet(t *testing.T) {
 		t.Errorf("Could not write file [%v] [%v]", "index.html", err)
 		t.FailNow()
 	}
+}
+
+func mustReadLines(path string, t *testing.T) []string {
+	file, err := os.Open(path)
+	if err != nil {
+		t.Errorf("[%v] Could not open file", path)
+		t.FailNow()
+	}
+	defer file.Close()
+
+	var (
+		lines []string
+		i     int
+	)
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		i++
+		if i < 3 {
+			continue
+		}
+		lines = append(lines, scanner.Text())
+	}
+	if scanner.Err() != nil {
+		t.Errorf("[%v] Error scanning file", scanner.Err())
+		t.FailNow()
+	}
+	return lines
 }
 
 var cheetsheetExamplesTemplateString = baseTemplateHeaderString + cheetsheetString + baseTemplateFooterString

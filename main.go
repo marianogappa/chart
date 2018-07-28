@@ -3,19 +3,27 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"os"
-	"text/template"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/skratchdot/open-golang/open"
 )
 
 func main() {
-	o := mustResolveOptions(os.Args[1:])
-	o, b := mustBuildChart(os.Stdin, o)
-	tmpfile := mustNewTempFile()
-	chartTempl := newChartTemplate(o.chartType)
+	var (
+		opts           = mustResolveOptions(os.Args[1:])
+		dataset, iOpts = preprocess(os.Stdin, opts)
+		err            = assertChartable(dataset, iOpts)
+	)
+	if iOpts.debug || err != nil {
+		showDebug(dataset, iOpts, err)
+		os.Exit(0)
+	}
+	var (
+		b          = mustBuildChart(dataset, iOpts)
+		tmpfile    = mustNewTempFile()
+		chartTempl = newChartTemplate(iOpts.chartType)
+	)
 	chartTempl.mustExecute(b, tmpfile)
 	tmpfile.mustClose()
 	tmpfile.mustRenameWithHTMLSuffix()
@@ -28,50 +36,20 @@ func mustOpen(url string) {
 	}
 }
 
-func mustBuildChart(r io.Reader, o options) (options, bytes.Buffer) {
-	_, o, b, err := buildChart(r, o)
+func mustBuildChart(d dataset, o options) bytes.Buffer {
+	b, err := buildChart(d, o)
 	if err == nil && b.Len() == 0 {
+		log.Println("Empty result; nothing to plot here.")
 		os.Exit(0)
 	}
 	if err != nil {
 		log.Fatal(err)
 	}
-	return o, b
+	return b
 }
 
-func buildChart(r io.Reader, o options) ([]string, options, bytes.Buffer, error) {
-	d, o, lf, ls := preprocess(r, o)
-	var b bytes.Buffer
-
-	if o.debug {
-		showDebug(ls, d, o, lf)
-		return ls, o, b, nil
-	}
-
-	var err error
-	var templ *template.Template
-	var templData interface{}
-
-	switch o.chartType {
-	case pie:
-		if len(d.fss) == 0 || (len(d.fss[0]) == 1 && len(d.sss) == 0 && len(d.tss) == 0) {
-			return ls, o, b, fmt.Errorf("couldn't find values to plot")
-		}
-	case bar:
-		if len(d.fss) == 0 || (len(d.fss[0]) == 1 && len(d.sss) == 0 && len(d.tss) == 0) {
-			return ls, o, b, fmt.Errorf("couldn't find values to plot")
-		}
-	case line:
-		if d.fss == nil || (d.sss == nil && d.tss == nil && len(d.fss[0]) < 2) {
-			return ls, o, b, fmt.Errorf("couldn't find values to plot")
-		}
-	case scatter:
-		if len(d.fss) == 0 {
-			return ls, o, b, fmt.Errorf("couldn't find values to plot")
-		}
-	}
-
-	templData, templ, err = cjsChart{inData{
+func buildChart(d dataset, o options) (bytes.Buffer, error) {
+	templData, templ, err := cjsChart{inData{
 		ChartType: o.chartType.string(),
 		FSS:       d.fss,
 		SSS:       d.sss,
@@ -86,12 +64,35 @@ func buildChart(r io.Reader, o options) ([]string, options, bytes.Buffer, error)
 		ColorType: int(o.colorType),
 	}}.chart()
 	if err != nil {
-		return ls, o, b, fmt.Errorf("couldn't construct chart because [%v]", err)
+		return bytes.Buffer{}, fmt.Errorf("couldn't construct chart because [%v]", err)
 	}
 
+	var b bytes.Buffer
 	if err := templ.Execute(&b, templData); err != nil {
-		return ls, o, b, fmt.Errorf("could't prepare ChartJS js code for chart: [%v]", err)
+		return b, fmt.Errorf("could't prepare ChartJS js code for chart: [%v]", err)
 	}
 
-	return ls, o, b, nil
+	return b, nil
+}
+
+func assertChartable(d dataset, opts options) error {
+	switch opts.chartType {
+	case pie:
+		if len(d.fss) == 0 || (len(d.fss[0]) == 1 && len(d.sss) == 0 && len(d.tss) == 0) {
+			return fmt.Errorf("couldn't find values to plot")
+		}
+	case bar:
+		if len(d.fss) == 0 || (len(d.fss[0]) == 1 && len(d.sss) == 0 && len(d.tss) == 0) {
+			return fmt.Errorf("couldn't find values to plot")
+		}
+	case line:
+		if d.fss == nil || (d.sss == nil && d.tss == nil && len(d.fss[0]) < 2) {
+			return fmt.Errorf("couldn't find values to plot")
+		}
+	case scatter:
+		if len(d.fss) == 0 {
+			return fmt.Errorf("couldn't find values to plot")
+		}
+	}
+	return nil
 }

@@ -8,11 +8,13 @@ import (
 )
 
 type dataset struct {
-	fss    [][]float64
-	sss    [][]string
-	tss    [][]time.Time
-	minFSS []float64
-	maxFSS []float64
+	fss      [][]float64
+	sss      [][]string
+	tss      [][]time.Time
+	minFSS   []float64
+	maxFSS   []float64
+	lf       string
+	stdinLen int
 }
 
 func newDataset() *dataset {
@@ -70,13 +72,15 @@ func (d *dataset) canBeScatterLine() bool {
 	return d.floatFieldLen()+d.timeFieldLen() >= 2
 }
 
-func preprocess(r io.Reader, o options) (dataset, options, string, []string) {
+func preprocess(r io.Reader, o options) (dataset, options) {
 	var (
 		d                      = newDataset()
 		sep                    = o.separator
 		ls, lf                 = readAndParseFormat(r, sep, o.dateFormat)
 		nilSSS, nilFSS, nilTSS = true, true, true
 	)
+	d.lf = lf
+	d.stdinLen = len(ls)
 
 	for _, l := range ls {
 		fs, ss, ts, err := parseLine(l, lf, sep, o.dateFormat)
@@ -138,5 +142,5 @@ func preprocess(r io.Reader, o options) (dataset, options, string, []string) {
 		sort.Sort(d)
 	}
 
-	return *d, o, lf, ls
+	return *d, o
 }

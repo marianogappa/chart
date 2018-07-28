@@ -106,7 +106,7 @@ func TestPreprocess(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		d, o, lf, _ := preprocess(strings.NewReader(ts.i), ts.o)
+		d, o := preprocess(strings.NewReader(ts.i), ts.o)
 
 		if !reflect.DeepEqual(d.fss, ts.fss) {
 			t.Errorf("'%v' failed: (floats) %v was not equal to %v", ts.name, d.fss, ts.fss)
@@ -126,8 +126,8 @@ func TestPreprocess(t *testing.T) {
 		if !reflect.DeepEqual(o, ts.expectedO) {
 			t.Errorf("'%v' failed: %v was not equal to %v", ts.name, o, ts.expectedO)
 		}
-		if !reflect.DeepEqual(lf, ts.expectedLF) {
-			t.Errorf("'%v' failed: %v was not equal to %v", ts.name, lf, ts.expectedLF)
+		if !reflect.DeepEqual(d.lf, ts.expectedLF) {
+			t.Errorf("'%v' failed: %v was not equal to %v", ts.name, d.lf, ts.expectedLF)
 		}
 	}
 }
