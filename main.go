@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"text/template"
 
@@ -14,48 +13,30 @@ import (
 
 func main() {
 	o := mustResolveOptions(os.Args[1:])
+	o, b := mustBuildChart(os.Stdin, o)
+	tmpfile := mustNewTempFile()
+	chartTempl := newChartTemplate(o.chartType)
+	chartTempl.mustExecute(b, tmpfile)
+	tmpfile.mustClose()
+	tmpfile.mustRenameWithHTMLSuffix()
+	mustOpen(tmpfile.url())
+}
 
-	_, o, b, err := buildChart(os.Stdin, o)
+func mustOpen(url string) {
+	if err := open.Run(url); err != nil {
+		log.WithField("err", err).Fatalf("Could not open the default viewer; please configure open/xdg-open")
+	}
+}
+
+func mustBuildChart(r io.Reader, o options) (options, bytes.Buffer) {
+	_, o, b, err := buildChart(r, o)
 	if err == nil && b.Len() == 0 {
 		os.Exit(0)
 	}
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	tmpfile, err := ioutil.TempFile("", "chartData")
-	if err != nil {
-		log.WithField("err", err).Fatalf("Could not create temporary file to store the chart.")
-	}
-
-	if _, err := tmpfile.WriteString(baseTemplateHeaderString); err != nil {
-		log.WithField("err", err).Fatalf("Could not write header to temporary file.")
-	}
-
-	t := baseTemplate
-	if o.chartType == pie {
-		t = basePieTemplate
-	}
-	if err = t.Execute(tmpfile, b.String()); err != nil {
-		log.WithField("err", err).Fatalf("Could not write chart to temporary file.")
-	}
-
-	if _, err := tmpfile.WriteString(baseTemplateFooterString); err != nil {
-		log.WithField("err", err).Fatalf("Could not write footer to temporary file.")
-	}
-
-	if err = tmpfile.Close(); err != nil {
-		log.WithField("err", err).Fatalf("Could not close temporary file after saving chart to it.")
-	}
-
-	newName := tmpfile.Name() + ".html"
-	if err = os.Rename(tmpfile.Name(), newName); err != nil {
-		log.WithField("err", err).Fatalf("Could not add html extension to the temporary file.")
-	}
-
-	if err = open.Run("file://" + newName); err != nil {
-		log.WithField("err", err).Fatalf("Could not open the default viewer")
-	}
+	return o, b
 }
 
 func buildChart(r io.Reader, o options) ([]string, options, bytes.Buffer, error) {
@@ -88,9 +69,6 @@ func buildChart(r io.Reader, o options) ([]string, options, bytes.Buffer, error)
 		if len(d.fss) == 0 {
 			return ls, o, b, fmt.Errorf("couldn't find values to plot")
 		}
-	}
-	if err != nil {
-		return ls, o, b, fmt.Errorf("couldn't construct chart because [%v]", err)
 	}
 
 	templData, templ, err = cjsChart{inData{
