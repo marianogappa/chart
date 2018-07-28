@@ -53,7 +53,9 @@ func main() {
 		log.WithField("err", err).Fatalf("Could not add html extension to the temporary file.")
 	}
 
-	open.Run("file://" + newName)
+	if err = open.Run("file://" + newName); err != nil {
+		log.WithField("err", err).Fatalf("Could not open the default viewer")
+	}
 }
 
 func buildChart(r io.Reader, o options) ([]string, options, bytes.Buffer, error) {
