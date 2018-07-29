@@ -106,7 +106,10 @@ func TestPreprocess(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		d, o := preprocess(strings.NewReader(ts.i), ts.o)
+		rd, lf := readAndParseFormat(strings.NewReader(ts.i), ts.o.separator, ts.o.dateFormat)
+		ts.o.lineFormat = lf
+		ts.expectedO.lineFormat = ts.o.lineFormat // TODO this is a hack because we don't care about o.lineFormat
+		d, o, _ := preprocess(rd, ts.o)
 
 		if !reflect.DeepEqual(d.fss, ts.fss) {
 			t.Errorf("'%v' failed: (floats) %v was not equal to %v", ts.name, d.fss, ts.fss)

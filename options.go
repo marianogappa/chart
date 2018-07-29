@@ -36,6 +36,7 @@ type options struct {
 	xLabel     string
 	yLabel     string
 	dateFormat string
+	lineFormat string
 	zeroBased  bool
 	debug      bool
 	help       bool
@@ -50,13 +51,16 @@ func mustResolveOptions(args []string) options {
 }
 
 func resolveOptions(args []string) (options, error) {
-	titleHelp := "Sets the title for the chart."
-	xLabelHelp := "Sets the label for the x axis."
-	yLabelHelp := "Sets the label for the y axis."
-	dateFormatHelp := "Sets the date format, according to https://golang.org/src/time/format.go."
-	zeroBasedHelp := "Makes y-axis begin at zero."
-	debugHelp := "Use to make sure to double-check the chart is showing what you expect."
-	helpHelp := "Show help."
+	var (
+		titleHelp      = "Sets the title for the chart."
+		xLabelHelp     = "Sets the label for the x axis."
+		yLabelHelp     = "Sets the label for the y axis."
+		dateFormatHelp = "Sets the date format, according to https://golang.org/src/time/format.go."
+		lineFormatHelp = "Prevents chart from inferring line format. Syntax: `[dfs]+` where d=date, f=float, s=string. e.g. `df`"
+		zeroBasedHelp  = "Makes y-axis begin at zero."
+		debugHelp      = "Use to make sure to double-check the chart is showing what you expect."
+		helpHelp       = "Show help."
+	)
 
 	o := options{}
 
@@ -66,6 +70,7 @@ func resolveOptions(args []string) (options, error) {
 	fs.StringVar(&o.xLabel, "x", o.xLabel, xLabelHelp)
 	fs.StringVar(&o.yLabel, "y", o.yLabel, yLabelHelp)
 	fs.StringVar(&o.dateFormat, "date-format", o.dateFormat, dateFormatHelp) //TODO document
+	fs.StringVar(&o.lineFormat, "lineFormat", o.lineFormat, lineFormatHelp)  //TODO document
 	fs.BoolVar(&o.zeroBased, "zero-based", o.zeroBased, zeroBasedHelp)       //TODO document
 	fs.BoolVar(&o.debug, "debug", o.debug, debugHelp)                        //TODO document
 	fs.BoolVar(&o.help, "help", o.help, helpHelp)

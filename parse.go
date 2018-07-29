@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 	"regexp"
@@ -10,11 +11,11 @@ import (
 	"time"
 )
 
-func readAndParseFormat(r io.Reader, sep rune, df string) ([]string, string) {
+func readAndParseFormat(r io.Reader, sep rune, df string) (io.Reader, string) {
 	var (
-		ls  = make([]string, 0, 500)
 		lfs = make(map[string]int)
 		rd  = bufio.NewReader(r)
+		buf bytes.Buffer
 		l   string
 		err error
 	)
@@ -27,10 +28,11 @@ func readAndParseFormat(r io.Reader, sep rune, df string) ([]string, string) {
 		if len(l) == 0 {
 			continue
 		}
-		ls = append(ls, l)
+		buf.WriteString(l)
+		buf.WriteByte('\n')
 		lfs[parseLineFormat(l, sep, df)]++
 	}
-	return ls, maxLineFormat(lfs)
+	return &buf, maxLineFormat(lfs)
 }
 
 func maxLineFormat(lfs map[string]int) string {

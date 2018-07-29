@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"os"
 
 	log "github.com/Sirupsen/logrus"
@@ -12,10 +13,18 @@ import (
 func main() {
 	var (
 		opts           = mustResolveOptions(os.Args[1:])
-		dataset, iOpts = preprocess(os.Stdin, opts)
-		err            = assertChartable(dataset, iOpts)
+		rd   io.Reader = os.Stdin
 	)
-	if iOpts.debug || err != nil {
+	if opts.lineFormat == "" {
+		var newRd, lineFormat = readAndParseFormat(os.Stdin, opts.separator, opts.dateFormat)
+		opts.lineFormat = lineFormat
+		rd = newRd
+	}
+	dataset, iOpts, err := preprocess(rd, opts)
+	if err != nil {
+		log.WithError(err).Fatal("Could not scan dataset.")
+	}
+	if err := assertChartable(dataset, iOpts); iOpts.debug || err != nil {
 		showDebug(dataset, iOpts, err)
 		os.Exit(0)
 	}
@@ -32,7 +41,7 @@ func main() {
 
 func mustOpen(url string) {
 	if err := open.Run(url); err != nil {
-		log.WithField("err", err).Fatalf("Could not open the default viewer; please configure open/xdg-open")
+		log.WithError(err).Fatalf("Could not open the default viewer; please configure open/xdg-open")
 	}
 }
 

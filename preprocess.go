@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"io"
 	"sort"
 	"strings"
@@ -72,18 +73,18 @@ func (d *dataset) canBeScatterLine() bool {
 	return d.floatFieldLen()+d.timeFieldLen() >= 2
 }
 
-func preprocess(r io.Reader, o options) (dataset, options) {
+func preprocess(r io.Reader, o options) (dataset, options, error) {
 	var (
 		d                      = newDataset()
-		sep                    = o.separator
-		ls, lf                 = readAndParseFormat(r, sep, o.dateFormat)
 		nilSSS, nilFSS, nilTSS = true, true, true
+		scanner                = bufio.NewScanner(r)
+		stdinLen               = 0
 	)
-	d.lf = lf
-	d.stdinLen = len(ls)
+	d.lf = o.lineFormat
 
-	for _, l := range ls {
-		fs, ss, ts, err := parseLine(l, lf, sep, o.dateFormat)
+	for scanner.Scan() {
+		stdinLen++
+		fs, ss, ts, err := parseLine(scanner.Text(), d.lf, o.separator, o.dateFormat)
 		if err != nil {
 			continue
 		}
@@ -116,6 +117,10 @@ func preprocess(r io.Reader, o options) (dataset, options) {
 		d.sss = append(d.sss, ss)
 		d.tss = append(d.tss, ts)
 	}
+	if err := scanner.Err(); err != nil {
+		return *d, o, err
+	}
+	d.stdinLen = stdinLen
 	if nilSSS {
 		d.sss = nil
 	}
@@ -128,13 +133,13 @@ func preprocess(r io.Reader, o options) (dataset, options) {
 		d.tss = nil
 	}
 
-	o.chartType = resolveChartType(o.chartType, lf, d.fss, d.sss)
+	o.chartType = resolveChartType(o.chartType, d.lf, d.fss, d.sss)
 
 	if o.chartType == bar {
 		o.zeroBased = true // https://github.com/marianogappa/chart/issues/11
 	}
 
-	if strings.Index(lf, "f") == -1 && len(d.sss) > 0 {
+	if strings.Index(d.lf, "f") == -1 && len(d.sss) > 0 {
 		d.fss, d.sss = preprocessFreq(d.sss)
 	}
 
@@ -142,5 +147,5 @@ func preprocess(r io.Reader, o options) (dataset, options) {
 		sort.Sort(d)
 	}
 
-	return *d, o
+	return *d, o, nil
 }
