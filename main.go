@@ -20,18 +20,19 @@ func main() {
 		opts.lineFormat = lineFormat
 		rd = newRd
 	}
-	dataset, iOpts, err := preprocess(rd, opts)
+	dataset, err := preprocess(rd, opts)
 	if err != nil {
 		log.WithError(err).Fatal("Could not scan dataset.")
 	}
-	if err := assertChartable(dataset, iOpts); iOpts.debug || err != nil {
-		showDebug(dataset, iOpts, err)
+	opts.chartType = resolveChartType(opts.chartType, dataset.lf, dataset.fss, dataset.sss)
+	if err := assertChartable(dataset, opts); opts.debug || err != nil {
+		showDebug(dataset, opts, err)
 		os.Exit(0)
 	}
 	var (
-		b          = mustBuildChart(dataset, iOpts)
+		b          = mustBuildChart(dataset, opts)
 		tmpfile    = mustNewTempFile()
-		chartTempl = newChartTemplate(iOpts.chartType)
+		chartTempl = newChartTemplate(opts.chartType)
 	)
 	chartTempl.mustExecute(b, tmpfile)
 	tmpfile.mustClose()

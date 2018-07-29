@@ -72,7 +72,7 @@ func (d *dataset) canBeScatterLine() bool {
 	return d.floatFieldLen()+d.timeFieldLen() >= 2
 }
 
-func preprocess(r io.Reader, o options) (dataset, options, error) {
+func preprocess(r io.Reader, o options) (dataset, error) {
 	var (
 		d                      = newDataset()
 		nilSSS, nilFSS, nilTSS = true, true, true
@@ -117,7 +117,7 @@ func preprocess(r io.Reader, o options) (dataset, options, error) {
 		d.tss = append(d.tss, ts)
 	}
 	if err := scanner.Err(); err != nil {
-		return *d, o, err
+		return *d, err
 	}
 	d.stdinLen = stdinLen
 	if nilSSS {
@@ -132,11 +132,9 @@ func preprocess(r io.Reader, o options) (dataset, options, error) {
 		d.tss = nil
 	}
 
-	o.chartType = resolveChartType(o.chartType, d.lf, d.fss, d.sss)
-
 	if strings.Index(d.lf, "f") == -1 && len(d.sss) > 0 {
 		d.fss, d.sss = preprocessFreq(d.sss)
 	}
 
-	return *d, o, nil
+	return *d, nil
 }

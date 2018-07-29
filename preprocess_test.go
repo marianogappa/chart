@@ -108,8 +108,8 @@ func TestPreprocess(t *testing.T) {
 	for _, ts := range tests {
 		rd, lf := readAndParseFormat(strings.NewReader(ts.i), ts.o.separator, ts.o.dateFormat)
 		ts.o.lineFormat = lf
-		ts.expectedO.lineFormat = ts.o.lineFormat // TODO this is a hack because we don't care about o.lineFormat
-		d, o, _ := preprocess(rd, ts.o)
+		// ts.expectedO.lineFormat = ts.o.lineFormat // TODO this is a hack because we don't care about o.lineFormat
+		d, _ := preprocess(rd, ts.o)
 
 		if !reflect.DeepEqual(d.fss, ts.fss) {
 			t.Errorf("'%v' failed: (floats) %v was not equal to %v", ts.name, d.fss, ts.fss)
@@ -126,9 +126,9 @@ func TestPreprocess(t *testing.T) {
 		if !reflect.DeepEqual(d.maxFSS, ts.maxFSS) {
 			t.Errorf("'%v' failed: (max floats) %v was not equal to %v", ts.name, d.maxFSS, ts.maxFSS)
 		}
-		if !reflect.DeepEqual(o, ts.expectedO) {
-			t.Errorf("'%v' failed: %v was not equal to %v", ts.name, o, ts.expectedO)
-		}
+		// if !reflect.DeepEqual(o, ts.expectedO) {
+		// 	t.Errorf("'%v' failed: %v was not equal to %v", ts.name, o, ts.expectedO)
+		// }
 		if !reflect.DeepEqual(d.lf, ts.expectedLF) {
 			t.Errorf("'%v' failed: %v was not equal to %v", ts.name, d.lf, ts.expectedLF)
 		}
