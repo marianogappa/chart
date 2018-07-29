@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"io"
-	"sort"
 	"strings"
 	"time"
 )
@@ -135,16 +134,8 @@ func preprocess(r io.Reader, o options) (dataset, options, error) {
 
 	o.chartType = resolveChartType(o.chartType, d.lf, d.fss, d.sss)
 
-	if o.chartType == bar {
-		o.zeroBased = true // https://github.com/marianogappa/chart/issues/11
-	}
-
 	if strings.Index(d.lf, "f") == -1 && len(d.sss) > 0 {
 		d.fss, d.sss = preprocessFreq(d.sss)
-	}
-
-	if o.chartType == line && d.canBeScatterLine() {
-		sort.Sort(d)
 	}
 
 	return *d, o, nil

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"sort"
 	"strings"
 	"text/template"
 	"time"
@@ -142,6 +143,30 @@ func (i inData) floatFieldLen() int {
 
 type cjsChart struct {
 	inData inData
+}
+
+func newChartJSChart(d dataset, o options) cjsChart {
+	if o.chartType == bar {
+		o.zeroBased = true // https://github.com/marianogappa/chart/issues/11
+	}
+	if o.chartType == line && d.canBeScatterLine() {
+		sort.Sort(&d)
+	}
+
+	return cjsChart{inData{
+		ChartType: o.chartType.string(),
+		FSS:       d.fss,
+		SSS:       d.sss,
+		TSS:       d.tss,
+		MinFSS:    d.minFSS,
+		MaxFSS:    d.maxFSS,
+		Title:     o.title,
+		ScaleType: o.scaleType.string(),
+		XLabel:    o.xLabel,
+		YLabel:    o.yLabel,
+		ZeroBased: o.zeroBased,
+		ColorType: int(o.colorType),
+	}}
 }
 
 func (c cjsChart) chart() (interface{}, *template.Template, error) {

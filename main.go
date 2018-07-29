@@ -58,20 +58,7 @@ func mustBuildChart(d dataset, o options) bytes.Buffer {
 }
 
 func buildChart(d dataset, o options) (bytes.Buffer, error) {
-	templData, templ, err := cjsChart{inData{
-		ChartType: o.chartType.string(),
-		FSS:       d.fss,
-		SSS:       d.sss,
-		TSS:       d.tss,
-		MinFSS:    d.minFSS,
-		MaxFSS:    d.maxFSS,
-		Title:     o.title,
-		ScaleType: o.scaleType.string(),
-		XLabel:    o.xLabel,
-		YLabel:    o.yLabel,
-		ZeroBased: o.zeroBased,
-		ColorType: int(o.colorType),
-	}}.chart()
+	templData, templ, err := newChartJSChart(d, o).chart()
 	if err != nil {
 		return bytes.Buffer{}, fmt.Errorf("couldn't construct chart because [%v]", err)
 	}

@@ -31,40 +31,40 @@ func TestPreprocess(t *testing.T) {
 			maxFSS:    nil,
 			expectedO: options{separator: '\t', scaleType: linear, chartType: pie},
 		},
-		{
-			name: "sorts scatter line charts",
-			i: `2	4
-1	3
-4	4
-3	3
-`,
-			o:          options{separator: '\t', scaleType: linear, chartType: line},
-			fss:        [][]float64{{1, 3}, {2, 4}, {3, 3}, {4, 4}},
-			sss:        nil,
-			tss:        nil,
-			minFSS:     []float64{1, 3},
-			maxFSS:     []float64{4, 4},
-			expectedO:  options{separator: '\t', scaleType: linear, chartType: line},
-			expectedLF: "ff",
-		},
-		{
-			name: "sorts scatter line charts with time series",
-			i: `2016-08-29	4
-2016-09-08	4
-2016-09-06	3
-2016-09-07	3
-`,
-			o:   options{separator: '\t', scaleType: linear, chartType: line, dateFormat: "2006-01-02"},
-			fss: [][]float64{{4}, {3}, {3}, {4}},
-			sss: nil,
-			tss: [][]time.Time{
-				{tp("2006-01-02", "2016-08-29")}, {tp("2006-01-02", "2016-09-06")}, {tp("2006-01-02", "2016-09-07")}, {tp("2006-01-02", "2016-09-08")},
-			},
-			minFSS:     []float64{3},
-			maxFSS:     []float64{4},
-			expectedO:  options{separator: '\t', scaleType: linear, chartType: line, dateFormat: "2006-01-02"},
-			expectedLF: "df",
-		},
+		// 		{
+		// 			name: "sorts scatter line charts",
+		// 			i: `2	4
+		// 1	3
+		// 4	4
+		// 3	3
+		// `,
+		// 			o:          options{separator: '\t', scaleType: linear, chartType: line},
+		// 			fss:        [][]float64{{1, 3}, {2, 4}, {3, 3}, {4, 4}},
+		// 			sss:        nil,
+		// 			tss:        nil,
+		// 			minFSS:     []float64{1, 3},
+		// 			maxFSS:     []float64{4, 4},
+		// 			expectedO:  options{separator: '\t', scaleType: linear, chartType: line},
+		// 			expectedLF: "ff",
+		// 		},
+		// 		{
+		// 			name: "sorts scatter line charts with time series",
+		// 			i: `2016-08-29	4
+		// 2016-09-08	4
+		// 2016-09-06	3
+		// 2016-09-07	3
+		// `,
+		// 			o:   options{separator: '\t', scaleType: linear, chartType: line, dateFormat: "2006-01-02"},
+		// 			fss: [][]float64{{4}, {3}, {3}, {4}},
+		// 			sss: nil,
+		// 			tss: [][]time.Time{
+		// 				{tp("2006-01-02", "2016-08-29")}, {tp("2006-01-02", "2016-09-06")}, {tp("2006-01-02", "2016-09-07")}, {tp("2006-01-02", "2016-09-08")},
+		// 			},
+		// 			minFSS:     []float64{3},
+		// 			maxFSS:     []float64{4},
+		// 			expectedO:  options{separator: '\t', scaleType: linear, chartType: line, dateFormat: "2006-01-02"},
+		// 			expectedLF: "df",
+		// 		},
 		{
 			name: "just strings",
 			i: `a
