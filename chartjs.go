@@ -355,12 +355,19 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 			}
 		}
 
-		dss := make([]cjsDataset, len(mdss))
-		i := 0
-		for _, v := range mdss {
+		var (
+			dss = make([]cjsDataset, len(mdss))
+			ds  = make([]string, len(mdss))
+			i   = 0
+		)
+		for k, v := range mdss {
 			dss[i] = v
+			ds[i] = k
 			i++
 		}
+		sort.Slice(dss, func(i, j int) bool { // https://github.com/marianogappa/chart/issues/33
+			return ds[i] < ds[j]
+		})
 		return cjsData{
 			ChartType:       "line",
 			ActualChartType: "scatterline",
