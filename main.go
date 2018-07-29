@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -20,56 +19,21 @@ func main() {
 		opts.lineFormat = lineFormat
 		rd = newRd
 	}
-	dataset, err := preprocess(rd, opts)
-	if err != nil {
-		log.WithError(err).Fatal("Could not scan dataset.")
-	}
+	dataset := mustNewDataset(rd, opts)
 	opts.chartType = resolveChartType(opts.chartType, dataset.lf, dataset.fss, dataset.sss)
-	if err := assertChartable(dataset, opts); opts.debug || err != nil {
-		showDebug(dataset, opts, err)
+	if err := assertChartable(*dataset, opts); opts.debug || err != nil {
+		showDebug(*dataset, opts, err)
 		os.Exit(0)
 	}
-	var (
-		b          = mustBuildChart(dataset, opts)
-		tmpfile    = mustNewTempFile()
-		chartTempl = newChartTemplate(opts.chartType)
-	)
+	b := newChartJSChart(*dataset, opts).mustBuild()
+	tmpfile := mustNewTempFile()
+	chartTempl := newChartTemplate(opts.chartType)
 	chartTempl.mustExecute(b, tmpfile)
 	tmpfile.mustClose()
 	tmpfile.mustRenameWithHTMLSuffix()
-	mustOpen(tmpfile.url())
-}
-
-func mustOpen(url string) {
-	if err := open.Run(url); err != nil {
+	if err := open.Run(tmpfile.url()); err != nil {
 		log.WithError(err).Fatalf("Could not open the default viewer; please configure open/xdg-open")
 	}
-}
-
-func mustBuildChart(d dataset, o options) bytes.Buffer {
-	b, err := buildChart(d, o)
-	if err == nil && b.Len() == 0 {
-		log.Println("Empty result; nothing to plot here.")
-		os.Exit(0)
-	}
-	if err != nil {
-		log.Fatal(err)
-	}
-	return b
-}
-
-func buildChart(d dataset, o options) (bytes.Buffer, error) {
-	templData, templ, err := newChartJSChart(d, o).chart()
-	if err != nil {
-		return bytes.Buffer{}, fmt.Errorf("couldn't construct chart because [%v]", err)
-	}
-
-	var b bytes.Buffer
-	if err := templ.Execute(&b, templData); err != nil {
-		return b, fmt.Errorf("could't prepare ChartJS js code for chart: [%v]", err)
-	}
-
-	return b, nil
 }
 
 func assertChartable(d dataset, opts options) error {

@@ -59,12 +59,9 @@ func TestCheatsheet(t *testing.T) {
 
 		var rdr io.Reader
 		rdr, o.lineFormat = readAndParseFormat(rd, o.separator, o.dateFormat)
-		d, err := preprocess(rdr, o)
-		if err != nil {
-			log.Fatal(err)
-		}
+		d := mustNewDataset(rdr, o)
 		o.chartType = resolveChartType(o.chartType, d.lf, d.fss, d.sss)
-		b, err := buildChart(d, o)
+		b, err := newChartJSChart(*d, o).build()
 		if err != nil {
 			t.Errorf("[%v] breaks building chart with: [%v]", fs, err)
 			t.FailNow()

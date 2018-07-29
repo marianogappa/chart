@@ -2,9 +2,12 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"strings"
 	"time"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 type dataset struct {
@@ -17,14 +20,23 @@ type dataset struct {
 	stdinLen int
 }
 
-func newDataset() *dataset {
-	return &dataset{
+func mustNewDataset(r io.Reader, o options) *dataset {
+	d, err := newDataset(r, o)
+	if err != nil {
+		log.WithError(err).Fatal("Could not build dataset.")
+	}
+	return d
+}
+
+func newDataset(r io.Reader, o options) (*dataset, error) {
+	d := &dataset{
 		fss:    make([][]float64, 0, 500),
 		sss:    make([][]string, 0, 500),
 		tss:    make([][]time.Time, 0, 500),
 		minFSS: make([]float64, 0, 500),
 		maxFSS: make([]float64, 0, 500),
 	}
+	return d, d.read(r, o)
 }
 
 func (d *dataset) Len() int {
@@ -72,9 +84,8 @@ func (d *dataset) canBeScatterLine() bool {
 	return d.floatFieldLen()+d.timeFieldLen() >= 2
 }
 
-func preprocess(r io.Reader, o options) (dataset, error) {
+func (d *dataset) read(r io.Reader, o options) error {
 	var (
-		d                      = newDataset()
 		nilSSS, nilFSS, nilTSS = true, true, true
 		scanner                = bufio.NewScanner(r)
 		stdinLen               = 0
@@ -117,7 +128,7 @@ func preprocess(r io.Reader, o options) (dataset, error) {
 		d.tss = append(d.tss, ts)
 	}
 	if err := scanner.Err(); err != nil {
-		return *d, err
+		return err
 	}
 	d.stdinLen = stdinLen
 	if nilSSS {
@@ -131,10 +142,12 @@ func preprocess(r io.Reader, o options) (dataset, error) {
 	if nilTSS {
 		d.tss = nil
 	}
-
 	if strings.Index(d.lf, "f") == -1 && len(d.sss) > 0 {
 		d.fss, d.sss = preprocessFreq(d.sss)
 	}
+	if d.Len() == 0 {
+		return fmt.Errorf("empty dataset; nothing to plot here")
+	}
 
-	return *d, nil
+	return nil
 }

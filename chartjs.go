@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"sort"
@@ -169,8 +170,20 @@ func newChartJSChart(d dataset, o options) cjsChart {
 	}}
 }
 
-func (c cjsChart) chart() (interface{}, *template.Template, error) {
-	return c.data(), cjsTemplate, nil
+func (c cjsChart) mustBuild() bytes.Buffer {
+	b, err := c.build()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return b
+}
+
+func (c cjsChart) build() (bytes.Buffer, error) {
+	var b bytes.Buffer
+	if err := cjsTemplate.Execute(&b, c.data()); err != nil {
+		return b, fmt.Errorf("could't prepare ChartJS js code for chart: [%v]", err)
+	}
+	return b, nil
 }
 
 type cjsData struct {
