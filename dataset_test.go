@@ -117,3 +117,77 @@ func tp(tf, t string) time.Time {
 	rt, _ := time.Parse(tf, t)
 	return rt
 }
+
+func TestParseLine(t *testing.T) {
+	tests := []struct {
+		name            string
+		i               string
+		sep             rune
+		df              string
+		format          string
+		expectedFloats  []float64
+		expectedStrings []string
+		expectedTimes   []time.Time
+		fails           bool
+	}{
+		{
+			name:            "base case",
+			i:               "1,2,3",
+			sep:             ',',
+			format:          "fff",
+			expectedFloats:  []float64{1, 2, 3},
+			expectedStrings: []string{},
+			expectedTimes:   []time.Time{},
+			fails:           false,
+		},
+		{
+			name:            "base failing case",
+			i:               "1,a,3",
+			sep:             ',',
+			format:          "fff",
+			expectedFloats:  []float64{},
+			expectedStrings: []string{},
+			expectedTimes:   []time.Time{},
+			fails:           true,
+		},
+		{
+			name:            "with strings",
+			i:               "a,1",
+			sep:             ',',
+			format:          "sf",
+			expectedFloats:  []float64{1},
+			expectedStrings: []string{"a"},
+			expectedTimes:   []time.Time{},
+			fails:           false,
+		},
+		{
+			name:            "strings and extra whitespace",
+			i:               "    a   ,   1   ",
+			sep:             ',',
+			format:          "sf",
+			expectedFloats:  []float64{1},
+			expectedStrings: []string{"a"},
+			expectedTimes:   []time.Time{},
+			fails:           false,
+		},
+	}
+
+	for _, ts := range tests {
+		fs, ss, ds, err := (&dataset{}).parseLine(ts.i, ts.format, ts.sep, ts.df)
+		if err != nil && !ts.fails {
+			t.Errorf("'%v' failed: should not have failed but did! With [%v]", ts.name, err)
+		}
+		if err == nil && ts.fails {
+			t.Errorf("'%v' failed: should have failed but didn't!", ts.name)
+		}
+		if !ts.fails && !reflect.DeepEqual(fs, ts.expectedFloats) {
+			t.Errorf("'%v' failed: %v != %v", ts.name, fs, ts.expectedFloats)
+		}
+		if !ts.fails && !reflect.DeepEqual(ss, ts.expectedStrings) {
+			t.Errorf("'%v' failed: %v != %v", ts.name, ss, ts.expectedStrings)
+		}
+		if !ts.fails && !reflect.DeepEqual(ds, ts.expectedTimes) {
+			t.Errorf("'%v' failed: %v != %v", ts.name, ds, ts.expectedTimes)
+		}
+	}
+}
