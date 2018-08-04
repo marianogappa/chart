@@ -1,10 +1,12 @@
-package main
+package format
 
 import (
 	"reflect"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/marianogappa/chart/format"
 )
 
 func TestParseLineFormat(t *testing.T) {
@@ -140,7 +142,7 @@ c	3
 	}
 
 	for _, ts := range tests {
-		_, result := readAndParseFormat(strings.NewReader(ts.i), ts.sep, ts.df)
+		_, result := Parse(strings.NewReader(ts.i), ts.sep, ts.df)
 		if !reflect.DeepEqual(result, ts.expected) {
 			t.Errorf("'%v' failed: %v was not equal to %v", ts.name, result, ts.expected)
 		}
@@ -202,7 +204,8 @@ func TestParseLine(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		fs, ss, ds, err := parseLine(ts.i, ts.format, ts.sep, ts.df)
+		lf, _ := format.NewLineFormat(ts.format, ts.sep, ts.df) // ignoring errors as we're not testing the format
+		fs, ss, ds, err := lf.ParseLine(ts.i)
 		if err != nil && !ts.fails {
 			t.Errorf("'%v' failed: should not have failed but did! With [%v]", ts.name, err)
 		}

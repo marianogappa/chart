@@ -1,28 +1,42 @@
 package main
 
 import (
+	"bufio"
+	"fmt"
 	"io"
-	"sort"
-	"strings"
 	"time"
+
+	log "github.com/Sirupsen/logrus"
+	"github.com/marianogappa/chart/format"
 )
 
 type dataset struct {
-	fss    [][]float64
-	sss    [][]string
-	tss    [][]time.Time
-	minFSS []float64
-	maxFSS []float64
+	fss        [][]float64
+	sss        [][]string
+	tss        [][]time.Time
+	minFSS     []float64
+	maxFSS     []float64
+	lineFormat format.LineFormat
+	stdinLen   int
 }
 
-func newDataset() *dataset {
-	return &dataset{
+func mustNewDataset(r io.Reader, o options) *dataset {
+	d, err := newDataset(r, o)
+	if err != nil {
+		log.WithError(err).Fatal("Could not build dataset.")
+	}
+	return d
+}
+
+func newDataset(r io.Reader, o options) (*dataset, error) {
+	d := &dataset{
 		fss:    make([][]float64, 0, 500),
 		sss:    make([][]string, 0, 500),
 		tss:    make([][]time.Time, 0, 500),
 		minFSS: make([]float64, 0, 500),
 		maxFSS: make([]float64, 0, 500),
 	}
+	return d, d.read(r, o)
 }
 
 func (d *dataset) Len() int {
@@ -70,16 +84,17 @@ func (d *dataset) canBeScatterLine() bool {
 	return d.floatFieldLen()+d.timeFieldLen() >= 2
 }
 
-func preprocess(r io.Reader, o options) (dataset, options, string, []string) {
+func (d *dataset) read(r io.Reader, o options) error {
 	var (
-		d                      = newDataset()
-		sep                    = o.separator
-		ls, lf                 = readAndParseFormat(r, sep, o.dateFormat)
 		nilSSS, nilFSS, nilTSS = true, true, true
+		scanner                = bufio.NewScanner(r)
+		stdinLen               = 0
 	)
+	d.lineFormat = o.lineFormat
 
-	for _, l := range ls {
-		fs, ss, ts, err := parseLine(l, lf, sep, o.dateFormat)
+	for scanner.Scan() {
+		stdinLen++
+		fs, ss, ts, err := d.lineFormat.ParseLine(scanner.Text())
 		if err != nil {
 			continue
 		}
@@ -112,6 +127,10 @@ func preprocess(r io.Reader, o options) (dataset, options, string, []string) {
 		d.sss = append(d.sss, ss)
 		d.tss = append(d.tss, ts)
 	}
+	if err := scanner.Err(); err != nil {
+		return err
+	}
+	d.stdinLen = stdinLen
 	if nilSSS {
 		d.sss = nil
 	}
@@ -123,20 +142,15 @@ func preprocess(r io.Reader, o options) (dataset, options, string, []string) {
 	if nilTSS {
 		d.tss = nil
 	}
-
-	o.chartType = resolveChartType(o.chartType, lf, d.fss, d.sss)
-
-	if o.chartType == bar {
-		o.zeroBased = true // https://github.com/marianogappa/chart/issues/11
-	}
-
-	if strings.Index(lf, "f") == -1 && len(d.sss) > 0 {
+	if !d.lineFormat.HasFloats && len(d.sss) > 0 {
 		d.fss, d.sss = preprocessFreq(d.sss)
+		d.lineFormat.ColTypes = append(d.lineFormat.ColTypes, format.Float)
+		d.lineFormat.FloatCount++
+		d.lineFormat.HasFloats = true
+	}
+	if d.Len() == 0 {
+		return fmt.Errorf("empty dataset; nothing to plot here")
 	}
 
-	if o.chartType == line && d.canBeScatterLine() {
-		sort.Sort(d)
-	}
-
-	return *d, o, lf, ls
+	return nil
 }

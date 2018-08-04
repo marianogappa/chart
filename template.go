@@ -1,8 +1,10 @@
 package main
 
 import (
-	"log"
+	"bytes"
 	"text/template"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 var baseTemplate, basePieTemplate *template.Template
@@ -16,6 +18,32 @@ func init() {
 	basePieTemplate, err = template.New("base").Parse(basePieTemplateString)
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+type chartTemplate struct {
+	tmpl *template.Template
+}
+
+func newChartTemplate(ct chartType) *chartTemplate {
+	t := baseTemplate
+	if ct == pie {
+		t = basePieTemplate
+	}
+	return &chartTemplate{tmpl: t}
+}
+
+func (t *chartTemplate) mustExecute(b bytes.Buffer, f *tempFile) {
+	if _, err := f.f.WriteString(baseTemplateHeaderString); err != nil {
+		log.WithField("err", err).Fatalf("Could not write header to temporary file.")
+	}
+
+	if err := t.tmpl.Execute(f.f, b.String()); err != nil {
+		log.WithField("err", err).Fatalf("Could not write chart to temporary file.")
+	}
+
+	if _, err := f.f.WriteString(baseTemplateFooterString); err != nil {
+		log.WithField("err", err).Fatalf("Could not write footer to temporary file.")
 	}
 }
 

@@ -1,19 +1,47 @@
 package main
 
-import "strings"
+import (
+	"fmt"
 
-func resolveChartType(t chartType, lf string, fss [][]float64, sss [][]string) chartType {
-	if t == undefinedChartType {
-		switch {
-		case strings.Index(lf, "f") == -1:
-			return pie
-		case strings.Count(lf, "f") >= 2 && strings.Count(lf, "s") == 0:
-			return scatter
-		case strings.Count(lf, "f") > 1:
-			return line
-		default:
-			return pie
+	"github.com/marianogappa/chart/format"
+)
+
+func resolveChartType(ct chartType, lf format.LineFormat) (chartType, error) {
+	ct = _resolveChartType(ct, lf)
+	return ct, assertChartable(ct, lf)
+}
+
+func _resolveChartType(ct chartType, f format.LineFormat) chartType {
+	if ct != undefinedChartType {
+		return ct
+	}
+	switch {
+	case !f.HasFloats:
+		return pie
+	case f.FloatCount >= 2 && !f.HasStrings:
+		return scatter
+	case f.FloatCount > 1:
+		return line
+	default:
+		return pie
+	}
+}
+
+func assertChartable(ct chartType, f format.LineFormat) error {
+	var errIncompatibleFormat = fmt.Errorf("I don't know how to plot a dataset with this line format")
+	switch ct {
+	case pie, bar:
+		if !f.HasFloats || (f.FloatCount == 1 && !f.HasStrings && !f.HasDateTimes) {
+			return errIncompatibleFormat
+		}
+	case line:
+		if !f.HasFloats || (f.FloatCount < 2 && !f.HasStrings && !f.HasDateTimes) {
+			return errIncompatibleFormat
+		}
+	case scatter:
+		if !f.HasFloats {
+			return errIncompatibleFormat
 		}
 	}
-	return t
+	return nil
 }

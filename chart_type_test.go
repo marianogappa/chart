@@ -1,60 +1,56 @@
 package main
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/marianogappa/chart/format"
+)
 
 func TestResolveChartType(t *testing.T) {
 	tests := []struct {
 		name      string
 		t         chartType
 		lf        string
-		fss       [][]float64
-		sss       [][]string
 		expectedT chartType
 	}{
 		{
 			name:      "default case",
 			t:         undefinedChartType,
 			lf:        "sf",
-			fss:       [][]float64{},
-			sss:       [][]string{},
 			expectedT: pie,
 		},
 		{
 			name:      "pie selected; inference ignored",
 			t:         pie,
 			lf:        "sf",
-			fss:       [][]float64{},
-			sss:       [][]string{},
 			expectedT: pie,
 		},
 		{
 			name:      "bar selected; inference ignored",
 			t:         bar,
 			lf:        "sf",
-			fss:       [][]float64{},
-			sss:       [][]string{},
 			expectedT: bar,
 		},
 		{
 			name:      "more than one column of floats, with strings",
 			t:         undefinedChartType,
 			lf:        "sff",
-			fss:       [][]float64{},
-			sss:       [][]string{},
 			expectedT: line,
 		},
 		{
 			name:      "more than one column of floats, without strings",
 			t:         undefinedChartType,
 			lf:        "ff",
-			fss:       [][]float64{},
-			sss:       [][]string{},
 			expectedT: scatter,
 		},
 	}
 
 	for _, ts := range tests {
-		result := resolveChartType(ts.t, ts.lf, ts.fss, ts.sss)
+		lf, _ := format.NewLineFormat(ts.lf, ' ', "") // ignoring errors as we're not testing the format package here
+		result, err := resolveChartType(ts.t, lf)
+		if err != nil { // TODO test cases where there's an error
+			t.Errorf("%v: there was an error resolving the chart type", ts.name)
+		}
 
 		if result != ts.expectedT {
 			t.Errorf("%v: %v was not equal to %v", ts.name, result, ts.expectedT)

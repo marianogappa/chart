@@ -11,6 +11,9 @@ import (
 	"regexp"
 	"testing"
 	"text/template"
+
+	"github.com/marianogappa/chart/chartjs"
+	"github.com/marianogappa/chart/format"
 )
 
 type cheatsheetExample struct {
@@ -39,7 +42,7 @@ func TestCheatsheet(t *testing.T) {
 		rd := bufio.NewReader(fh)
 		optionsLine, err := rd.ReadString('\n')
 		if err == io.EOF {
-			t.Errorf("[%v] doesn't have options line", fs)
+			t.Errorf("[%v] doesn't have options line", f)
 			t.FailNow()
 		}
 
@@ -49,21 +52,48 @@ func TestCheatsheet(t *testing.T) {
 		o, err := resolveOptions(m)
 		log.Println(o.title)
 		if err != nil {
-			t.Errorf("[%v] can't resolve options line [%v]", fs, optionsLine)
+			t.Errorf("[%v] can't resolve options line [%v]", f, optionsLine)
 			t.FailNow()
 		}
 		if _, err = rd.ReadString('\n'); err != nil {
-			t.Errorf("[%v] doesn't have empty line after options line", fs)
+			t.Errorf("[%v] doesn't have empty line after options line", f)
 			t.FailNow()
 		}
 
-		ls, _, b, err := buildChart(rd, o)
+		var rdr io.Reader
+		rdr, o.lineFormat = format.Parse(rd, o.separator, o.dateFormat)
+		d := mustNewDataset(rdr, o)
+		o.chartType, err = resolveChartType(o.chartType, d.lineFormat)
 		if err != nil {
-			t.Errorf("[%v] breaks building chart with: [%v]", fs, err)
+			t.Errorf("[%v] error resolving chart type when o.chartType=%v and d.lineFormat=%v: [%v]", f, o.chartType, d.lineFormat, err)
+			t.FailNow()
+		}
+		b, err := chartjs.New(
+			o.chartType.string(),
+			d.fss,
+			d.sss,
+			d.tss,
+			d.minFSS,
+			d.maxFSS,
+			o.title,
+			o.scaleType.string(),
+			o.xLabel,
+			o.yLabel,
+			o.zeroBased,
+			int(o.colorType),
+		).Build()
+		if err != nil {
+			t.Errorf("[%v] breaks building chart with: [%v]", f, err)
 			t.FailNow()
 		}
 
-		cheetsheetExamples[j] = cheatsheetExample{ID: j, Title: f, OptionsLine: optionsLine, Lines: ls, HTML: b.String()}
+		cheetsheetExamples[j] = cheatsheetExample{
+			ID:          j,
+			Title:       f,
+			OptionsLine: optionsLine,
+			Lines:       mustReadLines(f, t),
+			HTML:        b.String(),
+		}
 	}
 
 	cheetsheetExamplesTemplate, err := template.New("").Parse(cheetsheetExamplesTemplateString)
@@ -83,6 +113,33 @@ func TestCheatsheet(t *testing.T) {
 		t.Errorf("Could not write file [%v] [%v]", "index.html", err)
 		t.FailNow()
 	}
+}
+
+func mustReadLines(path string, t *testing.T) []string {
+	file, err := os.Open(path)
+	if err != nil {
+		t.Errorf("[%v] Could not open file", path)
+		t.FailNow()
+	}
+	defer file.Close()
+
+	var (
+		lines []string
+		i     int
+	)
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		i++
+		if i < 3 {
+			continue
+		}
+		lines = append(lines, scanner.Text())
+	}
+	if scanner.Err() != nil {
+		t.Errorf("[%v] Error scanning file", scanner.Err())
+		t.FailNow()
+	}
+	return lines
 }
 
 var cheetsheetExamplesTemplateString = baseTemplateHeaderString + cheetsheetString + baseTemplateFooterString
