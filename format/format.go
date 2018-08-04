@@ -72,7 +72,7 @@ func (l LineFormat) String() string {
 	for _, c := range l.ColTypes {
 		bs = append(bs, c.String()...)
 	}
-	return string(bs)
+	return fmt.Sprintf("{colTypes: [%v], separator: [%v], dateFormat: [%v]}", string(bs), string(l.Separator), l.DateFormat)
 }
 
 func (c ColType) String() string {

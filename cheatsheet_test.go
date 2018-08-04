@@ -41,7 +41,7 @@ func TestCheatsheet(t *testing.T) {
 		rd := bufio.NewReader(fh)
 		optionsLine, err := rd.ReadString('\n')
 		if err == io.EOF {
-			t.Errorf("[%v] doesn't have options line", fs)
+			t.Errorf("[%v] doesn't have options line", f)
 			t.FailNow()
 		}
 
@@ -51,21 +51,25 @@ func TestCheatsheet(t *testing.T) {
 		o, err := resolveOptions(m)
 		log.Println(o.title)
 		if err != nil {
-			t.Errorf("[%v] can't resolve options line [%v]", fs, optionsLine)
+			t.Errorf("[%v] can't resolve options line [%v]", f, optionsLine)
 			t.FailNow()
 		}
 		if _, err = rd.ReadString('\n'); err != nil {
-			t.Errorf("[%v] doesn't have empty line after options line", fs)
+			t.Errorf("[%v] doesn't have empty line after options line", f)
 			t.FailNow()
 		}
 
 		var rdr io.Reader
 		rdr, o.lineFormat = format.Parse(rd, o.separator, o.dateFormat)
 		d := mustNewDataset(rdr, o)
-		o.chartType = resolveChartType(o.chartType, d.lineFormat, d.fss, d.sss)
+		o.chartType, err = resolveChartType(o.chartType, d.lineFormat)
+		if err != nil {
+			t.Errorf("[%v] error resolving chart type when o.chartType=%v and d.lineFormat=%v: [%v]", f, o.chartType, d.lineFormat, err)
+			t.FailNow()
+		}
 		b, err := newChartJSChart(*d, o).build()
 		if err != nil {
-			t.Errorf("[%v] breaks building chart with: [%v]", fs, err)
+			t.Errorf("[%v] breaks building chart with: [%v]", f, err)
 			t.FailNow()
 		}
 

@@ -147,6 +147,9 @@ func (d *dataset) read(r io.Reader, o options) error {
 	}
 	if !d.lineFormat.HasFloats && len(d.sss) > 0 {
 		d.fss, d.sss = preprocessFreq(d.sss)
+		d.lineFormat.ColTypes = append(d.lineFormat.ColTypes, format.Float)
+		d.lineFormat.FloatCount++
+		d.lineFormat.HasFloats = true
 	}
 	if d.Len() == 0 {
 		return fmt.Errorf("empty dataset; nothing to plot here")
