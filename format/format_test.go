@@ -1,4 +1,4 @@
-package main
+package format
 
 import (
 	"reflect"
@@ -139,7 +139,7 @@ c	3
 	}
 
 	for _, ts := range tests {
-		_, result := readAndParseFormat(strings.NewReader(ts.i), ts.sep, ts.df)
+		_, result := Parse(strings.NewReader(ts.i), ts.sep, ts.df)
 		if !reflect.DeepEqual(result, ts.expected) {
 			t.Errorf("'%v' failed: %v was not equal to %v", ts.name, result, ts.expected)
 		}

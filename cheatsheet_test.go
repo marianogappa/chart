@@ -11,6 +11,8 @@ import (
 	"regexp"
 	"testing"
 	"text/template"
+
+	"github.com/marianogappa/chart/format"
 )
 
 type cheatsheetExample struct {
@@ -58,7 +60,7 @@ func TestCheatsheet(t *testing.T) {
 		}
 
 		var rdr io.Reader
-		rdr, o.lineFormat = readAndParseFormat(rd, o.separator, o.dateFormat)
+		rdr, o.lineFormat = format.Parse(rd, o.separator, o.dateFormat)
 		d := mustNewDataset(rdr, o)
 		o.chartType = resolveChartType(o.chartType, d.lf, d.fss, d.sss)
 		b, err := newChartJSChart(*d, o).build()

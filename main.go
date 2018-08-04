@@ -6,6 +6,7 @@ import (
 	"os"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/marianogappa/chart/format"
 	"github.com/skratchdot/open-golang/open"
 )
 
@@ -15,7 +16,7 @@ func main() {
 		rd   io.Reader = os.Stdin
 	)
 	if opts.lineFormat == "" {
-		var newRd, lineFormat = readAndParseFormat(os.Stdin, opts.separator, opts.dateFormat)
+		var newRd, lineFormat = format.Parse(os.Stdin, opts.separator, opts.dateFormat)
 		opts.lineFormat = lineFormat
 		rd = newRd
 	}

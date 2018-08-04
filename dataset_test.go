@@ -5,6 +5,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/marianogappa/chart/format"
 )
 
 func TestDataset(t *testing.T) {
@@ -88,7 +90,7 @@ func TestDataset(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		rd, lf := readAndParseFormat(strings.NewReader(ts.i), ts.o.separator, ts.o.dateFormat)
+		rd, lf := format.Parse(strings.NewReader(ts.i), ts.o.separator, ts.o.dateFormat)
 		ts.o.lineFormat = lf
 		d, err := newDataset(rd, ts.o)
 

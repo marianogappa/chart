@@ -1,4 +1,6 @@
-package main
+// Package format is used for inferring the line format
+// of a dataset with one line per data point.
+package format
 
 import (
 	"bufio"
@@ -10,7 +12,10 @@ import (
 	"time"
 )
 
-func readAndParseFormat(r io.Reader, sep rune, df string) (io.Reader, string) {
+// Parse infers the line format of a dataset with one line per data point.
+// It requires a separator e.g. `\t` and optionally a date format that time.Parse
+// understands. Parse also returns a new io.Reader ready to consume again.
+func Parse(r io.Reader, separator rune, dateFormat string) (io.Reader, string) {
 	var (
 		lfs = make(map[string]int)
 		rd  = bufio.NewReader(r)
@@ -29,7 +34,7 @@ func readAndParseFormat(r io.Reader, sep rune, df string) (io.Reader, string) {
 		}
 		buf.WriteString(l)
 		buf.WriteByte('\n')
-		lfs[parseLineFormat(l, sep, df)]++
+		lfs[parseLineFormat(l, separator, dateFormat)]++
 	}
 	return &buf, maxLineFormat(lfs)
 }
