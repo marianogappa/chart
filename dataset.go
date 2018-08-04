@@ -10,16 +10,17 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/marianogappa/chart/format"
 )
 
 type dataset struct {
-	fss      [][]float64
-	sss      [][]string
-	tss      [][]time.Time
-	minFSS   []float64
-	maxFSS   []float64
-	lf       string
-	stdinLen int
+	fss        [][]float64
+	sss        [][]string
+	tss        [][]time.Time
+	minFSS     []float64
+	maxFSS     []float64
+	lineFormat format.LineFormat
+	stdinLen   int
 }
 
 func mustNewDataset(r io.Reader, o options) *dataset {
@@ -92,11 +93,11 @@ func (d *dataset) read(r io.Reader, o options) error {
 		scanner                = bufio.NewScanner(r)
 		stdinLen               = 0
 	)
-	d.lf = o.lineFormat
+	d.lineFormat = o.lineFormat
 
 	for scanner.Scan() {
 		stdinLen++
-		fs, ss, ts, err := d.parseLine(scanner.Text(), d.lf, o.separator, o.dateFormat)
+		fs, ss, ts, err := d.parseLine(scanner.Text(), d.lineFormat)
 		if err != nil {
 			continue
 		}
@@ -144,7 +145,7 @@ func (d *dataset) read(r io.Reader, o options) error {
 	if nilTSS {
 		d.tss = nil
 	}
-	if strings.Index(d.lf, "f") == -1 && len(d.sss) > 0 {
+	if !d.lineFormat.HasFloats && len(d.sss) > 0 {
 		d.fss, d.sss = preprocessFreq(d.sss)
 	}
 	if d.Len() == 0 {
@@ -154,30 +155,30 @@ func (d *dataset) read(r io.Reader, o options) error {
 	return nil
 }
 
-func (d *dataset) parseLine(l string, lf string, sep rune, df string) ([]float64, []string, []time.Time, error) {
-	l = string(regexp.MustCompile(string(sep)+"{2,}").ReplaceAll([]byte(l), []byte(string(sep))))
-	sp := strings.Split(strings.TrimSpace(l), string(sep))
+func (d *dataset) parseLine(l string, lineFormat format.LineFormat) ([]float64, []string, []time.Time, error) {
+	l = string(regexp.MustCompile(string(lineFormat.Separator)+"{2,}").ReplaceAll([]byte(l), []byte(string(lineFormat.Separator))))
+	sp := strings.Split(strings.TrimSpace(l), string(lineFormat.Separator))
 
 	fs := []float64{}
 	ss := []string{}
 	ds := []time.Time{}
 
-	if len(sp) < len(lf) {
-		return fs, ss, ds, fmt.Errorf("Input line has invalid format length; expected %v vs found %v", len(lf), len(sp))
+	if len(sp) < len(lineFormat.ColTypes) {
+		return fs, ss, ds, fmt.Errorf("Input line has invalid format length; expected %v vs found %v", len(lineFormat.ColTypes), len(sp))
 	}
 
-	for i, lfe := range lf {
+	for i, colType := range lineFormat.ColTypes {
 		s := strings.TrimSpace(sp[i])
-		switch lfe {
-		case 's':
+		switch colType {
+		case format.String:
 			ss = append(ss, s)
-		case 'd':
-			d, err := time.Parse(df, s)
+		case format.DateTime:
+			d, err := time.Parse(lineFormat.DateFormat, s)
 			if err != nil {
 				return fs, ss, ds, fmt.Errorf("Couldn't convert %v to date given: %v", s, err)
 			}
 			ds = append(ds, d)
-		case 'f':
+		case format.Float:
 			f, err := strconv.ParseFloat(s, 64)
 			if err != nil {
 				return fs, ss, ds, fmt.Errorf("Couldn't convert %v to float given: %v", s, err)

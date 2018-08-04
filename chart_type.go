@@ -1,15 +1,17 @@
 package main
 
-import "strings"
+import (
+	"github.com/marianogappa/chart/format"
+)
 
-func resolveChartType(t chartType, lf string, fss [][]float64, sss [][]string) chartType {
+func resolveChartType(t chartType, lineFormat format.LineFormat, fss [][]float64, sss [][]string) chartType {
 	if t == undefinedChartType {
 		switch {
-		case strings.Index(lf, "f") == -1:
+		case !lineFormat.HasFloats:
 			return pie
-		case strings.Count(lf, "f") >= 2 && strings.Count(lf, "s") == 0:
+		case lineFormat.FloatCount >= 2 && !lineFormat.HasStrings:
 			return scatter
-		case strings.Count(lf, "f") > 1:
+		case lineFormat.FloatCount > 1:
 			return line
 		default:
 			return pie

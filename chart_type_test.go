@@ -1,6 +1,10 @@
 package main
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/marianogappa/chart/format"
+)
 
 func TestResolveChartType(t *testing.T) {
 	tests := []struct {
@@ -54,7 +58,8 @@ func TestResolveChartType(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		result := resolveChartType(ts.t, ts.lf, ts.fss, ts.sss)
+		lf, _ := format.NewLineFormat(ts.lf, ' ', "") // ignoring errors as we're not testing the format package here
+		result := resolveChartType(ts.t, lf, ts.fss, ts.sss)
 
 		if result != ts.expectedT {
 			t.Errorf("%v: %v was not equal to %v", ts.name, result, ts.expectedT)

@@ -22,7 +22,7 @@ func showDebug(d dataset, o options, err error) {
 		tcn = len(d.tss[0])
 	}
 	fmt.Printf("Lines read\t%v\n", d.stdinLen)
-	fmt.Printf("Line format inferred\t%v\n", d.lf)
+	fmt.Printf("Line format inferred\t%v\n", d.lineFormat.String())
 	fmt.Printf("Lines used\t%v\n", rn)
 	fmt.Printf("Float column count\t%v\n", fcn)
 	fmt.Printf("String column count\t%v\n", scn)

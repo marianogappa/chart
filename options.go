@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"log"
+
+	"github.com/marianogappa/chart/format"
 )
 
 type chartType int
@@ -28,18 +30,19 @@ const (
 )
 
 type options struct {
-	title      string
-	separator  rune
-	scaleType  scaleType
-	chartType  chartType
-	colorType  colorType
-	xLabel     string
-	yLabel     string
-	dateFormat string
-	lineFormat string
-	zeroBased  bool
-	debug      bool
-	help       bool
+	title         string
+	separator     rune
+	scaleType     scaleType
+	chartType     chartType
+	colorType     colorType
+	xLabel        string
+	yLabel        string
+	dateFormat    string
+	rawLineFormat string
+	lineFormat    format.LineFormat
+	zeroBased     bool
+	debug         bool
+	help          bool
 }
 
 func mustResolveOptions(args []string) options {
@@ -56,7 +59,7 @@ func resolveOptions(args []string) (options, error) {
 		xLabelHelp     = "Sets the label for the x axis."
 		yLabelHelp     = "Sets the label for the y axis."
 		dateFormatHelp = "Sets the date format, according to https://golang.org/src/time/format.go."
-		lineFormatHelp = "Prevents chart from inferring line format. Syntax: `[dfs]+` where d=date, f=float, s=string. e.g. `df`"
+		lineFormatHelp = "Prevents chart from inferring line format. Syntax: `[dfs]*` where d=date, f=float, s=string. e.g. `df`"
 		zeroBasedHelp  = "Makes y-axis begin at zero."
 		debugHelp      = "Use to make sure to double-check the chart is showing what you expect."
 		helpHelp       = "Show help."
@@ -69,10 +72,10 @@ func resolveOptions(args []string) (options, error) {
 	fs.StringVar(&o.title, "t", o.title, titleHelp)
 	fs.StringVar(&o.xLabel, "x", o.xLabel, xLabelHelp)
 	fs.StringVar(&o.yLabel, "y", o.yLabel, yLabelHelp)
-	fs.StringVar(&o.dateFormat, "date-format", o.dateFormat, dateFormatHelp) //TODO document
-	fs.StringVar(&o.lineFormat, "lineFormat", o.lineFormat, lineFormatHelp)  //TODO document
-	fs.BoolVar(&o.zeroBased, "zero-based", o.zeroBased, zeroBasedHelp)       //TODO document
-	fs.BoolVar(&o.debug, "debug", o.debug, debugHelp)                        //TODO document
+	fs.StringVar(&o.dateFormat, "date-format", o.dateFormat, dateFormatHelp)      //TODO document
+	fs.StringVar(&o.rawLineFormat, "lineFormat", o.rawLineFormat, lineFormatHelp) //TODO document
+	fs.BoolVar(&o.zeroBased, "zero-based", o.zeroBased, zeroBasedHelp)            //TODO document
+	fs.BoolVar(&o.debug, "debug", o.debug, debugHelp)                             //TODO document
 	fs.BoolVar(&o.help, "help", o.help, helpHelp)
 	fs.BoolVar(&o.help, "h", o.help, helpHelp)
 
@@ -168,6 +171,11 @@ More info: https://github.com/marianogappa/chart`)
 
 	if o.separator != ' ' && o.separator != ';' && o.separator != ',' {
 		o.separator = '\t'
+	}
+
+	o.lineFormat, err = format.NewLineFormat(o.rawLineFormat, o.separator, o.dateFormat)
+	if err != nil {
+		return o, err
 	}
 
 	return o, nil

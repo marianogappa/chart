@@ -15,13 +15,11 @@ func main() {
 		opts           = mustResolveOptions(os.Args[1:])
 		rd   io.Reader = os.Stdin
 	)
-	if opts.lineFormat == "" {
-		var newRd, lineFormat = format.Parse(os.Stdin, opts.separator, opts.dateFormat)
-		opts.lineFormat = lineFormat
-		rd = newRd
+	if opts.rawLineFormat == "" {
+		rd, opts.lineFormat = format.Parse(rd, opts.separator, opts.dateFormat)
 	}
 	dataset := mustNewDataset(rd, opts)
-	opts.chartType = resolveChartType(opts.chartType, dataset.lf, dataset.fss, dataset.sss)
+	opts.chartType = resolveChartType(opts.chartType, dataset.lineFormat, dataset.fss, dataset.sss)
 	if err := assertChartable(*dataset, opts); opts.debug || err != nil {
 		showDebug(*dataset, opts, err)
 		os.Exit(0)

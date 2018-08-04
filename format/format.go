@@ -5,6 +5,7 @@ package format
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 	"io"
 	"regexp"
 	"strconv"
@@ -15,7 +16,9 @@ import (
 // Parse infers the line format of a dataset with one line per data point.
 // It requires a separator e.g. `\t` and optionally a date format that time.Parse
 // understands. Parse also returns a new io.Reader ready to consume again.
-func Parse(r io.Reader, separator rune, dateFormat string) (io.Reader, string) {
+// Parsing strategy is to infer the line format of every line of input separately
+// and return the most common line format.
+func Parse(r io.Reader, separator rune, dateFormat string) (io.Reader, LineFormat) {
 	var (
 		lfs = make(map[string]int)
 		rd  = bufio.NewReader(r)
@@ -36,7 +39,81 @@ func Parse(r io.Reader, separator rune, dateFormat string) (io.Reader, string) {
 		buf.WriteByte('\n')
 		lfs[parseLineFormat(l, separator, dateFormat)]++
 	}
-	return &buf, maxLineFormat(lfs)
+	mlf, _ := NewLineFormat(maxLineFormat(lfs), separator, dateFormat) // Can't error when produced with parseLineFormat
+	return &buf, mlf
+}
+
+// LineFormat represents the format of a line of input
+type LineFormat struct {
+	ColTypes   []ColType
+	Separator  rune
+	DateFormat string
+
+	HasFloats     bool // calculated by NewLineFormat once
+	HasStrings    bool
+	HasDateTimes  bool
+	FloatCount    int
+	StringCount   int
+	DateTimeCount int
+}
+
+// ColType represents the type of a column in a data point (i.e. in a line of input)
+type ColType int
+
+// A column in a data point can either be a String (e.g. `series1`), a Float (e.g. 1.2) or a DateTime (e.g. 2006-01-02)
+const (
+	String ColType = iota
+	Float
+	DateTime
+)
+
+func (l LineFormat) String() string {
+	var bs = make([]byte, 0)
+	for _, c := range l.ColTypes {
+		bs = append(bs, c.String()...)
+	}
+	return string(bs)
+}
+
+func (c ColType) String() string {
+	switch c {
+	case String:
+		return "s"
+	case Float:
+		return "f"
+	case DateTime:
+		return "d"
+	default:
+		return "?"
+	}
+}
+
+// NewLineFormat creates a LineFormat from a string representing a line format with one rune
+// per column, with syntax `[dfs]*` where d=datetime,f=float,s=string
+func NewLineFormat(lineFormat string, separator rune, dateFormat string) (LineFormat, error) {
+	if ok, err := regexp.Match("[dfs ]*", []byte(lineFormat)); !ok || err != nil {
+		return LineFormat{}, fmt.Errorf("format: supplied lineFormat doesn't match syntax `[dfs ]*`")
+	}
+	var lf = LineFormat{ColTypes: nil, Separator: separator, DateFormat: dateFormat}
+
+	for _, b := range lineFormat {
+		switch b {
+		case 's':
+			lf.ColTypes = append(lf.ColTypes, String)
+			lf.StringCount++
+		case 'f':
+			lf.ColTypes = append(lf.ColTypes, Float)
+			lf.FloatCount++
+		case 'd':
+			lf.ColTypes = append(lf.ColTypes, DateTime)
+			lf.DateTimeCount++
+		default:
+		}
+	}
+	lf.HasStrings = lf.StringCount > 0
+	lf.HasFloats = lf.FloatCount > 0
+	lf.HasDateTimes = lf.DateTimeCount > 0
+	return lf, nil
 }
 
 func maxLineFormat(lfs map[string]int) string {

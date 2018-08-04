@@ -27,7 +27,7 @@ func TestDataset(t *testing.T) {
 			3	4
 			5	2
 			`,
-			o:      options{separator: '\t', chartType: pie, lineFormat: "ff"},
+			o:      options{separator: '\t', chartType: pie, rawLineFormat: "ff"},
 			fss:    [][]float64{{1, 6}, {3, 4}, {5, 2}},
 			sss:    nil,
 			tss:    nil,
@@ -42,7 +42,7 @@ func TestDataset(t *testing.T) {
 			2016-09-06	3
 			2016-09-07	3
 			`,
-			o:   options{separator: '\t', chartType: pie, lineFormat: "df", dateFormat: "2006-01-02"},
+			o:   options{separator: '\t', chartType: pie, rawLineFormat: "df", dateFormat: "2006-01-02"},
 			fss: [][]float64{{4}, {4}, {3}, {3}},
 			sss: nil,
 			tss: [][]time.Time{
@@ -175,7 +175,8 @@ func TestParseLine(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		fs, ss, ds, err := (&dataset{}).parseLine(ts.i, ts.format, ts.sep, ts.df)
+		lf, _ := format.NewLineFormat(ts.format, ts.sep, ts.df) // ignoring errors as we're not testing the format package here
+		fs, ss, ds, err := (&dataset{}).parseLine(ts.i, lf)
 		if err != nil && !ts.fails {
 			t.Errorf("'%v' failed: should not have failed but did! With [%v]", ts.name, err)
 		}
