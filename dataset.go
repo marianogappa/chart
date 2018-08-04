@@ -4,9 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"regexp"
-	"strconv"
-	"strings"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
@@ -97,7 +94,7 @@ func (d *dataset) read(r io.Reader, o options) error {
 
 	for scanner.Scan() {
 		stdinLen++
-		fs, ss, ts, err := d.parseLine(scanner.Text(), d.lineFormat)
+		fs, ss, ts, err := d.lineFormat.ParseLine(scanner.Text())
 		if err != nil {
 			continue
 		}
@@ -156,39 +153,4 @@ func (d *dataset) read(r io.Reader, o options) error {
 	}
 
 	return nil
-}
-
-func (d *dataset) parseLine(l string, lineFormat format.LineFormat) ([]float64, []string, []time.Time, error) {
-	l = string(regexp.MustCompile(string(lineFormat.Separator)+"{2,}").ReplaceAll([]byte(l), []byte(string(lineFormat.Separator))))
-	sp := strings.Split(strings.TrimSpace(l), string(lineFormat.Separator))
-
-	fs := []float64{}
-	ss := []string{}
-	ds := []time.Time{}
-
-	if len(sp) < len(lineFormat.ColTypes) {
-		return fs, ss, ds, fmt.Errorf("Input line has invalid format length; expected %v vs found %v", len(lineFormat.ColTypes), len(sp))
-	}
-
-	for i, colType := range lineFormat.ColTypes {
-		s := strings.TrimSpace(sp[i])
-		switch colType {
-		case format.String:
-			ss = append(ss, s)
-		case format.DateTime:
-			d, err := time.Parse(lineFormat.DateFormat, s)
-			if err != nil {
-				return fs, ss, ds, fmt.Errorf("Couldn't convert %v to date given: %v", s, err)
-			}
-			ds = append(ds, d)
-		case format.Float:
-			f, err := strconv.ParseFloat(s, 64)
-			if err != nil {
-				return fs, ss, ds, fmt.Errorf("Couldn't convert %v to float given: %v", s, err)
-			}
-			fs = append(fs, f)
-		}
-	}
-
-	return fs, ss, ds, nil
 }

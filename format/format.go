@@ -43,6 +43,34 @@ func Parse(r io.Reader, separator rune, dateFormat string) (io.Reader, LineForma
 	return &buf, mlf
 }
 
+func maxLineFormat(lfs map[string]int) string {
+	max := 0
+	lf := ""
+	for k, v := range lfs {
+		if v > max {
+			max = v
+			lf = k
+		}
+	}
+	return lf
+}
+
+func parseLineFormat(s string, sep rune, df string) string {
+	s = string(regexp.MustCompile(string(sep)+"{2,}").ReplaceAll([]byte(s), []byte(string(sep))))
+	ss := strings.Split(strings.TrimSpace(s), string(sep))
+	lf := ""
+	for _, sc := range ss {
+		if _, err := strconv.ParseFloat(sc, 64); err == nil {
+			lf += "f"
+		} else if _, err := time.Parse(df, sc); err == nil && strings.TrimSpace(sc) != "" {
+			lf += "d"
+		} else {
+			lf += "s"
+		}
+	}
+	return lf
+}
+
 // LineFormat represents the format of a line of input
 type LineFormat struct {
 	ColTypes   []ColType
@@ -116,30 +144,38 @@ func NewLineFormat(lineFormat string, separator rune, dateFormat string) (LineFo
 	return lf, nil
 }
 
-func maxLineFormat(lfs map[string]int) string {
-	max := 0
-	lf := ""
-	for k, v := range lfs {
-		if v > max {
-			max = v
-			lf = k
-		}
-	}
-	return lf
-}
+// ParseLine parses one line of input according to the given format
+func (l LineFormat) ParseLine(line string) ([]float64, []string, []time.Time, error) {
+	line = string(regexp.MustCompile(string(l.Separator)+"{2,}").ReplaceAll([]byte(line), []byte(string(l.Separator))))
+	sp := strings.Split(strings.TrimSpace(line), string(l.Separator))
 
-func parseLineFormat(s string, sep rune, df string) string {
-	s = string(regexp.MustCompile(string(sep)+"{2,}").ReplaceAll([]byte(s), []byte(string(sep))))
-	ss := strings.Split(strings.TrimSpace(s), string(sep))
-	lf := ""
-	for _, sc := range ss {
-		if _, err := strconv.ParseFloat(sc, 64); err == nil {
-			lf += "f"
-		} else if _, err := time.Parse(df, sc); err == nil && strings.TrimSpace(sc) != "" {
-			lf += "d"
-		} else {
-			lf += "s"
+	fs := []float64{}
+	ss := []string{}
+	ds := []time.Time{}
+
+	if len(sp) < len(l.ColTypes) {
+		return fs, ss, ds, fmt.Errorf("Input line has invalid format length; expected %v vs found %v", len(l.ColTypes), len(sp))
+	}
+
+	for i, colType := range l.ColTypes {
+		s := strings.TrimSpace(sp[i])
+		switch colType {
+		case String:
+			ss = append(ss, s)
+		case DateTime:
+			d, err := time.Parse(l.DateFormat, s)
+			if err != nil {
+				return fs, ss, ds, fmt.Errorf("Couldn't convert %v to date given: %v", s, err)
+			}
+			ds = append(ds, d)
+		case Float:
+			f, err := strconv.ParseFloat(s, 64)
+			if err != nil {
+				return fs, ss, ds, fmt.Errorf("Couldn't convert %v to float given: %v", s, err)
+			}
+			fs = append(fs, f)
 		}
 	}
-	return lf
+
+	return fs, ss, ds, nil
 }
