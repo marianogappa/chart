@@ -12,6 +12,7 @@ import (
 	"testing"
 	"text/template"
 
+	"github.com/marianogappa/chart/chartjs"
 	"github.com/marianogappa/chart/format"
 )
 
@@ -67,7 +68,20 @@ func TestCheatsheet(t *testing.T) {
 			t.Errorf("[%v] error resolving chart type when o.chartType=%v and d.lineFormat=%v: [%v]", f, o.chartType, d.lineFormat, err)
 			t.FailNow()
 		}
-		b, err := newChartJSChart(*d, o).build()
+		b, err := chartjs.New(
+			o.chartType.string(),
+			d.fss,
+			d.sss,
+			d.tss,
+			d.minFSS,
+			d.maxFSS,
+			o.title,
+			o.scaleType.string(),
+			o.xLabel,
+			o.yLabel,
+			o.zeroBased,
+			int(o.colorType),
+		).Build()
 		if err != nil {
 			t.Errorf("[%v] breaks building chart with: [%v]", f, err)
 			t.FailNow()

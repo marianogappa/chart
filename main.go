@@ -5,6 +5,7 @@ import (
 	"os"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/marianogappa/chart/chartjs"
 	"github.com/marianogappa/chart/format"
 	"github.com/skratchdot/open-golang/open"
 )
@@ -23,7 +24,20 @@ func main() {
 		showDebug(*dataset, opts, err)
 		os.Exit(0)
 	}
-	b := newChartJSChart(*dataset, opts).mustBuild()
+	b := chartjs.New(
+		opts.chartType.string(),
+		dataset.fss,
+		dataset.sss,
+		dataset.tss,
+		dataset.minFSS,
+		dataset.maxFSS,
+		opts.title,
+		opts.scaleType.string(),
+		opts.xLabel,
+		opts.yLabel,
+		opts.zeroBased,
+		int(opts.colorType),
+	).MustBuild()
 	tmpfile := mustNewTempFile()
 	chartTempl := newChartTemplate(opts.chartType)
 	chartTempl.mustExecute(b, tmpfile)
