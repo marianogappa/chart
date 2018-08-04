@@ -329,9 +329,6 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 		sort.Slice(dss, func(i, j int) bool { // https://github.com/marianogappa/chart/issues/33
 			return dss[i].Label < dss[j].Label
 		})
-		for i, d := range dss {
-			fmt.Printf("i=%v;label=%v\n", i, d.Label)
-		}
 		return cjsData{
 			ChartType:       "line",
 			ActualChartType: "scatterline",
