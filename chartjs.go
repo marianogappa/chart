@@ -320,17 +320,18 @@ func (c cjsChart) labelsAndDatasets() cjsData {
 
 		var (
 			dss = make([]cjsDataset, len(mdss))
-			ds  = make([]string, len(mdss))
 			i   = 0
 		)
-		for k, v := range mdss {
+		for _, v := range mdss {
 			dss[i] = v
-			ds[i] = k
 			i++
 		}
 		sort.Slice(dss, func(i, j int) bool { // https://github.com/marianogappa/chart/issues/33
-			return ds[i] < ds[j]
+			return dss[i].Label < dss[j].Label
 		})
+		for i, d := range dss {
+			fmt.Printf("i=%v;label=%v\n", i, d.Label)
+		}
 		return cjsData{
 			ChartType:       "line",
 			ActualChartType: "scatterline",
