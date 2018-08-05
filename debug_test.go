@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 	"time"
 )
@@ -239,6 +240,22 @@ Scale type	linear
 			expected: `Lines read	0
 Line format inferred	
 Lines used	1
+Float column count	0
+String column count	0
+Date/Time column count	0
+Chart type	???
+Scale type	linear
+`,
+		},
+		{
+			name: "reports errors",
+			d:    dataset{},
+			o:    options{scaleType: linear},
+			err:  fmt.Errorf("sample error"),
+			expected: `Error trying to chart: sample error
+Lines read	0
+Line format inferred	
+Lines used	0
 Float column count	0
 String column count	0
 Date/Time column count	0

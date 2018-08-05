@@ -51,8 +51,6 @@ func renderDebug(d dataset, o options, err error) string {
 		buffer.WriteString(fmt.Sprintf("Chart type\tline\n"))
 	case scatter:
 		buffer.WriteString(fmt.Sprintf("Chart type\tscatter\n"))
-	default:
-		fallthrough
 	case undefinedChartType:
 		buffer.WriteString(fmt.Sprintf("Chart type\t???\n"))
 	}
