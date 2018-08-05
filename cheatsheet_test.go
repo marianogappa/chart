@@ -69,14 +69,14 @@ func TestCheatsheet(t *testing.T) {
 			t.FailNow()
 		}
 		b, err := chartjs.New(
-			o.chartType.string(),
+			o.chartType.String(),
 			d.fss,
 			d.sss,
 			d.tss,
 			d.minFSS,
 			d.maxFSS,
 			o.title,
-			o.scaleType.string(),
+			o.scaleType.String(),
 			o.xLabel,
 			o.yLabel,
 			o.zeroBased,

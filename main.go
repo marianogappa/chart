@@ -25,14 +25,14 @@ func main() {
 		os.Exit(0)
 	}
 	b := chartjs.New(
-		opts.chartType.string(),
+		opts.chartType.String(),
 		dataset.fss,
 		dataset.sss,
 		dataset.tss,
 		dataset.minFSS,
 		dataset.maxFSS,
 		opts.title,
-		opts.scaleType.string(),
+		opts.scaleType.String(),
 		opts.xLabel,
 		opts.yLabel,
 		opts.zeroBased,

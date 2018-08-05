@@ -181,7 +181,7 @@ More info: https://github.com/marianogappa/chart`)
 	return o, nil
 }
 
-func (c chartType) string() string {
+func (c chartType) String() string {
 	switch c {
 	case bar:
 		return "bar"
@@ -194,7 +194,7 @@ func (c chartType) string() string {
 	}
 }
 
-func (c scaleType) string() string {
+func (c scaleType) String() string {
 	if c == logarithmic {
 		return "logarithmic"
 	}
