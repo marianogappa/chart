@@ -20,6 +20,13 @@ type dataset struct {
 	stdinLen   int
 }
 
+func (d dataset) Len() int {
+	if d.fss == nil {
+		return len(d.tss)
+	}
+	return len(d.fss)
+}
+
 func mustNewDataset(r io.Reader, o options) *dataset {
 	d, err := newDataset(r, o)
 	if err != nil {
@@ -37,51 +44,6 @@ func newDataset(r io.Reader, o options) (*dataset, error) {
 		maxFSS: make([]float64, 0, 500),
 	}
 	return d, d.read(r, o)
-}
-
-func (d *dataset) Len() int {
-	if d.fss == nil {
-		return len(d.tss)
-	}
-	return len(d.fss)
-}
-
-func (d *dataset) Less(i, j int) bool {
-	if d.tss == nil {
-		return d.fss[i][0] < d.fss[j][0]
-	}
-	return d.tss[i][0].Before(d.tss[j][0])
-}
-
-func (d *dataset) Swap(i, j int) {
-	if d.fss != nil {
-		d.fss[i], d.fss[j] = d.fss[j], d.fss[i]
-	}
-	if d.tss != nil {
-		d.tss[i], d.tss[j] = d.tss[j], d.tss[i]
-	}
-	if d.sss != nil {
-		d.sss[i], d.sss[j] = d.sss[j], d.sss[i]
-	}
-}
-
-func (d *dataset) hasFloats() bool  { return len(d.fss) > 0 }
-func (d *dataset) hasStrings() bool { return len(d.sss) > 0 }
-func (d *dataset) hasTimes() bool   { return len(d.tss) > 0 }
-func (d *dataset) timeFieldLen() int {
-	if !d.hasTimes() {
-		return 0
-	}
-	return len(d.tss[0])
-}
-func (d *dataset) floatFieldLen() int {
-	if !d.hasFloats() {
-		return 0
-	}
-	return len(d.fss[0])
-}
-func (d *dataset) canBeScatterLine() bool {
-	return d.floatFieldLen()+d.timeFieldLen() >= 2
 }
 
 func (d *dataset) read(r io.Reader, o options) error {

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"os"
 
@@ -21,7 +22,7 @@ func main() {
 	}
 	dataset := mustNewDataset(rd, opts)
 	if opts.chartType, err = resolveChartType(opts.chartType, dataset.lineFormat); opts.debug || err != nil {
-		showDebug(*dataset, opts, err)
+		fmt.Println(renderDebug(*dataset, opts, err))
 		os.Exit(0)
 	}
 	b := chartjs.New(
