@@ -64,8 +64,7 @@ func TestDataset(t *testing.T) {
 			i: `a
 		b
 		c
-		a
-		`,
+		a`,
 			rawLineFormat: "s",
 			sep:           '\t',
 			dateFormat:    "",
@@ -98,25 +97,25 @@ func TestDataset(t *testing.T) {
 
 	for _, ts := range tests {
 		lf, _ := format.NewLineFormat(ts.rawLineFormat, ts.sep, ts.dateFormat)
-		d, err := newDataset(bytes.NewReader([]byte(ts.i)), lf)
+		d, err := New(bytes.NewReader([]byte(ts.i)), lf)
 
 		if err != nil {
 			t.Errorf("'%v' failed: error reading dataset %v", ts.name, err)
 		}
-		if !reflect.DeepEqual(d.fss, ts.fss) {
-			t.Errorf("'%v' failed: (floats) %v was not equal to %v", ts.name, d.fss, ts.fss)
+		if !reflect.DeepEqual(d.FSS, ts.fss) {
+			t.Errorf("'%v' failed: (floats) %v was not equal to %v", ts.name, d.FSS, ts.fss)
 		}
-		if !reflect.DeepEqual(d.sss, ts.sss) {
-			t.Errorf("'%v' failed: (strings) %v was not equal to %v", ts.name, d.sss, ts.sss)
+		if !reflect.DeepEqual(d.SSS, ts.sss) {
+			t.Errorf("'%v' failed: (strings) %v was not equal to %v", ts.name, d.SSS, ts.sss)
 		}
-		if !reflect.DeepEqual(d.tss, ts.tss) {
-			t.Errorf("'%v' failed: (times) %v was not equal to %v", ts.name, d.tss, ts.tss)
+		if !reflect.DeepEqual(d.TSS, ts.tss) {
+			t.Errorf("'%v' failed: (times) %v was not equal to %v", ts.name, d.TSS, ts.tss)
 		}
-		if !reflect.DeepEqual(d.minFSS, ts.minFSS) {
-			t.Errorf("'%v' failed: (min floats) %v was not equal to %v", ts.name, d.minFSS, ts.minFSS)
+		if !reflect.DeepEqual(d.MinFSS, ts.minFSS) {
+			t.Errorf("'%v' failed: (min floats) %v was not equal to %v", ts.name, d.MinFSS, ts.minFSS)
 		}
-		if !reflect.DeepEqual(d.maxFSS, ts.maxFSS) {
-			t.Errorf("'%v' failed: (max floats) %v was not equal to %v", ts.name, d.maxFSS, ts.maxFSS)
+		if !reflect.DeepEqual(d.MaxFSS, ts.maxFSS) {
+			t.Errorf("'%v' failed: (max floats) %v was not equal to %v", ts.name, d.MaxFSS, ts.maxFSS)
 		}
 	}
 }

@@ -10,7 +10,7 @@ build build-linux build-darwin:
 	GOOS=${GOOS} GOARCH=${GOARCH} CGO_ENABLED=0 go build -o ${ARTIFACT} -a .
 
 test:
-	go test
+	go test ./...
 
 run: build
 	./${ARTIFACT}

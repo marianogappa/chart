@@ -5,8 +5,6 @@ import (
 	"strings"
 	"testing"
 	"time"
-
-	"github.com/marianogappa/chart/format"
 )
 
 func TestParseLineFormat(t *testing.T) {
@@ -113,13 +111,13 @@ func TestParseFormat(t *testing.T) {
 		i        string
 		sep      rune
 		df       string
-		expected string
+		expected LineFormat
 	}{
 		{
 			name:     "empty case",
 			i:        ``,
 			sep:      '\t',
-			expected: "",
+			expected: LineFormat{nil, '\t', "", false, false, false, 0, 0, 0},
 		},
 		{
 			name: "string, float",
@@ -128,7 +126,7 @@ b	2
 c	3
 `,
 			sep:      '\t',
-			expected: "sf",
+			expected: LineFormat{[]ColType{String, Float}, '\t', "", true, true, false, 1, 1, 0},
 		},
 		{
 			name: "string, float with one outlier (minority)",
@@ -137,7 +135,7 @@ onlystring
 c	3
 `,
 			sep:      '\t',
-			expected: "sf",
+			expected: LineFormat{[]ColType{String, Float}, '\t', "", true, true, false, 1, 1, 0},
 		},
 	}
 
@@ -204,7 +202,7 @@ func TestParseLine(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		lf, _ := format.NewLineFormat(ts.format, ts.sep, ts.df) // ignoring errors as we're not testing the format
+		lf, _ := NewLineFormat(ts.format, ts.sep, ts.df) // ignoring errors as we're not testing the format
 		fs, ss, ds, err := lf.ParseLine(ts.i)
 		if err != nil && !ts.fails {
 			t.Errorf("'%v' failed: should not have failed but did! With [%v]", ts.name, err)
