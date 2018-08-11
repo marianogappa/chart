@@ -60,11 +60,8 @@ func TestDataset(t *testing.T) {
 		c
 		a
 		`,
-			o: options{separator: '\t', scaleType: linear, chartType: pie},
-			fss: [][]float64{
-				{2}, {1}, {1},
-			},
-			sss:    [][]string{{"a"}, {"b"}, {"c"}},
+			o:      options{separator: '\t', scaleType: linear, chartType: pie},
+			sss:    [][]string{{"a"}, {"b"}, {"c"}, {"a"}},
 			tss:    nil,
 			minFSS: nil,
 			maxFSS: nil,
@@ -91,8 +88,7 @@ func TestDataset(t *testing.T) {
 
 	for _, ts := range tests {
 		rd, lf := format.Parse(strings.NewReader(ts.i), ts.o.separator, ts.o.dateFormat)
-		ts.o.lineFormat = lf
-		d, err := newDataset(rd, ts.o)
+		d, err := newDataset(rd, lf)
 
 		if err != nil {
 			t.Errorf("'%v' failed: error reading dataset %v", ts.name, err)

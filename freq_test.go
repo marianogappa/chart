@@ -1,6 +1,10 @@
 package main
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/marianogappa/chart/format"
+)
 
 func TestFreq(t *testing.T) {
 	tests := []struct {
@@ -119,7 +123,7 @@ func TestFreq(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		fss, sss := preprocessFreq(ts.isss)
+		fss, sss, _ := preprocessFreq(ts.isss, format.LineFormat{})
 
 		if !equalMap(fss, ts.expectedFSS, sss, ts.expectedSSS) {
 			t.Errorf("[%v] case failed: %v, %v were not equal to %v, %v", ts.name, fss, sss, ts.expectedFSS, ts.expectedSSS)

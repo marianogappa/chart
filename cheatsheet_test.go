@@ -62,10 +62,13 @@ func TestCheatsheet(t *testing.T) {
 
 		var rdr io.Reader
 		rdr, o.lineFormat = format.Parse(rd, o.separator, o.dateFormat)
-		d := mustNewDataset(rdr, o)
-		o.chartType, err = resolveChartType(o.chartType, d.lineFormat)
+		d := mustNewDataset(rdr, o.lineFormat)
+		if !o.lineFormat.HasFloats && !o.lineFormat.HasDateTimes && o.lineFormat.HasStrings {
+			d.fss, d.sss, o.lineFormat = preprocessFreq(d.sss, o.lineFormat)
+		}
+		o.chartType, err = resolveChartType(o.chartType, o.lineFormat, d.Len())
 		if err != nil {
-			t.Errorf("[%v] error resolving chart type when o.chartType=%v and d.lineFormat=%v: [%v]", f, o.chartType, d.lineFormat, err)
+			t.Errorf("[%v] error resolving chart type when o.chartType=%v and d.lineFormat=%v: [%v]", f, o.chartType, o.lineFormat, err)
 			t.FailNow()
 		}
 		b, err := chartjs.New(

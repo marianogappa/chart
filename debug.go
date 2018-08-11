@@ -24,7 +24,7 @@ func renderDebug(d dataset, o options, err error) string {
 		tcn = len(d.tss[0])
 	}
 	buffer.WriteString(fmt.Sprintf("Lines read\t%v\n", d.stdinLen))
-	buffer.WriteString(fmt.Sprintf("Line format inferred\t%v\n", d.lineFormat.String()))
+	buffer.WriteString(fmt.Sprintf("Line format inferred\t%v\n", o.lineFormat.String()))
 	buffer.WriteString(fmt.Sprintf("Lines used\t%v\n", rn))
 	buffer.WriteString(fmt.Sprintf("Float column count\t%v\n", fcn))
 	buffer.WriteString(fmt.Sprintf("String column count\t%v\n", scn))

@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"time"
 
@@ -11,13 +10,12 @@ import (
 )
 
 type dataset struct {
-	fss        [][]float64
-	sss        [][]string
-	tss        [][]time.Time
-	minFSS     []float64
-	maxFSS     []float64
-	lineFormat format.LineFormat
-	stdinLen   int
+	fss      [][]float64
+	sss      [][]string
+	tss      [][]time.Time
+	minFSS   []float64
+	maxFSS   []float64
+	stdinLen int
 }
 
 func (d dataset) Len() int {
@@ -27,15 +25,15 @@ func (d dataset) Len() int {
 	return len(d.fss)
 }
 
-func mustNewDataset(r io.Reader, o options) *dataset {
-	d, err := newDataset(r, o)
+func mustNewDataset(r io.Reader, f format.LineFormat) *dataset {
+	d, err := newDataset(r, f)
 	if err != nil {
 		log.WithError(err).Fatal("Could not build dataset.")
 	}
 	return d
 }
 
-func newDataset(r io.Reader, o options) (*dataset, error) {
+func newDataset(r io.Reader, f format.LineFormat) (*dataset, error) {
 	d := &dataset{
 		fss:    make([][]float64, 0, 500),
 		sss:    make([][]string, 0, 500),
@@ -43,20 +41,18 @@ func newDataset(r io.Reader, o options) (*dataset, error) {
 		minFSS: make([]float64, 0, 500),
 		maxFSS: make([]float64, 0, 500),
 	}
-	return d, d.read(r, o)
+	return d, d.read(r, f)
 }
 
-func (d *dataset) read(r io.Reader, o options) error {
+func (d *dataset) read(r io.Reader, f format.LineFormat) error {
 	var (
 		nilSSS, nilFSS, nilTSS = true, true, true
 		scanner                = bufio.NewScanner(r)
 		stdinLen               = 0
 	)
-	d.lineFormat = o.lineFormat
-
 	for scanner.Scan() {
 		stdinLen++
-		fs, ss, ts, err := d.lineFormat.ParseLine(scanner.Text())
+		fs, ss, ts, err := f.ParseLine(scanner.Text())
 		if err != nil {
 			continue
 		}
@@ -103,15 +99,6 @@ func (d *dataset) read(r io.Reader, o options) error {
 	}
 	if nilTSS {
 		d.tss = nil
-	}
-	if !d.lineFormat.HasFloats && len(d.sss) > 0 {
-		d.fss, d.sss = preprocessFreq(d.sss)
-		d.lineFormat.ColTypes = append(d.lineFormat.ColTypes, format.Float)
-		d.lineFormat.FloatCount++
-		d.lineFormat.HasFloats = true
-	}
-	if d.Len() == 0 {
-		return fmt.Errorf("empty dataset; nothing to plot here")
 	}
 
 	return nil

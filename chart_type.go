@@ -6,9 +6,9 @@ import (
 	"github.com/marianogappa/chart/format"
 )
 
-func resolveChartType(ct chartType, lf format.LineFormat) (chartType, error) {
+func resolveChartType(ct chartType, lf format.LineFormat, datasetLength int) (chartType, error) {
 	ct = _resolveChartType(ct, lf)
-	return ct, assertChartable(ct, lf)
+	return ct, assertChartable(ct, lf, datasetLength)
 }
 
 func _resolveChartType(ct chartType, f format.LineFormat) chartType {
@@ -27,7 +27,10 @@ func _resolveChartType(ct chartType, f format.LineFormat) chartType {
 	}
 }
 
-func assertChartable(ct chartType, f format.LineFormat) error {
+func assertChartable(ct chartType, f format.LineFormat, datasetLength int) error {
+	if datasetLength == 0 {
+		return fmt.Errorf("empty dataset; nothing to plot here")
+	}
 	var errIncompatibleFormat = fmt.Errorf("I don't know how to plot a dataset with this line format")
 	switch ct {
 	case pie, bar:

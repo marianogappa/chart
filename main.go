@@ -20,8 +20,11 @@ func main() {
 	if opts.rawLineFormat == "" {
 		rd, opts.lineFormat = format.Parse(rd, opts.separator, opts.dateFormat)
 	}
-	dataset := mustNewDataset(rd, opts)
-	if opts.chartType, err = resolveChartType(opts.chartType, dataset.lineFormat); opts.debug || err != nil {
+	dataset := mustNewDataset(rd, opts.lineFormat)
+	if !opts.lineFormat.HasFloats && !opts.lineFormat.HasDateTimes && opts.lineFormat.HasStrings {
+		dataset.fss, dataset.sss, opts.lineFormat = preprocessFreq(dataset.sss, opts.lineFormat)
+	}
+	if opts.chartType, err = resolveChartType(opts.chartType, opts.lineFormat, dataset.Len()); opts.debug || err != nil {
 		fmt.Println(renderDebug(*dataset, opts, err))
 		os.Exit(0)
 	}

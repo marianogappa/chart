@@ -47,7 +47,7 @@ func TestResolveChartType(t *testing.T) {
 
 	for _, ts := range tests {
 		lf, _ := format.NewLineFormat(ts.lf, ' ', "") // ignoring errors as we're not testing the format package here
-		result, err := resolveChartType(ts.t, lf)
+		result, err := resolveChartType(ts.t, lf, 123)
 		if err != nil { // TODO test cases where there's an error
 			t.Errorf("%v: there was an error resolving the chart type", ts.name)
 		}
