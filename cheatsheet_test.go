@@ -13,6 +13,7 @@ import (
 	"text/template"
 
 	"github.com/marianogappa/chart/chartjs"
+	"github.com/marianogappa/chart/dataset"
 	"github.com/marianogappa/chart/format"
 )
 
@@ -62,9 +63,9 @@ func TestCheatsheet(t *testing.T) {
 
 		var rdr io.Reader
 		rdr, o.lineFormat = format.Parse(rd, o.separator, o.dateFormat)
-		d := mustNewDataset(rdr, o.lineFormat)
+		d := dataset.MustNew(rdr, o.lineFormat)
 		if !o.lineFormat.HasFloats && !o.lineFormat.HasDateTimes && o.lineFormat.HasStrings {
-			d.fss, d.sss, o.lineFormat = preprocessFreq(d.sss, o.lineFormat)
+			d.FSS, d.SSS, o.lineFormat = preprocessFreq(d.SSS, o.lineFormat)
 		}
 		o.chartType, err = resolveChartType(o.chartType, o.lineFormat, d.Len())
 		if err != nil {
@@ -73,11 +74,11 @@ func TestCheatsheet(t *testing.T) {
 		}
 		b, err := chartjs.New(
 			o.chartType.String(),
-			d.fss,
-			d.sss,
-			d.tss,
-			d.minFSS,
-			d.maxFSS,
+			d.FSS,
+			d.SSS,
+			d.TSS,
+			d.MinFSS,
+			d.MaxFSS,
 			o.title,
 			o.scaleType.String(),
 			o.xLabel,

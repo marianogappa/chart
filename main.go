@@ -7,6 +7,7 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/marianogappa/chart/chartjs"
+	"github.com/marianogappa/chart/dataset"
 	"github.com/marianogappa/chart/format"
 	"github.com/skratchdot/open-golang/open"
 )
@@ -20,9 +21,9 @@ func main() {
 	if opts.rawLineFormat == "" {
 		rd, opts.lineFormat = format.Parse(rd, opts.separator, opts.dateFormat)
 	}
-	dataset := mustNewDataset(rd, opts.lineFormat)
+	dataset := dataset.MustNew(rd, opts.lineFormat)
 	if !opts.lineFormat.HasFloats && !opts.lineFormat.HasDateTimes && opts.lineFormat.HasStrings {
-		dataset.fss, dataset.sss, opts.lineFormat = preprocessFreq(dataset.sss, opts.lineFormat)
+		dataset.FSS, dataset.SSS, opts.lineFormat = preprocessFreq(dataset.SSS, opts.lineFormat)
 	}
 	if opts.chartType, err = resolveChartType(opts.chartType, opts.lineFormat, dataset.Len()); opts.debug || err != nil {
 		fmt.Println(renderDebug(*dataset, opts, err))
@@ -30,11 +31,11 @@ func main() {
 	}
 	b := chartjs.New(
 		opts.chartType.String(),
-		dataset.fss,
-		dataset.sss,
-		dataset.tss,
-		dataset.minFSS,
-		dataset.maxFSS,
+		dataset.FSS,
+		dataset.SSS,
+		dataset.TSS,
+		dataset.MinFSS,
+		dataset.MaxFSS,
 		opts.title,
 		opts.scaleType.String(),
 		opts.xLabel,

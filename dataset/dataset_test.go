@@ -1,8 +1,8 @@
-package main
+package dataset
 
 import (
+	"bytes"
 	"reflect"
-	"strings"
 	"testing"
 	"time"
 
@@ -11,14 +11,16 @@ import (
 
 func TestDataset(t *testing.T) {
 	tests := []struct {
-		name   string
-		i      string
-		o      options
-		fss    [][]float64
-		sss    [][]string
-		tss    [][]time.Time
-		minFSS []float64
-		maxFSS []float64
+		name          string
+		i             string
+		rawLineFormat string
+		sep           rune
+		dateFormat    string
+		fss           [][]float64
+		sss           [][]string
+		tss           [][]time.Time
+		minFSS        []float64
+		maxFSS        []float64
 	}{
 		{
 			name: "format: ff; line count: 3; separator: tab",
@@ -27,12 +29,14 @@ func TestDataset(t *testing.T) {
 			3	4
 			5	2
 			`,
-			o:      options{separator: '\t', chartType: pie, rawLineFormat: "ff"},
-			fss:    [][]float64{{1, 6}, {3, 4}, {5, 2}},
-			sss:    nil,
-			tss:    nil,
-			minFSS: []float64{1, 2},
-			maxFSS: []float64{5, 6},
+			rawLineFormat: "ff",
+			sep:           '\t',
+			dateFormat:    "",
+			fss:           [][]float64{{1, 6}, {3, 4}, {5, 2}},
+			sss:           nil,
+			tss:           nil,
+			minFSS:        []float64{1, 2},
+			maxFSS:        []float64{5, 6},
 		},
 		{
 			name: "format: df; line count: 3; separator: tab",
@@ -42,9 +46,11 @@ func TestDataset(t *testing.T) {
 			2016-09-06	3
 			2016-09-07	3
 			`,
-			o:   options{separator: '\t', chartType: pie, rawLineFormat: "df", dateFormat: "2006-01-02"},
-			fss: [][]float64{{4}, {4}, {3}, {3}},
-			sss: nil,
+			rawLineFormat: "df",
+			sep:           '\t',
+			dateFormat:    "2006-01-02",
+			fss:           [][]float64{{4}, {4}, {3}, {3}},
+			sss:           nil,
 			tss: [][]time.Time{
 				{tp("2006-01-02", "2016-08-29")},
 				{tp("2006-01-02", "2016-09-08")},
@@ -60,11 +66,13 @@ func TestDataset(t *testing.T) {
 		c
 		a
 		`,
-			o:      options{separator: '\t', scaleType: linear, chartType: pie},
-			sss:    [][]string{{"a"}, {"b"}, {"c"}, {"a"}},
-			tss:    nil,
-			minFSS: nil,
-			maxFSS: nil,
+			rawLineFormat: "s",
+			sep:           '\t',
+			dateFormat:    "",
+			sss:           [][]string{{"a"}, {"b"}, {"c"}, {"a"}},
+			tss:           nil,
+			minFSS:        nil,
+			maxFSS:        nil,
 		},
 		{
 			name: "dates and floats with many spaces in between",
@@ -73,7 +81,9 @@ func TestDataset(t *testing.T) {
 		2016-09-07	0.0000
 		2016-09-08	0.0000
 		`,
-			o: options{separator: '\t', scaleType: linear, chartType: pie, dateFormat: "2006-01-02"},
+			rawLineFormat: "df",
+			sep:           '\t',
+			dateFormat:    "2006-01-02",
 			fss: [][]float64{
 				{0.0125}, {0.0272}, {0}, {0},
 			},
@@ -87,8 +97,8 @@ func TestDataset(t *testing.T) {
 	}
 
 	for _, ts := range tests {
-		rd, lf := format.Parse(strings.NewReader(ts.i), ts.o.separator, ts.o.dateFormat)
-		d, err := newDataset(rd, lf)
+		lf, _ := format.NewLineFormat(ts.rawLineFormat, ts.sep, ts.dateFormat)
+		d, err := newDataset(bytes.NewReader([]byte(ts.i)), lf)
 
 		if err != nil {
 			t.Errorf("'%v' failed: error reading dataset %v", ts.name, err)
