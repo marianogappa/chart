@@ -6,7 +6,8 @@ import (
 	"log"
 	"sort"
 	"strings"
-	"time"
+
+	chartDataset "github.com/marianogappa/chart/dataset"
 )
 
 // ChartJS allows building an HTML/Javascript Chart.js chart from a given dataset
@@ -14,39 +15,40 @@ type ChartJS struct {
 	data dataset
 }
 
-// New constructs a new ChartJS instance
-func New(
-	chartType string,
-	fss [][]float64,
-	sss [][]string,
-	tss [][]time.Time,
-	title string,
-	scaleType string,
-	xLabel string,
-	yLabel string,
-	zeroBased bool,
-	colorType int) ChartJS {
+// Options is a container for ChartJS configurations; basically anything that is not
+// the datapoints themselves or the chart type. All are optional.
+type Options struct {
+	Title     string    // Chart title
+	ScaleType ScaleType // One of {Linear|Logarithmic}
+	XLabel    string    // X-Axis Label
+	YLabel    string    // Y-Axis Label
+	ZeroBased bool      // Should the chart's Y-Axis start at zero
+	ColorType ColorType // One of {DefaultColor|LegacyColor|Gradient}
+}
 
-	if chartType == "bar" {
-		zeroBased = true // https://github.com/marianogappa/chart/issues/11
+// New constructs a new ChartJS instance
+func New(chartType ChartType, ds chartDataset.Dataset, opts Options) ChartJS {
+
+	if chartType == Bar {
+		opts.ZeroBased = true // https://github.com/marianogappa/chart/issues/11
 	}
 
 	var d = dataset{
-		ChartType: chartType,
-		FSS:       fss,
-		SSS:       sss,
-		TSS:       tss,
-		Title:     title,
-		ScaleType: scaleType,
-		XLabel:    xLabel,
-		YLabel:    yLabel,
-		ZeroBased: zeroBased,
-		ColorType: colorType,
+		ChartType: chartType.String(),
+		FSS:       ds.FSS,
+		SSS:       ds.SSS,
+		TSS:       ds.TSS,
+		Title:     opts.Title,
+		ScaleType: opts.ScaleType.String(),
+		XLabel:    opts.XLabel,
+		YLabel:    opts.YLabel,
+		ZeroBased: opts.ZeroBased,
+		ColorType: int(opts.ColorType),
 	}
 
-	d.MinFSS, d.MaxFSS = calculateMinMaxFSS(fss)
+	d.MinFSS, d.MaxFSS = calculateMinMaxFSS(ds.FSS)
 
-	if chartType == "line" && d.canBeScatterLine() {
+	if chartType == Line && d.canBeScatterLine() {
 		sort.Sort(&d)
 	}
 
@@ -67,7 +69,7 @@ func (c ChartJS) MustBuild() bytes.Buffer {
 // with executing the template.
 func (c ChartJS) Build() (bytes.Buffer, error) {
 	var b bytes.Buffer
-	if err := cjsTemplate.Execute(&b, c.getData()); err != nil {
+	if err := cjsTemplate.Execute(&b, c.prepareTemplateData()); err != nil {
 		return b, fmt.Errorf("could't prepare ChartJS js code for chart: [%v]", err)
 	}
 	return b, nil
@@ -102,8 +104,8 @@ type cjsDataPoint struct {
 	UsesR   bool
 }
 
-func (c ChartJS) getData() cjsData {
-	d := c.labelsAndDatasets()
+func (c ChartJS) prepareTemplateData() cjsData {
+	d := c.prepareLabelsAndDatasets()
 	d.Title = c.data.Title
 	d.ScaleType = c.data.ScaleType
 	d.ColorType = c.data.ColorType
@@ -115,7 +117,7 @@ func (c ChartJS) getData() cjsData {
 	return d
 }
 
-func (c ChartJS) labelsAndDatasets() cjsData {
+func (c ChartJS) prepareLabelsAndDatasets() cjsData {
 	var usesTimeScale bool
 	if c.data.ChartType == "line" && (!c.data.hasStrings() || c.data.hasTimes()) {
 		c.data.ChartType = "scatterline"
@@ -452,4 +454,88 @@ func preprocessLabel(s string) string {
 	s = strings.Replace(s, `${`, `\${`, -1)
 	s = strings.Replace(s, "`", "\\`", -1)
 	return "`" + s + "`"
+}
+
+// ChartType represents one of {Pie|Bar|Line|Scatter}
+type ChartType int
+
+// ScaleType represents one of {LinearScale|LogarithmicScale}
+type ScaleType int
+
+// ColorType represents one of {DefaultColor|LegacyColor|Gradient}
+type ColorType int
+
+// ChartType represents one of {Pie|Bar|Line|Scatter}
+const (
+	Pie ChartType = iota
+	Bar
+	Line
+	Scatter
+)
+
+// ScaleType represents one of {LinearScale|LogarithmicScale}
+const (
+	LinearScale ScaleType = iota
+	LogarithmicScale
+)
+
+// ColorType represents one of {DefaultColor|LegacyColor|Gradient}
+const (
+	DefaultColor ColorType = iota
+	LegacyColor
+	Gradient
+)
+
+func (c ChartType) String() string {
+	switch c {
+	case Bar:
+		return "bar"
+	case Line:
+		return "line"
+	case Scatter:
+		return "scatter"
+	default:
+		return "pie"
+	}
+}
+
+func (c ScaleType) String() string {
+	if c == LogarithmicScale {
+		return "logarithmic"
+	}
+	return "linear"
+}
+
+// NewChartType returns a ChartType from a string. Defaults to Pie.
+func NewChartType(s string) ChartType {
+	switch s {
+	case "bar":
+		return Bar
+	case "line":
+		return Line
+	case "scatter":
+		return Scatter
+	default:
+		return Pie
+	}
+}
+
+// NewScaleType returns a ScaleType from a string. Defaults to LinearScale.
+func NewScaleType(s string) ScaleType {
+	if s == "logarithmic" {
+		return LogarithmicScale
+	}
+	return LinearScale
+}
+
+// NewColorType returns a ColorType from a string. Defaults to DefaultColor.
+func NewColorType(s string) ColorType {
+	switch s {
+	case "legacy":
+		return LegacyColor
+	case "gradient":
+		return Gradient
+	default:
+		return DefaultColor
+	}
 }

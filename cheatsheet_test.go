@@ -73,16 +73,16 @@ func TestCheatsheet(t *testing.T) {
 			t.FailNow()
 		}
 		b, err := chartjs.New(
-			o.chartType.String(),
-			d.FSS,
-			d.SSS,
-			d.TSS,
-			o.title,
-			o.scaleType.String(),
-			o.xLabel,
-			o.yLabel,
-			o.zeroBased,
-			int(o.colorType),
+			chartjs.NewChartType(o.chartType.String()),
+			*d,
+			chartjs.Options{
+				Title:     o.title,
+				ScaleType: chartjs.NewScaleType(o.scaleType.String()),
+				XLabel:    o.xLabel,
+				YLabel:    o.yLabel,
+				ZeroBased: o.zeroBased,
+				ColorType: chartjs.NewColorType(o.colorType.String()),
+			},
 		).Build()
 		if err != nil {
 			t.Errorf("[%v] breaks building chart with: [%v]", f, err)

@@ -201,6 +201,17 @@ func (c scaleType) String() string {
 	return "linear"
 }
 
+func (c colorType) String() string {
+	switch c {
+	case legacyColor:
+		return "legacy"
+	case gradient:
+		return "gradient"
+	default:
+		return "default"
+	}
+}
+
 // flag package doesn't read flags if first argument is not a flag :(
 func fromFirstDash(as []string) []string {
 	for i, v := range as {

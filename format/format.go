@@ -18,6 +18,16 @@ import (
 // understands. Parse also returns a new io.Reader ready to consume again.
 // Parsing strategy is to infer the line format of every line of input separately
 // and return the most common line format.
+//
+// For example, for an input like this:
+//
+// ABC,1,2,2001-02-03
+// DEF,3,4,2004-05-06
+// ...
+//
+// This invocation would be appropriate:
+//
+// rd, lf := format.Parse(os.Stdin, ",", "2006-01-02"))
 func Parse(r io.Reader, separator rune, dateFormat string) (io.Reader, LineFormat) {
 	var (
 		lfs = make(map[string]int)

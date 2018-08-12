@@ -30,16 +30,16 @@ func main() {
 		os.Exit(0)
 	}
 	b := chartjs.New(
-		opts.chartType.String(),
-		dataset.FSS,
-		dataset.SSS,
-		dataset.TSS,
-		opts.title,
-		opts.scaleType.String(),
-		opts.xLabel,
-		opts.yLabel,
-		opts.zeroBased,
-		int(opts.colorType),
+		chartjs.NewChartType(opts.chartType.String()),
+		*dataset,
+		chartjs.Options{
+			Title:     opts.title,
+			ScaleType: chartjs.NewScaleType(opts.scaleType.String()),
+			XLabel:    opts.xLabel,
+			YLabel:    opts.yLabel,
+			ZeroBased: opts.zeroBased,
+			ColorType: chartjs.NewColorType(opts.colorType.String()),
+		},
 	).MustBuild()
 	tmpfile := mustNewTempFile()
 	chartTempl := newChartTemplate(opts.chartType)
