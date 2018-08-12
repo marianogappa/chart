@@ -11,5 +11,5 @@ env:
   secure: "buI5iifzDU3Py2SMPAtAGROYBV8p8JyOp3bGVtUXzajgR4MCT5Nq2n0PQ63ArJw5Q71GsljKxzI9hxziUp0z9vrXXb5VAed3QPPuDKXt8gDr9ePWPm6JE67f4Y+0HswrWu8c0xaYOLdy2y/JSH3qPRjKMjuxj9qaOtSYXq1WKd95juU0TQ5L0t5TXFaHp4xc9SR2jmHGp9JZcq+37bCu5Zm4bj5hgmgg8GDa9DUbMMqSmDPLS0T/cVV9z9ic5wFpyf0XcUVXdunrKVr8hEKN6kcKrajZPTvCSM/w+fyjQyFQL50m/VqfMnvOEhpIs5kwhqN3EQcD84Yw0C47TSJdFvh399CdUZpwlLJm7NAQDaGQCs7lho/rJ2t6ECL2loxvr9jAVvE5YRPQhrbvAYo30UGPQf8bQdrGha8152bT2M4M6fsm54tNhNvH6p1cHax55cOXqU4RXV44RTGjXpgqRaTjLlDVJRXyDaP4HkwYRvgWLqYFykhF7A4NCVCFTVUjfEgA4ULyMKONH7qWwcCNxA5wWg0i99rFv6CrCwtRzvZkHe/9ZH2am7R4XI08KfN7Euz36U0RzK8Dy06YKgdXD+fhRJaPDv6Cak3l2z99lItAnOUf9Q5ZAf1f58iT6A2ZGc62q7j4IlstIo0z0DGXj/I0r/nJnGQe/5enW7BAk6E="
 
 script:
-  - go test -v -covermode=count -coverprofile=coverage.out
+  - go test -v -covermode=count -coverprofile=coverage.out ./...
   - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN; fi'

@@ -20,8 +20,6 @@ func New(
 	fss [][]float64,
 	sss [][]string,
 	tss [][]time.Time,
-	minFSS []float64,
-	maxFSS []float64,
 	title string,
 	scaleType string,
 	xLabel string,
@@ -38,8 +36,6 @@ func New(
 		FSS:       fss,
 		SSS:       sss,
 		TSS:       tss,
-		MinFSS:    minFSS,
-		MaxFSS:    maxFSS,
 		Title:     title,
 		ScaleType: scaleType,
 		XLabel:    xLabel,
@@ -47,6 +43,8 @@ func New(
 		ZeroBased: zeroBased,
 		ColorType: colorType,
 	}
+
+	d.MinFSS, d.MaxFSS = calculateMinMaxFSS(fss)
 
 	if chartType == "line" && d.canBeScatterLine() {
 		sort.Sort(&d)
@@ -403,6 +401,30 @@ func (c ChartJS) tooltipCallback() string {
 	default:
 		return ``
 	}
+}
+
+func calculateMinMaxFSS(fss [][]float64) ([]float64, []float64) {
+	if len(fss) == 0 {
+		return nil, nil
+	}
+	var minFSS, maxFSS = make([]float64, 0, 500), make([]float64, 0, 500)
+	for _, fs := range fss {
+		for i, f := range fs {
+			if len(minFSS) == i {
+				minFSS = append(minFSS, f)
+			}
+			if len(maxFSS) == i {
+				maxFSS = append(maxFSS, f)
+			}
+			if f < minFSS[i] {
+				minFSS[i] = f
+			}
+			if f > maxFSS[i] {
+				maxFSS[i] = f
+			}
+		}
+	}
+	return minFSS, maxFSS
 }
 
 func scatterRadius(x, min, max float64) float64 {

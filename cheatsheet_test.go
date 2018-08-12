@@ -77,8 +77,6 @@ func TestCheatsheet(t *testing.T) {
 			d.FSS,
 			d.SSS,
 			d.TSS,
-			d.MinFSS,
-			d.MaxFSS,
 			o.title,
 			o.scaleType.String(),
 			o.xLabel,

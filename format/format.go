@@ -118,6 +118,17 @@ func (c ColType) String() string {
 
 // NewLineFormat creates a LineFormat from a string representing a line format with one rune
 // per column, with syntax `[dfs]*` where d=datetime,f=float,s=string
+// Don't create a LineFormat directly unless you're sure about the format; use Parse instead.
+//
+// For example, for an input like this:
+//
+// ABC,1,2,2001-02-03
+// DEF,3,4,2004-05-06
+// ...
+//
+// This invocation would be appropriate:
+//
+// lf, err := format.NewLineFormat("sffd", ",", "2006-01-02")
 func NewLineFormat(lineFormat string, separator rune, dateFormat string) (LineFormat, error) {
 	if ok, err := regexp.Match("[dfs ]*", []byte(lineFormat)); !ok || err != nil {
 		return LineFormat{}, fmt.Errorf("format: supplied lineFormat doesn't match syntax `[dfs ]*`")

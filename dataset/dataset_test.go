@@ -19,8 +19,6 @@ func TestDataset(t *testing.T) {
 		fss           [][]float64
 		sss           [][]string
 		tss           [][]time.Time
-		minFSS        []float64
-		maxFSS        []float64
 	}{
 		{
 			name: "format: ff; line count: 3; separator: tab",
@@ -35,8 +33,6 @@ func TestDataset(t *testing.T) {
 			fss:           [][]float64{{1, 6}, {3, 4}, {5, 2}},
 			sss:           nil,
 			tss:           nil,
-			minFSS:        []float64{1, 2},
-			maxFSS:        []float64{5, 6},
 		},
 		{
 			name: "format: df; line count: 3; separator: tab",
@@ -56,8 +52,6 @@ func TestDataset(t *testing.T) {
 				{tp("2006-01-02", "2016-09-08")},
 				{tp("2006-01-02", "2016-09-06")},
 				{tp("2006-01-02", "2016-09-07")}},
-			minFSS: []float64{3},
-			maxFSS: []float64{4},
 		},
 		{
 			name: "just strings",
@@ -70,8 +64,6 @@ func TestDataset(t *testing.T) {
 			dateFormat:    "",
 			sss:           [][]string{{"a"}, {"b"}, {"c"}, {"a"}},
 			tss:           nil,
-			minFSS:        nil,
-			maxFSS:        nil,
 		},
 		{
 			name: "dates and floats with many spaces in between",
@@ -90,8 +82,6 @@ func TestDataset(t *testing.T) {
 			tss: [][]time.Time{
 				{tp("2006-01-02", "2016-08-29")}, {tp("2006-01-02", "2016-09-06")}, {tp("2006-01-02", "2016-09-07")}, {tp("2006-01-02", "2016-09-08")},
 			},
-			minFSS: []float64{0.0000},
-			maxFSS: []float64{0.0272},
 		},
 	}
 
@@ -110,12 +100,6 @@ func TestDataset(t *testing.T) {
 		}
 		if !reflect.DeepEqual(d.TSS, ts.tss) {
 			t.Errorf("'%v' failed: (times) %v was not equal to %v", ts.name, d.TSS, ts.tss)
-		}
-		if !reflect.DeepEqual(d.MinFSS, ts.minFSS) {
-			t.Errorf("'%v' failed: (min floats) %v was not equal to %v", ts.name, d.MinFSS, ts.minFSS)
-		}
-		if !reflect.DeepEqual(d.MaxFSS, ts.maxFSS) {
-			t.Errorf("'%v' failed: (max floats) %v was not equal to %v", ts.name, d.MaxFSS, ts.maxFSS)
 		}
 	}
 }

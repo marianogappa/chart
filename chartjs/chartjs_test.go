@@ -1,6 +1,58 @@
 package chartjs
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
+
+func TestCalculateMinMaxFSS(t *testing.T) {
+	tests := []struct {
+		fss    [][]float64
+		minFSS []float64
+		maxFSS []float64
+	}{
+		{
+			fss:    [][]float64{},
+			minFSS: nil,
+			maxFSS: nil,
+		},
+		{
+			fss: [][]float64{
+				{1, 2, 3},
+				{4, 5, 6},
+				{7, 8, 9},
+			},
+			minFSS: []float64{1, 2, 3},
+			maxFSS: []float64{7, 8, 9},
+		},
+		{
+			fss: [][]float64{
+				{1, 8, 3},
+				{4, 2, 9},
+				{7, 6, 5},
+			},
+			minFSS: []float64{1, 2, 3},
+			maxFSS: []float64{7, 8, 9},
+		},
+		{
+			fss: [][]float64{
+				{1.2, 5.6},
+				{7.8, 3.4},
+			},
+			minFSS: []float64{1.2, 3.4},
+			maxFSS: []float64{7.8, 5.6},
+		},
+	}
+	for _, tc := range tests {
+		actualMinFSS, actualMaxFSS := calculateMinMaxFSS(tc.fss)
+		if !reflect.DeepEqual(tc.minFSS, actualMinFSS) {
+			t.Errorf("Expected %v but got %v", tc.minFSS, actualMinFSS)
+		}
+		if !reflect.DeepEqual(tc.maxFSS, actualMaxFSS) {
+			t.Errorf("Expected %v but got %v", tc.maxFSS, actualMaxFSS)
+		}
+	}
+}
 
 func TestCropLongLabels(t *testing.T) {
 	tests := []struct {

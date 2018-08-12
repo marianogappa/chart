@@ -34,8 +34,6 @@ func main() {
 		dataset.FSS,
 		dataset.SSS,
 		dataset.TSS,
-		dataset.MinFSS,
-		dataset.MaxFSS,
 		opts.title,
 		opts.scaleType.String(),
 		opts.xLabel,
