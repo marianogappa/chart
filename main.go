@@ -40,7 +40,7 @@ func main() {
 			ZeroBased: opts.zeroBased,
 			ColorType: chartjs.NewColorType(opts.colorType.String()),
 		},
-	).MustBuild()
+	).MustBuild(chartjs.OutputAll)
 	tmpfile := mustNewTempFile()
 	chartTempl := newChartTemplate(opts.chartType)
 	chartTempl.mustExecute(b, tmpfile)

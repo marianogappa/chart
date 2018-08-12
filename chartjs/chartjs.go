@@ -55,10 +55,26 @@ func New(chartType ChartType, ds chartDataset.Dataset, opts Options) ChartJS {
 	return ChartJS{d}
 }
 
+// OutputMode parameterizes the output of Build() to one of {All|HTMLHeader|Dependencies|Chart|HTMLFooter}.
+// In most cases, OutputAll should be used. When constructing a page with many charts, or with custom HTML,
+// Build() can be called many times with different OutputModes.
+type OutputMode int
+
+// OutputMode parameterizes the output of Build() to one of {All|HTMLHeader|Dependencies|Chart|HTMLFooter}.
+// In most cases, OutputAll should be used. When constructing a page with many charts, or with custom HTML,
+// Build() can be called many times with different OutputModes.
+const (
+	OutputAll OutputMode = iota
+	OutputHTMLHeader
+	OutputDependencies
+	OutputChart
+	OutputHTMLFooter
+)
+
 // MustBuild prepares the dataset and executes the text template with it. Fatals if there's a problem
 // with executing the template.
-func (c ChartJS) MustBuild() bytes.Buffer {
-	b, err := c.Build()
+func (c ChartJS) MustBuild(om OutputMode) bytes.Buffer {
+	b, err := c.Build(om)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -67,7 +83,7 @@ func (c ChartJS) MustBuild() bytes.Buffer {
 
 // Build prepares the dataset and executes the text template with it. Returns an error if there's a problem
 // with executing the template.
-func (c ChartJS) Build() (bytes.Buffer, error) {
+func (c ChartJS) Build(om OutputMode) (bytes.Buffer, error) {
 	var b bytes.Buffer
 	if err := cjsTemplate.Execute(&b, c.prepareTemplateData()); err != nil {
 		return b, fmt.Errorf("could't prepare ChartJS js code for chart: [%v]", err)

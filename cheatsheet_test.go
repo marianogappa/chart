@@ -83,7 +83,7 @@ func TestCheatsheet(t *testing.T) {
 				ZeroBased: o.zeroBased,
 				ColorType: chartjs.NewColorType(o.colorType.String()),
 			},
-		).Build()
+		).Build(chartjs.OutputAll)
 		if err != nil {
 			t.Errorf("[%v] breaks building chart with: [%v]", f, err)
 			t.FailNow()
