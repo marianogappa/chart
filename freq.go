@@ -2,9 +2,11 @@ package main
 
 import (
 	"sort"
+
+	"github.com/marianogappa/chart/format"
 )
 
-func preprocessFreq(isss [][]string) ([][]float64, [][]string) {
+func preprocessFreq(isss [][]string, lineFormat format.LineFormat) ([][]float64, [][]string, format.LineFormat) {
 	fss := [][]float64{}
 	sss := [][]string{}
 
@@ -44,7 +46,12 @@ func preprocessFreq(isss [][]string) ([][]float64, [][]string) {
 		sss = append(sss, []string{fqs.fs[9].s})
 	}
 
-	return fss, sss
+	// Updates lineFormat
+	lineFormat.ColTypes = append(lineFormat.ColTypes, format.Float)
+	lineFormat.FloatCount++
+	lineFormat.HasFloats = true
+
+	return fss, sss, lineFormat
 }
 
 type freq struct {

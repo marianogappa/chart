@@ -3,10 +3,12 @@ package chartjs
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"log"
 	"sort"
 	"strings"
-	"time"
+
+	chartDataset "github.com/marianogappa/chart/dataset"
 )
 
 // ChartJS allows building an HTML/Javascript Chart.js chart from a given dataset
@@ -14,65 +16,114 @@ type ChartJS struct {
 	data dataset
 }
 
-// New constructs a new ChartJS instance
-func New(
-	chartType string,
-	fss [][]float64,
-	sss [][]string,
-	tss [][]time.Time,
-	minFSS []float64,
-	maxFSS []float64,
-	title string,
-	scaleType string,
-	xLabel string,
-	yLabel string,
-	zeroBased bool,
-	colorType int) ChartJS {
+// Options is a container for ChartJS configurations; basically anything that is not
+// the datapoints themselves or the chart type. All are optional.
+type Options struct {
+	Title     string    // Chart title
+	ScaleType ScaleType // One of {Linear|Logarithmic}
+	XLabel    string    // X-Axis Label
+	YLabel    string    // Y-Axis Label
+	ZeroBased bool      // Should the chart's Y-Axis start at zero
+	ColorType ColorType // One of {DefaultColor|LegacyColor|Gradient}
+}
 
-	if chartType == "bar" {
-		zeroBased = true // https://github.com/marianogappa/chart/issues/11
+// New constructs a new ChartJS instance
+func New(chartType ChartType, ds chartDataset.Dataset, opts Options) ChartJS {
+
+	if chartType == Bar {
+		opts.ZeroBased = true // https://github.com/marianogappa/chart/issues/11
 	}
 
 	var d = dataset{
-		ChartType: chartType,
-		FSS:       fss,
-		SSS:       sss,
-		TSS:       tss,
-		MinFSS:    minFSS,
-		MaxFSS:    maxFSS,
-		Title:     title,
-		ScaleType: scaleType,
-		XLabel:    xLabel,
-		YLabel:    yLabel,
-		ZeroBased: zeroBased,
-		ColorType: colorType,
+		ChartType: chartType.String(),
+		FSS:       ds.FSS,
+		SSS:       ds.SSS,
+		TSS:       ds.TSS,
+		Title:     opts.Title,
+		ScaleType: opts.ScaleType.String(),
+		XLabel:    opts.XLabel,
+		YLabel:    opts.YLabel,
+		ZeroBased: opts.ZeroBased,
+		ColorType: int(opts.ColorType),
 	}
 
-	if chartType == "line" && d.canBeScatterLine() {
+	d.MinFSS, d.MaxFSS = calculateMinMaxFSS(ds.FSS)
+
+	if chartType == Line && d.canBeScatterLine() {
 		sort.Sort(&d)
 	}
 
 	return ChartJS{d}
 }
 
+// OutputMode parameterizes the output of Build() to one of {All|HTMLHeader|Dependencies|Chart|HTMLFooter}.
+// In most cases, OutputAll should be used. When constructing a page with many charts, or with custom HTML,
+// Build() can be called many times with different OutputModes.
+type OutputMode int
+
+// OutputMode parameterizes the output of Build() to one of {All|HTMLHeader|Dependencies|Chart|HTMLFooter}.
+// In most cases, OutputAll should be used. When constructing a page with many charts, or with custom HTML,
+// Build() can be called many times with different OutputModes.
+const (
+	OutputAll          OutputMode = iota // Outputs a complete HTML file
+	OutputHTMLHeader                     // Outputs an HTML header, styling, dependencies and an opening <body> tag
+	OutputDependencies                   // Outputs only <script> tags with moment.js & Chart.js dependencies
+	OutputChart                          // Outputs the JS object that Chart.js expects: new Chart(ctx, {{.}})
+	OutputHTMLFooter                     // Outputs </body></html>
+)
+
 // MustBuild prepares the dataset and executes the text template with it. Fatals if there's a problem
 // with executing the template.
-func (c ChartJS) MustBuild() bytes.Buffer {
-	b, err := c.Build()
-	if err != nil {
+func (c ChartJS) MustBuild(om OutputMode, w io.Writer) {
+	if err := c.Build(om, w); err != nil {
 		log.Fatal(err)
 	}
-	return b
 }
 
 // Build prepares the dataset and executes the text template with it. Returns an error if there's a problem
 // with executing the template.
-func (c ChartJS) Build() (bytes.Buffer, error) {
-	var b bytes.Buffer
-	if err := cjsTemplate.Execute(&b, c.getData()); err != nil {
-		return b, fmt.Errorf("could't prepare ChartJS js code for chart: [%v]", err)
+func (c ChartJS) Build(om OutputMode, w io.Writer) (err error) {
+	defer recover𝑒(&err)
+	switch om {
+	case OutputDependencies:
+		𝑒(tplToWriter(tplMomentJS, "", w))
+		𝑒(tplToWriter(tplChartJS, "", w))
+	case OutputHTMLHeader:
+		bb := bytes.Buffer{}
+		𝑒(tplToWriter(tplMomentJS, "", &bb))
+		𝑒(tplToWriter(tplChartJS, "", &bb))
+		𝑒(tplToWriter(tplHTMLHeader, bb.String(), w))
+	case OutputChart:
+		𝑒(tplToWriter(tplChartObject, c.prepareTemplateData(), w))
+	case OutputHTMLFooter:
+		𝑒(tplToWriter(tplHTMLFooter, "", w))
+	case OutputAll:
+		deps, chartObj := bytes.Buffer{}, bytes.Buffer{}
+		𝑒(tplToWriter(tplMomentJS, "", &deps))
+		𝑒(tplToWriter(tplChartJS, "", &deps))
+		𝑒(tplToWriter(tplHTMLHeader, deps.String(), w))
+		𝑒(tplToWriter(tplChartObject, c.prepareTemplateData(), &chartObj))
+		switch c.data.ChartType {
+		case "pie":
+			𝑒(tplToWriter(tplPieChartDivScript, chartObj.String(), w))
+		default:
+			𝑒(tplToWriter(tplChartDivScript, chartObj.String(), w))
+		}
+		𝑒(tplToWriter(tplHTMLFooter, "", w))
 	}
-	return b, nil
+	return nil
+}
+
+func 𝑒(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
+func recover𝑒(err *error) {
+	if e := recover(); e != nil {
+		*err = e.(error)
+	}
 }
 
 type cjsData struct {
@@ -104,8 +155,8 @@ type cjsDataPoint struct {
 	UsesR   bool
 }
 
-func (c ChartJS) getData() cjsData {
-	d := c.labelsAndDatasets()
+func (c ChartJS) prepareTemplateData() cjsData {
+	d := c.prepareLabelsAndDatasets()
 	d.Title = c.data.Title
 	d.ScaleType = c.data.ScaleType
 	d.ColorType = c.data.ColorType
@@ -117,7 +168,7 @@ func (c ChartJS) getData() cjsData {
 	return d
 }
 
-func (c ChartJS) labelsAndDatasets() cjsData {
+func (c ChartJS) prepareLabelsAndDatasets() cjsData {
 	var usesTimeScale bool
 	if c.data.ChartType == "line" && (!c.data.hasStrings() || c.data.hasTimes()) {
 		c.data.ChartType = "scatterline"
@@ -405,6 +456,30 @@ func (c ChartJS) tooltipCallback() string {
 	}
 }
 
+func calculateMinMaxFSS(fss [][]float64) ([]float64, []float64) {
+	if len(fss) == 0 {
+		return nil, nil
+	}
+	var minFSS, maxFSS = make([]float64, 0, 500), make([]float64, 0, 500)
+	for _, fs := range fss {
+		for i, f := range fs {
+			if len(minFSS) == i {
+				minFSS = append(minFSS, f)
+			}
+			if len(maxFSS) == i {
+				maxFSS = append(maxFSS, f)
+			}
+			if f < minFSS[i] {
+				minFSS[i] = f
+			}
+			if f > maxFSS[i] {
+				maxFSS[i] = f
+			}
+		}
+	}
+	return minFSS, maxFSS
+}
+
 func scatterRadius(x, min, max float64) float64 {
 	if max-min < 50 {
 		return x - min + 4
@@ -430,4 +505,88 @@ func preprocessLabel(s string) string {
 	s = strings.Replace(s, `${`, `\${`, -1)
 	s = strings.Replace(s, "`", "\\`", -1)
 	return "`" + s + "`"
+}
+
+// ChartType represents one of {Pie|Bar|Line|Scatter}
+type ChartType int
+
+// ScaleType represents one of {LinearScale|LogarithmicScale}
+type ScaleType int
+
+// ColorType represents one of {DefaultColor|LegacyColor|Gradient}
+type ColorType int
+
+// ChartType represents one of {Pie|Bar|Line|Scatter}
+const (
+	Pie ChartType = iota
+	Bar
+	Line
+	Scatter
+)
+
+// ScaleType represents one of {LinearScale|LogarithmicScale}
+const (
+	LinearScale ScaleType = iota
+	LogarithmicScale
+)
+
+// ColorType represents one of {DefaultColor|LegacyColor|Gradient}
+const (
+	DefaultColor ColorType = iota
+	LegacyColor
+	Gradient
+)
+
+func (c ChartType) String() string {
+	switch c {
+	case Bar:
+		return "bar"
+	case Line:
+		return "line"
+	case Scatter:
+		return "scatter"
+	default:
+		return "pie"
+	}
+}
+
+func (c ScaleType) String() string {
+	if c == LogarithmicScale {
+		return "logarithmic"
+	}
+	return "linear"
+}
+
+// NewChartType returns a ChartType from a string. Defaults to Pie.
+func NewChartType(s string) ChartType {
+	switch s {
+	case "bar":
+		return Bar
+	case "line":
+		return Line
+	case "scatter":
+		return Scatter
+	default:
+		return Pie
+	}
+}
+
+// NewScaleType returns a ScaleType from a string. Defaults to LinearScale.
+func NewScaleType(s string) ScaleType {
+	if s == "logarithmic" {
+		return LogarithmicScale
+	}
+	return LinearScale
+}
+
+// NewColorType returns a ColorType from a string. Defaults to DefaultColor.
+func NewColorType(s string) ColorType {
+	switch s {
+	case "legacy":
+		return LegacyColor
+	case "gradient":
+		return Gradient
+	default:
+		return DefaultColor
+	}
 }

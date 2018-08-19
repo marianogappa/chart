@@ -3,28 +3,30 @@ package main
 import (
 	"bytes"
 	"fmt"
+
+	"github.com/marianogappa/chart/dataset"
 )
 
-func renderDebug(d dataset, o options, err error) string {
+func renderDebug(d dataset.Dataset, o options, err error) string {
 	var buffer bytes.Buffer
 	if err != nil {
 		buffer.WriteString(fmt.Sprintf("Error trying to chart: %v\n", err))
 	}
 	fcn, scn, tcn, rn := 0, 0, 0, 0
-	if len(d.fss) > 0 {
-		rn = len(d.fss)
-		fcn = len(d.fss[0])
+	if len(d.FSS) > 0 {
+		rn = len(d.FSS)
+		fcn = len(d.FSS[0])
 	}
-	if len(d.sss) > 0 {
-		rn = len(d.sss)
-		scn = len(d.sss[0])
+	if len(d.SSS) > 0 {
+		rn = len(d.SSS)
+		scn = len(d.SSS[0])
 	}
-	if len(d.tss) > 0 {
-		rn = len(d.tss)
-		tcn = len(d.tss[0])
+	if len(d.TSS) > 0 {
+		rn = len(d.TSS)
+		tcn = len(d.TSS[0])
 	}
-	buffer.WriteString(fmt.Sprintf("Lines read\t%v\n", d.stdinLen))
-	buffer.WriteString(fmt.Sprintf("Line format inferred\t%v\n", d.lineFormat.String()))
+	buffer.WriteString(fmt.Sprintf("Lines read\t%v\n", d.StdinLen))
+	buffer.WriteString(fmt.Sprintf("Line format inferred\t%v\n", o.lineFormat.String()))
 	buffer.WriteString(fmt.Sprintf("Lines used\t%v\n", rn))
 	buffer.WriteString(fmt.Sprintf("Float column count\t%v\n", fcn))
 	buffer.WriteString(fmt.Sprintf("String column count\t%v\n", scn))

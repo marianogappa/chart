@@ -7,6 +7,7 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/marianogappa/chart/chartjs"
+	"github.com/marianogappa/chart/dataset"
 	"github.com/marianogappa/chart/format"
 	"github.com/skratchdot/open-golang/open"
 )
@@ -20,28 +21,28 @@ func main() {
 	if opts.rawLineFormat == "" {
 		rd, opts.lineFormat = format.Parse(rd, opts.separator, opts.dateFormat)
 	}
-	dataset := mustNewDataset(rd, opts)
-	if opts.chartType, err = resolveChartType(opts.chartType, dataset.lineFormat); opts.debug || err != nil {
+	dataset := dataset.MustNew(rd, opts.lineFormat)
+	if !opts.lineFormat.HasFloats && !opts.lineFormat.HasDateTimes && opts.lineFormat.HasStrings {
+		dataset.FSS, dataset.SSS, opts.lineFormat = preprocessFreq(dataset.SSS, opts.lineFormat)
+	}
+	if opts.chartType, err = resolveChartType(opts.chartType, opts.lineFormat, dataset.Len()); opts.debug || err != nil {
 		fmt.Println(renderDebug(*dataset, opts, err))
 		os.Exit(0)
 	}
-	b := chartjs.New(
-		opts.chartType.String(),
-		dataset.fss,
-		dataset.sss,
-		dataset.tss,
-		dataset.minFSS,
-		dataset.maxFSS,
-		opts.title,
-		opts.scaleType.String(),
-		opts.xLabel,
-		opts.yLabel,
-		opts.zeroBased,
-		int(opts.colorType),
-	).MustBuild()
+	chart := chartjs.New(
+		chartjs.NewChartType(opts.chartType.String()),
+		*dataset,
+		chartjs.Options{
+			Title:     opts.title,
+			ScaleType: chartjs.NewScaleType(opts.scaleType.String()),
+			XLabel:    opts.xLabel,
+			YLabel:    opts.yLabel,
+			ZeroBased: opts.zeroBased,
+			ColorType: chartjs.NewColorType(opts.colorType.String()),
+		},
+	)
 	tmpfile := mustNewTempFile()
-	chartTempl := newChartTemplate(opts.chartType)
-	chartTempl.mustExecute(b, tmpfile)
+	chart.MustBuild(chartjs.OutputAll, tmpfile.f)
 	tmpfile.mustClose()
 	tmpfile.mustRenameWithHTMLSuffix()
 	if err := open.Run(tmpfile.url()); err != nil {

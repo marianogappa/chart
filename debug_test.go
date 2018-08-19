@@ -4,19 +4,21 @@ import (
 	"fmt"
 	"testing"
 	"time"
+
+	"github.com/marianogappa/chart/dataset"
 )
 
 func TestDebug(t *testing.T) {
 	var ts = []struct {
 		name     string
-		d        dataset
+		d        dataset.Dataset
 		o        options
 		err      error
 		expected string
 	}{
 		{
 			name: "base case",
-			d:    dataset{},
+			d:    dataset.Dataset{},
 			o:    options{},
 			err:  nil,
 			expected: `Lines read	0
@@ -31,7 +33,7 @@ Scale type	linear
 		},
 		{
 			name: "reports lines read",
-			d:    dataset{stdinLen: 123},
+			d:    dataset.Dataset{StdinLen: 123},
 			o:    options{},
 			err:  nil,
 			expected: `Lines read	123
@@ -46,7 +48,7 @@ Scale type	linear
 		},
 		{
 			name: "reports pie chart type",
-			d:    dataset{},
+			d:    dataset.Dataset{},
 			o:    options{chartType: pie},
 			err:  nil,
 			expected: `Lines read	0
@@ -61,7 +63,7 @@ Scale type	linear
 		},
 		{
 			name: "reports line chart type",
-			d:    dataset{},
+			d:    dataset.Dataset{},
 			o:    options{chartType: line},
 			err:  nil,
 			expected: `Lines read	0
@@ -76,7 +78,7 @@ Scale type	linear
 		},
 		{
 			name: "reports scatter chart type",
-			d:    dataset{},
+			d:    dataset.Dataset{},
 			o:    options{chartType: scatter},
 			err:  nil,
 			expected: `Lines read	0
@@ -91,7 +93,7 @@ Scale type	linear
 		},
 		{
 			name: "reports bar chart type",
-			d:    dataset{},
+			d:    dataset.Dataset{},
 			o:    options{chartType: bar},
 			err:  nil,
 			expected: `Lines read	0
@@ -106,7 +108,7 @@ Scale type	linear
 		},
 		{
 			name: "reports linear scaleType",
-			d:    dataset{},
+			d:    dataset.Dataset{},
 			o:    options{scaleType: linear},
 			err:  nil,
 			expected: `Lines read	0
@@ -121,7 +123,7 @@ Scale type	linear
 		},
 		{
 			name: "reports logarithmic scaleType",
-			d:    dataset{},
+			d:    dataset.Dataset{},
 			o:    options{scaleType: logarithmic},
 			err:  nil,
 			expected: `Lines read	0
@@ -136,7 +138,7 @@ Scale type	logarithmic
 		},
 		{
 			name: "reports tab separator",
-			d:    dataset{},
+			d:    dataset.Dataset{},
 			o:    options{separator: '\t'},
 			err:  nil,
 			expected: `Lines read	0
@@ -152,7 +154,7 @@ Separator	[tab]
 		},
 		{
 			name: "reports space separator",
-			d:    dataset{},
+			d:    dataset.Dataset{},
 			o:    options{separator: ' '},
 			err:  nil,
 			expected: `Lines read	0
@@ -168,7 +170,7 @@ Separator	[space]
 		},
 		{
 			name: "reports comma separator",
-			d:    dataset{},
+			d:    dataset.Dataset{},
 			o:    options{separator: ','},
 			err:  nil,
 			expected: `Lines read	0
@@ -184,7 +186,7 @@ Separator	[comma]
 		},
 		{
 			name: "reports semicolon separator",
-			d:    dataset{},
+			d:    dataset.Dataset{},
 			o:    options{separator: ';'},
 			err:  nil,
 			expected: `Lines read	0
@@ -200,7 +202,7 @@ Separator	[semicolon]
 		},
 		{
 			name: "reports title and axis labels",
-			d:    dataset{},
+			d:    dataset.Dataset{},
 			o:    options{title: "sample title", xLabel: "sample x-label", yLabel: "sample y-label"},
 			err:  nil,
 			expected: `Lines read	0
@@ -218,7 +220,7 @@ Scale type	linear
 		},
 		{
 			name: "reports dateFormat",
-			d:    dataset{},
+			d:    dataset.Dataset{},
 			o:    options{dateFormat: "2006-01-02 15:04:05"},
 			err:  nil,
 			expected: `Lines read	0
@@ -234,7 +236,7 @@ Scale type	linear
 		},
 		{
 			name: "reports lines used",
-			d:    dataset{fss: [][]float64{{}}, sss: [][]string{{}}, tss: [][]time.Time{{}}},
+			d:    dataset.Dataset{FSS: [][]float64{{}}, SSS: [][]string{{}}, TSS: [][]time.Time{{}}},
 			o:    options{},
 			err:  nil,
 			expected: `Lines read	0
@@ -249,7 +251,7 @@ Scale type	linear
 		},
 		{
 			name: "reports errors",
-			d:    dataset{},
+			d:    dataset.Dataset{},
 			o:    options{scaleType: linear},
 			err:  fmt.Errorf("sample error"),
 			expected: `Error trying to chart: sample error

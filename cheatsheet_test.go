@@ -13,6 +13,7 @@ import (
 	"text/template"
 
 	"github.com/marianogappa/chart/chartjs"
+	"github.com/marianogappa/chart/dataset"
 	"github.com/marianogappa/chart/format"
 )
 
@@ -62,26 +63,29 @@ func TestCheatsheet(t *testing.T) {
 
 		var rdr io.Reader
 		rdr, o.lineFormat = format.Parse(rd, o.separator, o.dateFormat)
-		d := mustNewDataset(rdr, o)
-		o.chartType, err = resolveChartType(o.chartType, d.lineFormat)
+		d := dataset.MustNew(rdr, o.lineFormat)
+		if !o.lineFormat.HasFloats && !o.lineFormat.HasDateTimes && o.lineFormat.HasStrings {
+			d.FSS, d.SSS, o.lineFormat = preprocessFreq(d.SSS, o.lineFormat)
+		}
+		o.chartType, err = resolveChartType(o.chartType, o.lineFormat, d.Len())
 		if err != nil {
-			t.Errorf("[%v] error resolving chart type when o.chartType=%v and d.lineFormat=%v: [%v]", f, o.chartType, d.lineFormat, err)
+			t.Errorf("[%v] error resolving chart type when o.chartType=%v and d.lineFormat=%v: [%v]", f, o.chartType, o.lineFormat, err)
 			t.FailNow()
 		}
-		b, err := chartjs.New(
-			o.chartType.String(),
-			d.fss,
-			d.sss,
-			d.tss,
-			d.minFSS,
-			d.maxFSS,
-			o.title,
-			o.scaleType.String(),
-			o.xLabel,
-			o.yLabel,
-			o.zeroBased,
-			int(o.colorType),
-		).Build()
+		ch := chartjs.New(
+			chartjs.NewChartType(o.chartType.String()),
+			*d,
+			chartjs.Options{
+				Title:     o.title,
+				ScaleType: chartjs.NewScaleType(o.scaleType.String()),
+				XLabel:    o.xLabel,
+				YLabel:    o.yLabel,
+				ZeroBased: o.zeroBased,
+				ColorType: chartjs.NewColorType(o.colorType.String()),
+			},
+		)
+		b := bytes.Buffer{}
+		err = ch.Build(chartjs.OutputChart, &b)
 		if err != nil {
 			t.Errorf("[%v] breaks building chart with: [%v]", f, err)
 			t.FailNow()
@@ -96,7 +100,12 @@ func TestCheatsheet(t *testing.T) {
 		}
 	}
 
-	cheetsheetExamplesTemplate, err := template.New("").Parse(cheetsheetExamplesTemplateString)
+	bb := bytes.Buffer{}
+	chartjs.New(chartjs.ChartType(0), dataset.Dataset{}, chartjs.Options{}).MustBuild(chartjs.OutputHTMLHeader, &bb)
+	bb.WriteString(cheetsheetString)
+	chartjs.New(chartjs.ChartType(0), dataset.Dataset{}, chartjs.Options{}).MustBuild(chartjs.OutputHTMLFooter, &bb)
+
+	cheetsheetExamplesTemplate, err := template.New("").Parse(bb.String())
 	if err != nil {
 		t.Errorf("Could not parse cheatsheet examples page: [%v]", err)
 		t.FailNow()
@@ -142,7 +151,6 @@ func mustReadLines(path string, t *testing.T) []string {
 	return lines
 }
 
-var cheetsheetExamplesTemplateString = baseTemplateHeaderString + cheetsheetString + baseTemplateFooterString
 var cheetsheetString = `
 <style>
 body {
