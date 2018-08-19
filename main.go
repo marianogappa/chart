@@ -29,7 +29,7 @@ func main() {
 		fmt.Println(renderDebug(*dataset, opts, err))
 		os.Exit(0)
 	}
-	b := chartjs.New(
+	chart := chartjs.New(
 		chartjs.NewChartType(opts.chartType.String()),
 		*dataset,
 		chartjs.Options{
@@ -40,10 +40,9 @@ func main() {
 			ZeroBased: opts.zeroBased,
 			ColorType: chartjs.NewColorType(opts.colorType.String()),
 		},
-	).MustBuild(chartjs.OutputAll)
+	)
 	tmpfile := mustNewTempFile()
-	chartTempl := newChartTemplate(opts.chartType)
-	chartTempl.mustExecute(b, tmpfile)
+	chart.MustBuild(chartjs.OutputAll, tmpfile.f)
 	tmpfile.mustClose()
 	tmpfile.mustRenameWithHTMLSuffix()
 	if err := open.Run(tmpfile.url()); err != nil {

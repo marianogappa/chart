@@ -72,7 +72,7 @@ func TestCheatsheet(t *testing.T) {
 			t.Errorf("[%v] error resolving chart type when o.chartType=%v and d.lineFormat=%v: [%v]", f, o.chartType, o.lineFormat, err)
 			t.FailNow()
 		}
-		b, err := chartjs.New(
+		ch := chartjs.New(
 			chartjs.NewChartType(o.chartType.String()),
 			*d,
 			chartjs.Options{
@@ -83,7 +83,9 @@ func TestCheatsheet(t *testing.T) {
 				ZeroBased: o.zeroBased,
 				ColorType: chartjs.NewColorType(o.colorType.String()),
 			},
-		).Build(chartjs.OutputAll)
+		)
+		b := bytes.Buffer{}
+		err = ch.Build(chartjs.OutputChart, &b)
 		if err != nil {
 			t.Errorf("[%v] breaks building chart with: [%v]", f, err)
 			t.FailNow()
@@ -98,7 +100,12 @@ func TestCheatsheet(t *testing.T) {
 		}
 	}
 
-	cheetsheetExamplesTemplate, err := template.New("").Parse(cheetsheetExamplesTemplateString)
+	bb := bytes.Buffer{}
+	chartjs.New(chartjs.ChartType(0), dataset.Dataset{}, chartjs.Options{}).MustBuild(chartjs.OutputHTMLHeader, &bb)
+	bb.WriteString(cheetsheetString)
+	chartjs.New(chartjs.ChartType(0), dataset.Dataset{}, chartjs.Options{}).MustBuild(chartjs.OutputHTMLFooter, &bb)
+
+	cheetsheetExamplesTemplate, err := template.New("").Parse(bb.String())
 	if err != nil {
 		t.Errorf("Could not parse cheatsheet examples page: [%v]", err)
 		t.FailNow()
@@ -144,7 +151,6 @@ func mustReadLines(path string, t *testing.T) []string {
 	return lines
 }
 
-var cheetsheetExamplesTemplateString = baseTemplateHeaderString + cheetsheetString + baseTemplateFooterString
 var cheetsheetString = `
 <style>
 body {

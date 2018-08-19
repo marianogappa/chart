@@ -3,6 +3,7 @@ package chartjs
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"log"
 	"sort"
 	"strings"
@@ -73,22 +74,56 @@ const (
 
 // MustBuild prepares the dataset and executes the text template with it. Fatals if there's a problem
 // with executing the template.
-func (c ChartJS) MustBuild(om OutputMode) bytes.Buffer {
-	b, err := c.Build(om)
-	if err != nil {
+func (c ChartJS) MustBuild(om OutputMode, w io.Writer) {
+	if err := c.Build(om, w); err != nil {
 		log.Fatal(err)
 	}
-	return b
 }
 
 // Build prepares the dataset and executes the text template with it. Returns an error if there's a problem
 // with executing the template.
-func (c ChartJS) Build(om OutputMode) (bytes.Buffer, error) {
-	var b bytes.Buffer
-	if err := cjsTemplate.Execute(&b, c.prepareTemplateData()); err != nil {
-		return b, fmt.Errorf("could't prepare ChartJS js code for chart: [%v]", err)
+func (c ChartJS) Build(om OutputMode, w io.Writer) (err error) {
+	defer recover𝑒(&err)
+	switch om {
+	case OutputDependencies:
+		𝑒(tplToWriter(tplMomentJS, "", w))
+		𝑒(tplToWriter(tplChartJS, "", w))
+	case OutputHTMLHeader:
+		bb := bytes.Buffer{}
+		𝑒(tplToWriter(tplMomentJS, "", &bb))
+		𝑒(tplToWriter(tplChartJS, "", &bb))
+		𝑒(tplToWriter(tplHTMLHeader, bb.String(), w))
+	case OutputChart:
+		𝑒(tplToWriter(tplChartObject, c.prepareTemplateData(), w))
+	case OutputHTMLFooter:
+		𝑒(tplToWriter(tplHTMLFooter, "", w))
+	case OutputAll:
+		deps, chartObj := bytes.Buffer{}, bytes.Buffer{}
+		𝑒(tplToWriter(tplMomentJS, "", &deps))
+		𝑒(tplToWriter(tplChartJS, "", &deps))
+		𝑒(tplToWriter(tplHTMLHeader, deps.String(), w))
+		𝑒(tplToWriter(tplChartObject, c.prepareTemplateData(), &chartObj))
+		switch c.data.ChartType {
+		case "pie":
+			𝑒(tplToWriter(tplPieChartDivScript, chartObj.String(), w))
+		default:
+			𝑒(tplToWriter(tplChartDivScript, chartObj.String(), w))
+		}
+		𝑒(tplToWriter(tplHTMLFooter, "", w))
 	}
-	return b, nil
+	return nil
+}
+
+func 𝑒(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
+func recover𝑒(err *error) {
+	if e := recover(); e != nil {
+		*err = e.(error)
+	}
 }
 
 type cjsData struct {
