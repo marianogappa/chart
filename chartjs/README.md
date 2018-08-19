@@ -21,13 +21,13 @@ Category2	2
 Category3	3
 `
 	reader := strings.NewReader(fileContent)
-	lineFormat, _ := format.NewLineFormat("sf", '\t', "") // Look into format.Parse to infer the line format
-	ds, err := dataset.New(reader, lineFormat)
+	lineFormat, _ := format.NewLineFormat("sf", '\t', "")        // Look into format.Parse to infer the line format
+	ds, err := dataset.New(reader, lineFormat)                   // Construct dataset manually if not reading a file
 	if err != nil {
 		log.Fatal(err)
 	}
-	chart := chartjs.New(chartjs.Pie, *ds, chartjs.Options{Title: "Example chart"})
-	if err := chart.Build(chartjs.OutputAll, os.Stdout); err != nil {
+	chart := chartjs.New(chartjs.Pie, *ds, chartjs.Options{Title: "Example chart"}) // Consult godoc for ChartTypes
+	if err := chart.Build(chartjs.OutputAll, os.Stdout); err != nil {               // Consult godoc for OutputModes
 		log.Fatal(err)
 	}
 }
