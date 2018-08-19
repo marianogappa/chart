@@ -65,11 +65,11 @@ type OutputMode int
 // In most cases, OutputAll should be used. When constructing a page with many charts, or with custom HTML,
 // Build() can be called many times with different OutputModes.
 const (
-	OutputAll OutputMode = iota
-	OutputHTMLHeader
-	OutputDependencies
-	OutputChart
-	OutputHTMLFooter
+	OutputAll          OutputMode = iota // Outputs a complete HTML file
+	OutputHTMLHeader                     // Outputs an HTML header, styling, dependencies and an opening <body> tag
+	OutputDependencies                   // Outputs only <script> tags with moment.js & Chart.js dependencies
+	OutputChart                          // Outputs the JS object that Chart.js expects: new Chart(ctx, {{.}})
+	OutputHTMLFooter                     // Outputs </body></html>
 )
 
 // MustBuild prepares the dataset and executes the text template with it. Fatals if there's a problem
