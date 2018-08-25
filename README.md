@@ -4,6 +4,8 @@ Quick & smart charting for STDIN
 
 [Blogpost](https://movio.co/en/blog/improving-with-sql-and-charts/)
 
+![Chart example use](img/chart.gif?v=1)
+
 ## Learn by example!
 
 [Cheatsheet](https://marianogappa.github.io/chart/)
