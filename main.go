@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"io"
+	"log"
 	"os"
 
-	log "github.com/Sirupsen/logrus"
 	"github.com/marianogappa/chart/chartjs"
 	"github.com/marianogappa/chart/dataset"
 	"github.com/marianogappa/chart/format"
@@ -46,6 +46,6 @@ func main() {
 	tmpfile.mustClose()
 	tmpfile.mustRenameWithHTMLSuffix()
 	if err := open.Run(tmpfile.url()); err != nil {
-		log.WithError(err).Fatalf("Could not open the default viewer; please configure open/xdg-open")
+		log.Fatalf("Could not open the default viewer; please configure open/xdg-open: %v", err)
 	}
 }

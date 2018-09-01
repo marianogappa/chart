@@ -5,9 +5,9 @@ package dataset
 import (
 	"bufio"
 	"io"
+	"log"
 	"time"
 
-	log "github.com/Sirupsen/logrus"
 	"github.com/marianogappa/chart/format"
 )
 
@@ -45,7 +45,7 @@ func (d Dataset) Len() int {
 func MustNew(r io.Reader, f format.LineFormat) *Dataset {
 	d, err := New(r, f)
 	if err != nil {
-		log.WithError(err).Fatal("Could not build dataset.")
+		log.Fatalf("Could not build dataset: %v", err)
 	}
 	return d
 }
