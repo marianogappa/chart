@@ -3,9 +3,8 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
-
-	log "github.com/Sirupsen/logrus"
 )
 
 type tempFile struct {
@@ -16,21 +15,21 @@ type tempFile struct {
 func mustNewTempFile() *tempFile {
 	tmpfile, err := ioutil.TempFile("", "chartData")
 	if err != nil {
-		log.WithField("err", err).Fatalf("Could not create temporary file to store the chart.")
+		log.Fatalf("Could not create temporary file to store the chart: %v", err)
 	}
 	return &tempFile{tmpfile, tmpfile.Name()}
 }
 
 func (f *tempFile) mustClose() {
 	if err := f.f.Close(); err != nil {
-		log.WithField("err", err).Fatalf("Could not close temporary file after saving chart to it.")
+		log.Fatalf("Could not close temporary file after saving chart to it: %v", err)
 	}
 }
 
 func (f *tempFile) mustRenameWithHTMLSuffix() {
 	newName := f.name + ".html"
 	if err := os.Rename(f.name, newName); err != nil {
-		log.WithField("err", err).Fatalf("Could not add html extension to the temporary file.")
+		log.Fatalf("Could not add html extension to the temporary file: %v", err)
 	}
 	f.name = newName
 }
