@@ -122,6 +122,6 @@ If you have a use case that is not supported by `chart`, [I'd love to hear about
 
 - Requires Go version >= 1.11 with module support for building and testing.
 
-- Requres [Goreleaser](https://goreleaser.com) for building and publishing releases.
+- Requires [Goreleaser](https://goreleaser.com) for building and publishing releases.
 
 - See [Makefile](./Makefile) for build and test commands.
