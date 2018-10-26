@@ -120,4 +120,8 @@ If you have a use case that is not supported by `chart`, [I'd love to hear about
 
 ### Development
 
-Requires Go version >= 1.11 with module support. See [Makefile](./Makefile) for build and test commands.
+- Requires Go version >= 1.11 with module support for building and testing.
+
+- Requires [Goreleaser](https://goreleaser.com) for building and publishing releases.
+
+- See [Makefile](./Makefile) for build and test commands.
