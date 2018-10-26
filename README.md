@@ -117,3 +117,7 @@ Separator   [tab]
 
 PRs are greatly appreciated and are currently [being merged](https://github.com/marianogappa/chart/pull/3).
 If you have a use case that is not supported by `chart`, [I'd love to hear about it](https://github.com/marianogappa/chart/issues), but if it's too complex I'd recommend you to try [gnuplot](http://www.gnuplot.info/).
+
+### Development
+
+Requires Go version >= 1.11 with module support. See [Makefile](./Makefile) for build and test commands.
