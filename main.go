@@ -6,9 +6,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/marianogappa/chart/v4/chartjs"
-	"github.com/marianogappa/chart/v4/dataset"
-	"github.com/marianogappa/chart/v4/format"
+	"github.com/marianogappa/chart/chartjs"
+	"github.com/marianogappa/chart/dataset"
+	"github.com/marianogappa/chart/format"
 	"github.com/skratchdot/open-golang/open"
 )
 

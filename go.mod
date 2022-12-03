@@ -1,4 +1,4 @@
-module github.com/marianogappa/chart/v4
+module github.com/marianogappa/chart
 
 go 1.18
 

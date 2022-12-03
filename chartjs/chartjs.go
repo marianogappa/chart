@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strings"
 
-	chartDataset "github.com/marianogappa/chart/v4/dataset"
+	chartDataset "github.com/marianogappa/chart/dataset"
 )
 
 // ChartJS allows building an HTML/Javascript Chart.js chart from a given dataset

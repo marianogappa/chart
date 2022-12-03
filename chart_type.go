@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/marianogappa/chart/v4/format"
+	"github.com/marianogappa/chart/format"
 )
 
 func resolveChartType(ct chartType, lf format.LineFormat, datasetLength int) (chartType, error) {

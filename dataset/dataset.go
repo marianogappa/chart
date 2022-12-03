@@ -8,7 +8,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/marianogappa/chart/v4/format"
+	"github.com/marianogappa/chart/format"
 )
 
 // Dataset represents the source dataset used to construct the charts.
