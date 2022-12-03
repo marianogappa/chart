@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	"github.com/marianogappa/chart/format"
+	"github.com/marianogappa/chart/v4/format"
 )
 
 func TestResolveChartType(t *testing.T) {

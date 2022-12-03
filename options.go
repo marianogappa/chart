@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/marianogappa/chart/format"
+	"github.com/marianogappa/chart/v4/format"
 )
 
 type chartType int

@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/marianogappa/chart/format"
+	"github.com/marianogappa/chart/v4/format"
 )
 
 func TestResolveOptions(t *testing.T) {

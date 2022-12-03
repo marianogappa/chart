@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/marianogappa/chart/dataset"
+	"github.com/marianogappa/chart/v4/dataset"
 )
 
 func TestDebug(t *testing.T) {

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/marianogappa/chart/dataset"
+	"github.com/marianogappa/chart/v4/dataset"
 )
 
 func renderDebug(d dataset.Dataset, o options, err error) string {

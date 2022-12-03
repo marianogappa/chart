@@ -38,7 +38,7 @@ chart [options]
 go get -u github.com/marianogappa/chart
 ```
 
-or get the latest binary for your OS in the [Releases section](https://github.com/MarianoGappa/chart/releases).
+or get the latest binary for your OS in the [Releases section](https://github.com/marianogappa/chart/v4/releases).
 
 ## Example use cases
 
@@ -110,13 +110,13 @@ Separator   [tab]
 
 ## Known issues
 
-- Javascript's floating point messes up y-axis https://github.com/marianogappa/chart/issues/15
-- No histogram support (ChartJS doesn't provide it) https://github.com/marianogappa/chart/issues/22
+- Javascript's floating point messes up y-axis https://github.com/marianogappa/chart/v4/issues/15
+- No histogram support (ChartJS doesn't provide it) https://github.com/marianogappa/chart/v4/issues/22
 
 ## Contribute
 
-PRs are greatly appreciated and are currently [being merged](https://github.com/marianogappa/chart/pull/3).
-If you have a use case that is not supported by `chart`, [I'd love to hear about it](https://github.com/marianogappa/chart/issues), but if it's too complex I'd recommend you to try [gnuplot](http://www.gnuplot.info/).
+PRs are greatly appreciated and are currently [being merged](https://github.com/marianogappa/chart/v4/pull/3).
+If you have a use case that is not supported by `chart`, [I'd love to hear about it](https://github.com/marianogappa/chart/v4/issues), but if it's too complex I'd recommend you to try [gnuplot](http://www.gnuplot.info/).
 
 ### Development
 

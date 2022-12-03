@@ -3,11 +3,11 @@ ARTIFACT = chart
 
 build: ## build for default architecture.
 build:
-	GO111MODULE=on go build -o ${ARTIFACT} -a .
+	go build -o ${ARTIFACT} -a .
 
 test: ## Run tests
 test:
-	GO111MODULE=on go test ./...
+	go test ./...
 
 run: ## Build for default architecture and run immediately.
 run: build

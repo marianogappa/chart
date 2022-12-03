@@ -3,7 +3,7 @@ package main
 import (
 	"sort"
 
-	"github.com/marianogappa/chart/format"
+	"github.com/marianogappa/chart/v4/format"
 )
 
 func preprocessFreq(isss [][]string, lineFormat format.LineFormat) ([][]float64, [][]string, format.LineFormat) {

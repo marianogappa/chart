@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strings"
 
-	chartDataset "github.com/marianogappa/chart/dataset"
+	chartDataset "github.com/marianogappa/chart/v4/dataset"
 )
 
 // ChartJS allows building an HTML/Javascript Chart.js chart from a given dataset
@@ -31,7 +31,7 @@ type Options struct {
 func New(chartType ChartType, ds chartDataset.Dataset, opts Options) ChartJS {
 
 	if chartType == Bar {
-		opts.ZeroBased = true // https://github.com/marianogappa/chart/issues/11
+		opts.ZeroBased = true // https://github.com/marianogappa/chart/v4/issues/11
 	}
 
 	var d = dataset{
@@ -303,7 +303,7 @@ func (c ChartJS) prepareLabelsAndDatasets() cjsData {
 			dss[i] = v
 			i++
 		}
-		sort.Slice(dss, func(i, j int) bool { // https://github.com/marianogappa/chart/issues/33
+		sort.Slice(dss, func(i, j int) bool { // https://github.com/marianogappa/chart/v4/issues/33
 			return dss[i].Label < dss[j].Label
 		})
 		return cjsData{

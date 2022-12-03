@@ -41,7 +41,7 @@ var templateStrings = map[tpl]string{
 var ctx = document.getElementById("chart");
 var chart = new Chart(ctx, {{.}});
 </script>`,
-	// https://github.com/marianogappa/chart/issues/25
+	// https://github.com/marianogappa/chart/v4/issues/25
 	tplPieChartDivScript: `
 <div style="height:50vh; width:50vw;">
 <canvas id="chart" height="100%" width="100%"></canvas>

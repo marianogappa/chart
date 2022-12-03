@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/marianogappa/chart/format"
+	"github.com/marianogappa/chart/v4/format"
 )
 
 func TestDataset(t *testing.T) {

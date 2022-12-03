@@ -1,4 +1,4 @@
-# chart/chartjs [![Build Status](https://img.shields.io/travis/marianogappa/chart.svg)](https://travis-ci.org/marianogappa/chart) [![Coverage Status](https://coveralls.io/repos/github/MarianoGappa/chart/badge.svg?branch=master)](https://coveralls.io/github/MarianoGappa/chart?branch=master) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/marianogappa/chart/master/LICENSE) [![Go Report Card](https://goreportcard.com/badge/github.com/marianogappa/chart?style=flat-square)](https://goreportcard.com/report/github.com/marianogappa/chart) [![GoDoc](https://godoc.org/github.com/marianogappa/chart/chartjs?status.svg)](https://godoc.org/github.com/marianogappa/chart/chartjs)
+# chart/chartjs [![Build Status](https://img.shields.io/travis/marianogappa/chart.svg)](https://travis-ci.org/marianogappa/chart) [![Coverage Status](https://coveralls.io/repos/github/MarianoGappa/chart/badge.svg?branch=master)](https://coveralls.io/github/MarianoGappa/chart?branch=master) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/marianogappa/chart/master/LICENSE) [![Go Report Card](https://goreportcard.com/badge/github.com/marianogappa/chart?style=flat-square)](https://goreportcard.com/report/github.com/marianogappa/chart) [![GoDoc](https://godoc.org/github.com/marianogappa/chart/v4/chartjs?status.svg)](https://godoc.org/github.com/marianogappa/chart/v4/chartjs)
 
 ## Example usage
 
@@ -10,9 +10,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/marianogappa/chart/chartjs"
-	"github.com/marianogappa/chart/dataset"
-	"github.com/marianogappa/chart/format"
+	"github.com/marianogappa/chart/v4/chartjs"
+	"github.com/marianogappa/chart/v4/dataset"
+	"github.com/marianogappa/chart/v4/format"
 )
 
 func main() {
