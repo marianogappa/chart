@@ -35,7 +35,7 @@ chart [options]
 ## Installation
 
 ```
-go get -u github.com/marianogappa/chart
+go install github.com/marianogappa/chart@latest
 ```
 
 or get the latest binary for your OS in the [Releases section](https://github.com/marianogappa/chart/v4/releases).
